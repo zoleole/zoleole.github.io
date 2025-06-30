@@ -164,7 +164,7 @@
 }
 
 .card-back {
-  background-image: url("../images/storm-trooper.gif");
+  background-image: url("../images/rainbow_1.gif");
   transition: transform .2s;
 }
 
@@ -180,39 +180,39 @@
 }
 
 .chewbacca {
-  background-image: url("../images/chewbacca.jpg");
+  background-image: url("../images/altocumulus1_big.jpg");
 }
 
 .emperor {
-  background-image: url("../images/emperor.jpg");
+  background-image: url("../images/altostratus3_big.jpg");
 }
 
 .hansolo {
-  background-image: url("../images/hansolo.webp");
+  background-image: url("../images/cirrocumulus1_big.jpg");
 }
 
 .leia {
-  background-image: url("../images/leia.jpg");
+  background-image: url("../images/cirrostratus1_big.jpg");
 }
 
 .luke {
-  background-image: url("../images/luke.png");
+  background-image: url("../images/cirrus6_big.jpg");
 }
 
 .obiwan {
-  background-image: url("../images/obiwan.webp");
+  background-image: url("../images/cumulonimbus3_big.jpg");
 }
 
 .padme {
-  background-image: url("../images/padme.jpg");
+  background-image: url("../images/cumulus3_big.jpg");
 }
 
 .vader {
-  background-image: url("../images/vader.jpg");
+  background-image: url("../images/kelvihelmholtz3_big.jpg");
 }
 
 .yoda {
-  background-image: url("../images/yoda.jpg");
+  background-image: url("../images/lenticular1_big.jpg");
 }
 
 .modal {
