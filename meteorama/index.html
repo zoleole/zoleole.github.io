@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Keith Tachibana: Memory Match</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Inconsolata&display=swap" rel="stylesheet">
+    <link href="assets/css/grid.css" rel="stylesheet" />
+    <link href="assets/css/style.css" rel="stylesheet" />
+  </head>
+  <body onload="shuffleCards()">
+    <div class="container main-container">
+      <div class="row">
+        <header class="header">
+          <div class="title-container">
+            <h1 class="title-text">Star Wars Memory Match</h1>
+          </div>
+        </header>
+      </div>
+      <div class="row">
+        <aside class="aside col-2">
+          <div class="games-container">
+            <h4 class="games-text">Games:</h4>
+          </div>
+          <div class="games-score-container">
+            <h4 class="games-score">0</h4>
+          </div>
+          <div class="matches-container">
+            <h4 class="matches-text">Matches:</h4>
+          </div>
+          <div class="matches-score-container">
+            <h4 class="matches-score">0</h4>
+          </div>
+          <div class="attempts-container">
+            <h4 class="attempts-text">Attempts:</h4>
+          </div>
+          <div class="attempts-score-container">
+            <h4 class="attempts-score">0</h4>
+          </div>
+          <div class="accuracy-container">
+            <h4 class="accuracy-text">Accuracy:</h4>
+          </div>
+          <div class="accuracy-score-container">
+            <h4 class="accuracy-score">0%</h4>
+          </div>
+          <button class="shuffle-button">Click To Reset</button>
+          <video autoplay muted loop class="video-bg">
+            <source src="./assets/videos/nebula.mp4" />
+          </video>
+        </aside>
+        <main class="main col-10" id="gameCards">
+          <div class="card-item col-2">
+            <div class="card-front chewbacca"></div>
+            <div class="card-back"></div>
+          </div>
+          <div class="card-item col-2">
+            <div class="card-front chewbacca"></div>
+            <div class="card-back"></div>
+          </div>
+          <div class="card-item col-2">
+            <div class="card-front emperor"></div>
+            <div class="card-back"></div>
+          </div>
+          <div class="card-item col-2">
+            <div class="card-front emperor"></div>
+            <div class="card-back"></div>
+          </div>
+          <div class="card-item col-2">
+            <div class="card-front hansolo"></div>
+            <div class="card-back"></div>
+          </div>
+          <div class="card-item col-2">
+            <div class="card-front hansolo"></div>
+            <div class="card-back"></div>
+          </div>
+          <div class="card-item col-2">
+            <div class="card-front leia"></div>
+            <div class="card-back"></div>
+          </div>
+          <div class="card-item col-2">
+            <div class="card-front leia"></div>
+            <div class="card-back"></div>
+          </div>
+          <div class="card-item col-2">
+            <div class="card-front luke"></div>
+            <div class="card-back"></div>
+          </div>
+          <div class="card-item col-2">
+            <div class="card-front luke"></div>
+            <div class="card-back"></div>
+          </div>
+          <div class="card-item col-2">
+            <div class="card-front obiwan"></div>
+            <div class="card-back"></div>
+          </div>
+          <div class="card-item col-2">
+            <div class="card-front obiwan"></div>
+            <div class="card-back"></div>
+          </div>
+          <div class="card-item col-2">
+            <div class="card-front padme"></div>
+            <div class="card-back"></div>
+          </div>
+          <div class="card-item col-2">
+            <div class="card-front padme"></div>
+            <div class="card-back"></div>
+          </div>
+          <div class="card-item col-2">
+            <div class="card-front vader"></div>
+            <div class="card-back"></div>
+          </div>
+          <div class="card-item col-2">
+            <div class="card-front vader"></div>
+            <div class="card-back"></div>
+          </div>
+          <div class="card-item col-2">
+            <div class="card-front yoda"></div>
+            <div class="card-back"></div>
+          </div>
+          <div class="card-item col-2">
+            <div class="card-front yoda"></div>
+            <div class="card-back"></div>
+          </div>
+        </main>
+      </div>
+    </div>
+    <div class="modal hidden">
+      <div class="modal-text">
+        <span class="close">&times;</span>
+        <h3>Congratulations! You have won!!!</h3>
+        <button class="reset"><span>Play Again </span></button>
+      </div>
+    </div>
+    <script src="assets/js/script.js"></script>
+  </body>
+</html>
