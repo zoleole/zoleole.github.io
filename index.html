@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Weather Widget</title>
+    <title>☁️ Weather & Clouds | Meteorama</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -158,6 +158,31 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        .meteorama-link {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.3s ease;
+        }
+
+        .meteorama-link:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .header-title {
+            background: linear-gradient(135deg, #667eea, #87ceeb, #4682b4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradient-shift 3s ease infinite;
+            background-size: 200% 200%;
+        }
+
+        @keyframes gradient-shift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
     </style>
 </head>
 <body>
@@ -174,6 +199,11 @@
             </div>
 
             <div class="relative z-20">
+                <div class="text-center mb-4">
+                    <h1 class="header-title text-2xl font-bold mb-2">Weather & Clouds</h1>
+                    <p class="text-xs opacity-70">Real-time weather information</p>
+                </div>
+                
                 <div class="location-search mb-4">
                     <div class="flex gap-2">
                         <input 
@@ -232,8 +262,12 @@
                     <div id="windSpeed">Wind: -- km/h</div>
                 </div>
 
-                <div class="forecast flex flex-nowrap justify-between pb-2" id="forecastContainer">
+                <div class="forecast flex flex-nowrap justify-between pb-2 mb-4" id="forecastContainer">
                 </div>
+
+                <a href="meteorama/" class="meteorama-link block text-center py-3 px-4 rounded-xl border border-white/20 text-white font-semibold text-sm shadow-lg hover:shadow-xl transition-all">
+                    ☁️ Play Cloud Memory Game - Meteorama
+                </a>
 
                 <div id="loadingIndicator" class="hidden absolute inset-0 bg-black/50 backdrop-blur-sm rounded-3xl flex items-center justify-center z-40">
                     <div class="loading-spinner"></div>
