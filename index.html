@@ -417,7 +417,9 @@
             // Actualizar visibilidad de las nubes 3D según el clima actual
             if (window.cloudGroup) {
                 const weatherCode = current.weather_code;
-                const isCloudy = weatherCode >= 2; // 2=parcialmente nublado, 3=nublado, etc.
+                // Mostrar nubes si hay cualquier tipo de nubosidad (código >= 1)
+                // 0 = despejado, 1 = mayormente despejado, 2+ = nublado/lluvia/etc
+                const isCloudy = weatherCode >= 1;
                 const isRainy = [51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82].includes(weatherCode);
                 
                 window.cloudGroup.visible = isCloudy;
