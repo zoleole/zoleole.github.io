@@ -191,7 +191,7 @@
 
     <div class="weather-widget-container relative w-full max-w-sm sm:max-w-md">
         <div class="weather-widget relative text-white bg-gradient-to-br from-purple-700/70 via-indigo-800/60 to-blue-900/70 backdrop-blur-lg shadow-2xl rounded-3xl p-6 overflow-hidden border border-white/10">
-            <div id="cloud-container" class="absolute top-0 right-0 w-36 h-36 sm:w-40 sm:h-40 z-30 cursor-pointer rounded-tr-3xl overflow-hidden">
+            <div id="cloud-container" class="absolute top-0 right-0 w-36 h-36 sm:w-40 sm:h-40 z-30 cursor-pointer rounded-tr-3xl overflow-hidden" style="display: none;">
                 <div id="cloud-tooltip" class="tooltip absolute top-20 right-2 sm:top-24 sm:right-4 bg-black/70 text-white px-3 py-1.5 rounded-md text-xs opacity-0 transition-opacity duration-300 pointer-events-none z-40 shadow-lg">
                     Click clouds for a surprise!
                     <div class="absolute -top-1 right-3 w-3 h-3 bg-black/70 transform rotate-45"></div>
@@ -335,13 +335,23 @@
     };
 
     const ui = {
-        updateDateTime() {
+        currentTimezone: 'America/Mexico_City',
+        
+        updateDateTime(timezone = null) {
+            if (timezone) {
+                this.currentTimezone = timezone;
+            }
             const now = new Date();
-            const optionsDate = { weekday: 'long' };
-            const optionsTime = { hour: '2-digit', minute: '2-digit', hour12: false };
+            const optionsDate = { weekday: 'long', timeZone: this.currentTimezone };
+            const optionsTime = { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: this.currentTimezone };
             const dateTimeEl = document.getElementById('dateTime');
             if (dateTimeEl) {
-                dateTimeEl.textContent = `${now.toLocaleDateString(undefined, optionsDate)}, ${now.toLocaleTimeString([], optionsTime)}`;
+                try {
+                    dateTimeEl.textContent = `${now.toLocaleDateString('en-US', optionsDate)}, ${now.toLocaleTimeString('en-US', optionsTime)}`;
+                } catch (e) {
+                    console.error('Timezone error:', e);
+                    dateTimeEl.textContent = `${now.toLocaleDateString(undefined, { weekday: 'long' })}, ${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}`;
+                }
             }
         },
 
@@ -368,7 +378,12 @@
         updateWeatherDisplay(weatherData) {
             if (!weatherData) return;
 
-            const { current, daily, locationName } = weatherData;
+            const { current, daily, locationName, timezone } = weatherData;
+
+            // Actualizar zona horaria
+            if (timezone) {
+                this.updateDateTime(timezone);
+            }
 
             document.getElementById('location').textContent = locationName;
 
@@ -397,6 +412,38 @@
                 `;
                 
                 forecastContainer.appendChild(forecastDay);
+            }
+
+            // Actualizar visibilidad de las nubes 3D según el clima actual
+            if (window.cloudGroup) {
+                const weatherCode = current.weather_code;
+                const isCloudy = weatherCode >= 2; // 2=parcialmente nublado, 3=nublado, etc.
+                const isRainy = [51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82].includes(weatherCode);
+                
+                window.cloudGroup.visible = isCloudy;
+                
+                // Ocultar/mostrar el contenedor y tooltip
+                const cloudContainer = document.getElementById('cloud-container');
+                const cloudTooltip = document.getElementById('cloud-tooltip');
+                if (cloudContainer) {
+                    cloudContainer.style.display = isCloudy ? 'block' : 'none';
+                }
+                if (cloudTooltip) {
+                    cloudTooltip.style.display = isCloudy ? 'block' : 'none';
+                }
+                
+                // Si está lloviendo, activar la lluvia automáticamente
+                if (isRainy && window.cloud1 && window.cloud2) {
+                    window.cloud1.userData.isRaining = true;
+                    window.cloud2.userData.isRaining = true;
+                    if (window.cloud1.userData.rainGroup) window.cloud1.userData.rainGroup.visible = true;
+                    if (window.cloud2.userData.rainGroup) window.cloud2.userData.rainGroup.visible = true;
+                } else if (window.cloud1 && window.cloud2) {
+                    window.cloud1.userData.isRaining = false;
+                    window.cloud2.userData.isRaining = false;
+                    if (window.cloud1.userData.rainGroup) window.cloud1.userData.rainGroup.visible = false;
+                    if (window.cloud2.userData.rainGroup) window.cloud2.userData.rainGroup.visible = false;
+                }
             }
         },
 
@@ -476,7 +523,8 @@
                 await this.loadWeatherForLocation(location.latitude, location.longitude);
             } catch (error) {
                 console.error('Geolocation error:', error);
-                await this.loadWeatherForLocation(40.7128, -74.0060, 'New York, USA');
+                // Fallback a Ciudad de México
+                await this.loadWeatherForLocation(19.4326, -99.1332, 'Mexico City, Mexico');
             } finally {
                 ui.hideLoading();
             }
@@ -484,7 +532,7 @@
     };
 
     ui.updateDateTime();
-    setInterval(ui.updateDateTime, 60000);
+    setInterval(() => ui.updateDateTime(), 60000);
 
     document.getElementById('searchBtn').addEventListener('click', () => locationHandler.searchAndSelectLocation());
     document.getElementById('locationInput').addEventListener('keypress', (e) => {
@@ -591,7 +639,13 @@
         const cloud2 = createDetailedCloud(0.7, -0.1, 0.3, 0.9);
         cloudGroup.add(cloud1, cloud2);
         cloudGroup.position.y = -0.2;
+        cloudGroup.visible = false; // Ocultas por defecto, se mostrarán según el clima
         let autoRotateSpeed = 0.002;
+        
+        // Hacer accesibles globalmente para actualizar según el clima
+        window.cloudGroup = cloudGroup;
+        window.cloud1 = cloud1;
+        window.cloud2 = cloud2;
 
         function createRaindropsForCloud(cloud) {
             const rainGroup = new THREE.Group();
