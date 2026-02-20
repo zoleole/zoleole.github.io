@@ -570,24 +570,53 @@
       background: rgba(15,15,26,0.92);
       border: 3px solid var(--yellow);
       border-radius: 6px;
-      padding: 10px 12px;
+      padding: 0;
       font-size: 0.58rem;
       line-height: 1.7;
       box-shadow: 0 0 0 1px var(--yellow-dark), 0 8px 25px rgba(0,0,0,0.5);
       max-width: 200px;
-      max-height: 60vh;
-      overflow-y: auto;
       backdrop-filter: blur(10px);
+      overflow: hidden;
     }
 
-    .legend h4 {
+    .legend-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      cursor: pointer;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .legend-toggle h4 {
       font-family: 'Press Start 2P', monospace;
       color: var(--yellow);
-      margin-bottom: 6px;
       font-size: 0.45rem;
       text-shadow: 1px 1px 0 #000;
-      border-bottom: 2px solid rgba(255,222,0,0.2);
-      padding-bottom: 5px;
+      margin: 0;
+    }
+
+    .legend-toggle .arrow {
+      color: var(--yellow);
+      font-size: 0.7rem;
+      transition: transform 0.3s;
+    }
+
+    .legend.collapsed .arrow { transform: rotate(180deg); }
+
+    .legend-body {
+      max-height: 300px;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s ease;
+      padding: 0 12px 10px;
+      border-top: 2px solid rgba(255,222,0,0.2);
+    }
+
+    .legend.collapsed .legend-body {
+      max-height: 0;
+      padding: 0 12px;
+      border-top-color: transparent;
     }
 
     .legend-item {
@@ -597,6 +626,7 @@
       color: #ccc;
       font-size: 0.52rem;
       font-family: 'Exo 2', sans-serif;
+      padding: 2px 0;
     }
 
     .legend-dot {
@@ -616,8 +646,11 @@
       .search-box { max-width: 160px; }
       .type-filter-btn { width: 20px; height: 20px; font-size: 0.48rem; }
       .stat-pill { font-size: 0.48rem; padding: 2px 6px; }
-      .legend { max-width: 140px; padding: 6px 8px; max-height: 45vh; }
-      .legend h4 { font-size: 0.38rem; }
+      .legend { max-width: 140px; }
+      .legend-toggle h4 { font-size: 0.38rem; }
+      .legend-toggle { padding: 6px 8px; }
+      .legend-body { padding: 0 8px 6px; }
+      .legend.collapsed .legend-body { padding: 0 8px; }
       .legend-item { font-size: 0.44rem; line-height: 1.6; }
       .pokemon-marker img { width: 38px; height: 38px; }
       .marker-label { font-size: 0.26rem; }
@@ -631,9 +664,9 @@
       .controls-bar { padding: 3px 8px; gap: 4px; }
       .search-box { max-width: 120px; }
       .stat-pill { display: none; }
-      .legend { max-width: 120px; padding: 5px 6px; max-height: 40vh; font-size: 0.48rem; }
-      .legend h4 { font-size: 0.34rem; margin-bottom: 3px; padding-bottom: 3px; }
-      .legend-item { font-size: 0.4rem; gap: 4px; line-height: 1.5; }
+      .legend { max-width: 120px; }
+      .legend-toggle h4 { font-size: 0.34rem; }
+      .legend-item { font-size: 0.4rem; gap: 4px; }
       .legend-dot { width: 6px; height: 6px; }
     }
   </style>
@@ -1032,12 +1065,24 @@
       legend.onAdd = () => {
         const div = L.DomUtil.create('div', 'legend');
         const uniqueTypes = [...new Set(Object.values(WEATHER_TO_TYPE))];
-        div.innerHTML = `<h4>🗺️ Tipos por clima</h4>` +
+        const isMobile = window.innerWidth <= 600;
+        if (isMobile) div.classList.add('collapsed');
+        div.innerHTML =
+          `<div class="legend-toggle">
+            <h4>🗺️ Tipos por clima</h4>
+            <span class="arrow">▼</span>
+          </div>
+          <div class="legend-body">` +
           uniqueTypes.map(type => {
             const r = TYPE_ROSTERS[type];
-            const conds = Object.entries(WEATHER_TO_TYPE).filter(([, t]) => t === type).map(([c]) => c).join(', ');
             return `<div class="legend-item"><div class="legend-dot" style="background:${r.color};color:${r.color}"></div>${r.emoji} ${r.label}</div>`;
-          }).join('');
+          }).join('') +
+          `</div>`;
+        div.querySelector('.legend-toggle').addEventListener('click', () => {
+          div.classList.toggle('collapsed');
+        });
+        // Prevent map interactions when clicking legend
+        L.DomEvent.disableClickPropagation(div);
         return div;
       };
       legend.addTo(map);
