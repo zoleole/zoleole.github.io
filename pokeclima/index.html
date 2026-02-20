@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🌍 Pokémon Weather Map</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Exo+2:wght@400;600;700;800&display=swap');
+
+    :root {
+      --red: #CC0000;
+      --red-dark: #880000;
+      --yellow: #FFDE00;
+      --yellow-dark: #B8860B;
+      --dark: #0f0f1a;
+      --dark-card: #1a1a2e;
+      --blue: #3B4CCA;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Exo 2', sans-serif;
+      background: var(--blue);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ─── HEADER ─── */
+    header {
+      background: linear-gradient(135deg, #CC0000 0%, #a00000 100%);
+      padding: 0;
+      border-bottom: 4px solid var(--red-dark);
+      position: relative;
+      z-index: 1000;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 8px 16px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .pokeball-logo {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(180deg, white 48%, #1a1a1a 48%, #1a1a1a 52%, var(--red) 52%);
+      border: 3px solid #1a1a1a;
+      position: relative;
+      flex-shrink: 0;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.5), inset 0 0 6px rgba(255,255,255,0.2);
+      animation: pulse-glow 3s ease-in-out infinite;
+    }
+
+    .pokeball-logo::after {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #fff, #ddd);
+      border: 3px solid #1a1a1a;
+      z-index: 1;
+      box-shadow: 0 0 6px rgba(255,255,255,0.6);
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+      50% { box-shadow: 0 2px 10px rgba(0,0,0,0.5), 0 0 15px rgba(255,222,0,0.3); }
+    }
+
+    .header-text h1 {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.75rem;
+      color: var(--yellow);
+      text-shadow: 2px 2px 0px var(--yellow-dark), -1px -1px 0 #000, 1px -1px 0 #000;
+      letter-spacing: 1px;
+    }
+
+    .header-text p {
+      font-size: 0.55rem;
+      color: rgba(255,255,255,0.8);
+      margin-top: 2px;
+      font-family: 'Press Start 2P', monospace;
+    }
+
+    /* ─── CONTROLS BAR ─── */
+    .controls-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      background: rgba(0,0,0,0.25);
+      border-top: 1px solid rgba(255,255,255,0.08);
+      flex-wrap: wrap;
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      background: rgba(0,0,0,0.4);
+      border: 2px solid rgba(255,222,0,0.3);
+      border-radius: 4px;
+      padding: 4px 8px;
+      gap: 6px;
+      flex: 1;
+      min-width: 140px;
+      max-width: 260px;
+      transition: border-color 0.2s;
+    }
+
+    .search-box:focus-within {
+      border-color: var(--yellow);
+      box-shadow: 0 0 8px rgba(255,222,0,0.2);
+    }
+
+    .search-box input {
+      background: none;
+      border: none;
+      color: white;
+      font-family: 'Exo 2', sans-serif;
+      font-size: 0.7rem;
+      outline: none;
+      width: 100%;
+    }
+
+    .search-box input::placeholder { color: rgba(255,255,255,0.4); }
+
+    .control-btn {
+      background: rgba(0,0,0,0.4);
+      border: 2px solid rgba(255,222,0,0.25);
+      border-radius: 4px;
+      color: rgba(255,255,255,0.8);
+      font-size: 0.6rem;
+      font-family: 'Press Start 2P', monospace;
+      padding: 5px 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .control-btn:hover {
+      border-color: var(--yellow);
+      color: var(--yellow);
+      background: rgba(255,222,0,0.1);
+    }
+
+    .control-btn.active {
+      background: rgba(255,222,0,0.15);
+      border-color: var(--yellow);
+      color: var(--yellow);
+    }
+
+    .type-filters {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .type-filter-btn {
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.15);
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 0.6rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .type-filter-btn:hover { transform: scale(1.2); }
+
+    .type-filter-btn.dimmed { opacity: 0.25; filter: grayscale(1); }
+
+    .stat-pill {
+      background: rgba(0,0,0,0.4);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 3px 10px;
+      color: rgba(255,255,255,0.7);
+      font-size: 0.6rem;
+      font-family: 'Exo 2', sans-serif;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
+
+    .stat-pill strong { color: var(--yellow); font-weight: 700; }
+
+    /* ─── MAP ─── */
+    #map { flex: 1; z-index: 1; }
+
+    .pokemon-icon { background: none; border: none; }
+
+    .pokemon-marker {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.8));
+      animation: marker-appear 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+
+    @keyframes marker-appear {
+      0% { transform: scale(0) translateY(-40px); opacity: 0; }
+      100% { transform: scale(1) translateY(0); opacity: 1; }
+    }
+
+    .pokemon-marker:hover {
+      filter: drop-shadow(0 4px 12px rgba(255,222,0,0.6)) drop-shadow(0 2px 6px rgba(0,0,0,0.8));
+    }
+
+    .pokemon-marker:hover img { animation: bounce 0.5s ease infinite; }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    .pokemon-marker img {
+      width: 52px; height: 52px;
+      object-fit: contain;
+      transition: transform 0.15s ease;
+    }
+
+    .marker-label {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.32rem;
+      color: white;
+      background: rgba(0,0,0,0.7);
+      padding: 2px 5px;
+      border-radius: 2px;
+      margin-top: 2px;
+      text-shadow: 1px 1px 0 #000;
+      white-space: nowrap;
+      backdrop-filter: blur(4px);
+    }
+
+    /* ─── POPUP ─── */
+    .leaflet-popup-content-wrapper {
+      background: var(--dark);
+      border: 3px solid var(--yellow);
+      border-radius: 6px;
+      box-shadow: 0 0 0 1px var(--yellow-dark), 0 12px 40px rgba(0,0,0,0.7);
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .leaflet-popup-content { margin: 0 !important; width: auto !important; }
+    .leaflet-popup-tip { background: var(--yellow); }
+
+    .popup-header {
+      background: linear-gradient(135deg, var(--red) 0%, var(--red-dark) 100%);
+      padding: 8px 14px;
+      border-bottom: 2px solid var(--red-dark);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .popup-header h3 {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.5rem;
+      color: var(--yellow);
+      text-shadow: 1px 1px 0 #000;
+    }
+
+    .popup-header .temp-toggle {
+      font-size: 0.45rem;
+      color: rgba(255,255,255,0.7);
+      cursor: pointer;
+      font-family: 'Press Start 2P', monospace;
+      background: rgba(0,0,0,0.3);
+      padding: 2px 6px;
+      border-radius: 3px;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .popup-body {
+      display: flex;
+      gap: 14px;
+      padding: 14px;
+      min-width: 260px;
+      align-items: flex-start;
+    }
+
+    .popup-sprite-wrap {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .popup-sprite-bg {
+      width: 88px; height: 88px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .popup-sprite-bg::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.1);
+    }
+
+    .popup-sprite-bg img {
+      width: 72px; height: 72px;
+      object-fit: contain;
+      display: block;
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,0.5));
+      animation: sprite-idle 3s ease-in-out infinite;
+    }
+
+    @keyframes sprite-idle {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-3px); }
+    }
+
+    .popup-info { color: white; flex: 1; }
+
+    .popup-temp-row {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .popup-temp {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 1.3rem;
+      color: var(--yellow);
+      text-shadow: 2px 2px 0 #000;
+      line-height: 1;
+    }
+
+    .popup-feels {
+      font-size: 0.6rem;
+      color: rgba(255,255,255,0.5);
+    }
+
+    .popup-condition {
+      font-size: 0.72rem;
+      color: #ccc;
+      margin-top: 6px;
+      line-height: 1.6;
+      text-transform: capitalize;
+    }
+
+    .popup-pokemon-name {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.48rem;
+      margin-top: 8px;
+      line-height: 1.6;
+    }
+
+    .popup-stats {
+      display: flex;
+      gap: 6px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+
+    .popup-stat {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 4px;
+      padding: 3px 7px;
+      font-size: 0.58rem;
+      color: rgba(255,255,255,0.7);
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .type-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.4rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-top: 8px;
+    }
+
+    /* ─── ENCOUNTER OVERLAY ─── */
+    .encounter-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      pointer-events: none;
+      display: none;
+    }
+
+    .encounter-overlay.active {
+      display: block;
+      animation: encounter-flash 0.6s ease-out;
+    }
+
+    @keyframes encounter-flash {
+      0% { background: white; }
+      30% { background: rgba(255,255,255,0.8); }
+      60% { background: rgba(0,0,0,0.3); }
+      100% { background: transparent; }
+    }
+
+    /* ─── WEATHER PARTICLES ─── */
+    .weather-particles {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 999;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+    }
+
+    .rain-drop {
+      width: 2px;
+      background: linear-gradient(to bottom, transparent, rgba(100,180,255,0.6));
+      animation-name: rain-fall;
+    }
+
+    @keyframes rain-fall {
+      0% { transform: translateY(-10px); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(100vh); opacity: 0; }
+    }
+
+    .snow-flake {
+      width: 6px; height: 6px;
+      background: white;
+      border-radius: 50%;
+      opacity: 0.8;
+      animation-name: snow-fall;
+    }
+
+    @keyframes snow-fall {
+      0% { transform: translateY(-10px) translateX(0); opacity: 0; }
+      10% { opacity: 0.8; }
+      50% { transform: translateY(50vh) translateX(30px); }
+      90% { opacity: 0.6; }
+      100% { transform: translateY(100vh) translateX(-20px); opacity: 0; }
+    }
+
+    .sun-ray {
+      position: absolute;
+      width: 2px;
+      background: linear-gradient(to bottom, rgba(255,222,0,0.3), transparent);
+      animation-name: sun-shimmer;
+      transform-origin: top center;
+    }
+
+    @keyframes sun-shimmer {
+      0%, 100% { opacity: 0; }
+      50% { opacity: 1; }
+    }
+
+    /* ─── LOADING SCREEN ─── */
+    #loading-overlay {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at center, #cc0000 0%, #880000 50%, #440000 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 99999;
+      gap: 20px;
+    }
+
+    .loading-pokeball {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(180deg, white 48%, #1a1a1a 48%, #1a1a1a 52%, #CC0000 52%);
+      border: 5px solid #1a1a1a;
+      position: relative;
+      animation: pokeball-wobble 1.2s ease-in-out infinite;
+      box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    }
+
+    .loading-pokeball::after {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #fff, #ddd);
+      border: 4px solid #1a1a1a;
+      z-index: 1;
+      box-shadow: 0 0 10px rgba(255,255,255,0.5);
+    }
+
+    @keyframes pokeball-wobble {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(-20deg); }
+      50% { transform: rotate(0deg); }
+      75% { transform: rotate(20deg); }
+    }
+
+    .loading-title {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.9rem;
+      color: var(--yellow);
+      text-shadow: 3px 3px 0 rgba(0,0,0,0.5);
+      text-align: center;
+      line-height: 1.8;
+    }
+
+    .loading-progress {
+      width: 200px;
+      height: 8px;
+      background: rgba(0,0,0,0.4);
+      border-radius: 4px;
+      overflow: hidden;
+      border: 2px solid rgba(255,255,255,0.1);
+    }
+
+    .loading-progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--yellow), #ffaa00, var(--yellow));
+      background-size: 200% 100%;
+      animation: shimmer 1.5s ease-in-out infinite;
+      border-radius: 2px;
+      transition: width 0.3s ease;
+      width: 0%;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .loading-sub {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.42rem;
+      color: rgba(255,255,255,0.6);
+      animation: blink 1s step-end infinite;
+    }
+
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+    /* ─── LEGEND ─── */
+    .legend {
+      background: rgba(15,15,26,0.92);
+      border: 3px solid var(--yellow);
+      border-radius: 6px;
+      padding: 0;
+      font-size: 0.58rem;
+      line-height: 1.7;
+      box-shadow: 0 0 0 1px var(--yellow-dark), 0 8px 25px rgba(0,0,0,0.5);
+      max-width: 200px;
+      backdrop-filter: blur(10px);
+      overflow: hidden;
+    }
+
+    .legend-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      cursor: pointer;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .legend-toggle h4 {
+      font-family: 'Press Start 2P', monospace;
+      color: var(--yellow);
+      font-size: 0.45rem;
+      text-shadow: 1px 1px 0 #000;
+      margin: 0;
+    }
+
+    .legend-toggle .arrow {
+      color: var(--yellow);
+      font-size: 0.7rem;
+      transition: transform 0.3s;
+    }
+
+    .legend.collapsed .arrow { transform: rotate(180deg); }
+
+    .legend-body {
+      max-height: 300px;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s ease;
+      padding: 0 12px 10px;
+      border-top: 2px solid rgba(255,222,0,0.2);
+    }
+
+    .legend.collapsed .legend-body {
+      max-height: 0;
+      padding: 0 12px;
+      border-top-color: transparent;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #ccc;
+      font-size: 0.52rem;
+      font-family: 'Exo 2', sans-serif;
+      padding: 2px 0;
+    }
+
+    .legend-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      box-shadow: 0 0 4px currentColor;
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 600px) {
+      .header-text h1 { font-size: 0.52rem; }
+      .header-text p { font-size: 0.38rem; }
+      .pokeball-logo { width: 30px; height: 30px; }
+      .controls-bar { padding: 4px 10px; gap: 5px; }
+      .control-btn { font-size: 0.45rem; padding: 3px 7px; }
+      .search-box { max-width: 160px; }
+      .type-filter-btn { width: 20px; height: 20px; font-size: 0.48rem; }
+      .stat-pill { font-size: 0.48rem; padding: 2px 6px; }
+      .legend { max-width: 140px; }
+      .legend-toggle h4 { font-size: 0.38rem; }
+      .legend-toggle { padding: 6px 8px; }
+      .legend-body { padding: 0 8px 6px; }
+      .legend.collapsed .legend-body { padding: 0 8px; }
+      .legend-item { font-size: 0.44rem; line-height: 1.6; }
+      .pokemon-marker img { width: 38px; height: 38px; }
+      .marker-label { font-size: 0.26rem; }
+      .popup-body { flex-direction: column; min-width: 180px; padding: 10px; gap: 8px; }
+      .popup-sprite-bg { width: 64px; height: 64px; }
+      .popup-sprite-bg img { width: 52px; height: 52px; }
+      .popup-temp { font-size: 1rem; }
+    }
+
+    @media (max-width: 380px) {
+      .controls-bar { padding: 3px 8px; gap: 4px; }
+      .search-box { max-width: 120px; }
+      .stat-pill { display: none; }
+      .legend { max-width: 120px; }
+      .legend-toggle h4 { font-size: 0.34rem; }
+      .legend-item { font-size: 0.4rem; gap: 4px; }
+      .legend-dot { width: 6px; height: 6px; }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="header-inner">
+      <div class="pokeball-logo"></div>
+      <div class="header-text">
+        <h1>Pokémon Weather Map</h1>
+        <p>Clima real · Wild Pokémon appeared!</p>
+      </div>
+    </div>
+    <div class="controls-bar">
+      <div class="search-box">
+        <span style="font-size:0.7rem">🔍</span>
+        <input type="text" id="city-search" placeholder="Buscar ciudad..." autocomplete="off" />
+      </div>
+      <button class="control-btn" id="unit-toggle" title="Toggle °C / °F">°C / °F</button>
+      <div class="type-filters" id="type-filters"></div>
+      <div class="stat-pill" id="city-count">🏙️ <strong>0</strong> ciudades</div>
+      <div class="stat-pill" id="pokemon-count">✨ <strong>0</strong> pokémon</div>
+    </div>
+  </header>
+
+  <div id="loading-overlay">
+    <div class="loading-pokeball"></div>
+    <div class="loading-title">Pokémon Weather Map</div>
+    <div class="loading-progress"><div class="loading-progress-bar" id="progress-bar"></div></div>
+    <div class="loading-sub">Buscando Pokémon salvajes...</div>
+  </div>
+
+  <div class="encounter-overlay" id="encounter-overlay"></div>
+  <div class="weather-particles" id="weather-particles"></div>
+  <div id="map"></div>
+
+  <script>
+    const API_KEY = 'ac39d7ef1d6feed80b00409860f6dcbc';
+    let useFahrenheit = false;
+    let allMarkers = [];
+    let activeFilters = new Set();
+
+    const CITIES = [
+      { name: 'Ciudad de México', lat: 19.43, lon: -99.13 },
+      { name: 'São Paulo', lat: -23.55, lon: -46.63 },
+      { name: 'Buenos Aires', lat: -34.61, lon: -58.38 },
+      { name: 'Nueva York', lat: 40.71, lon: -74.01 },
+      { name: 'Londres', lat: 51.51, lon: -0.13 },
+      { name: 'Tokio', lat: 35.68, lon: 139.69 },
+      { name: 'Sídney', lat: -33.87, lon: 151.21 },
+      { name: 'Moscú', lat: 55.75, lon: 37.62 },
+      { name: 'El Cairo', lat: 30.04, lon: 31.24 },
+      { name: 'Lagos', lat: 6.52, lon: 3.38 },
+      { name: 'Mumbai', lat: 19.08, lon: 72.88 },
+      { name: 'Los Ángeles', lat: 34.05, lon: -118.24 },
+      { name: 'París', lat: 48.85, lon: 2.35 },
+      { name: 'Bogotá', lat: 4.71, lon: -74.07 },
+      { name: 'Seúl', lat: 37.57, lon: 126.98 },
+      { name: 'Ensenada', lat: 31.87, lon: -116.60 },
+      { name: 'Guadalajara', lat: 20.66, lon: -103.35 },
+      { name: 'Santiago', lat: -33.45, lon: -70.67 },
+      { name: 'Lima', lat: -12.05, lon: -77.04 },
+      { name: 'Caracas', lat: 10.48, lon: -66.88 },
+      { name: 'Toronto', lat: 43.65, lon: -79.38 },
+      { name: 'Chicago', lat: 41.88, lon: -87.63 },
+      { name: 'Madrid', lat: 40.42, lon: -3.70 },
+      { name: 'Berlín', lat: 52.52, lon: 13.40 },
+      { name: 'Estambul', lat: 41.01, lon: 28.95 },
+      { name: 'Dubái', lat: 25.20, lon: 55.27 },
+      { name: 'Bangkok', lat: 13.75, lon: 100.52 },
+      { name: 'Shanghái', lat: 31.23, lon: 121.47 },
+      { name: 'Nairobi', lat: -1.29, lon: 36.82 },
+      { name: 'Ciudad del Cabo', lat: -33.93, lon: 18.42 },
+      { name: 'Reikiavik', lat: 64.15, lon: -21.94 },
+      { name: 'Atenas', lat: 37.98, lon: 23.73 },
+      { name: 'Río de Janeiro', lat: -22.91, lon: -43.17 },
+      { name: 'Singapur', lat: 1.35, lon: 103.82 },
+      { name: 'Helsinki', lat: 60.17, lon: 24.94 },
+      { name: 'Marrakech', lat: 31.63, lon: -8.00 },
+      { name: 'Hanói', lat: 21.03, lon: 105.85 },
+      { name: 'Yakarta', lat: -6.21, lon: 106.85 },
+      { name: 'Vancouver', lat: 49.28, lon: -123.12 },
+      { name: 'Honolulú', lat: 21.31, lon: -157.86 },
+    ];
+
+    const TYPE_ROSTERS = {
+      fire: {
+        color: '#EE8130', emoji: '🔥', label: 'Fuego',
+        pokemon: [
+          { id: 4, name: 'Charmander' }, { id: 37, name: 'Vulpix' },
+          { id: 58, name: 'Growlithe' }, { id: 77, name: 'Ponyta' },
+          { id: 126, name: 'Magmar' }, { id: 6, name: 'Charizard' },
+        ]
+      },
+      water: {
+        color: '#6390F0', emoji: '💧', label: 'Agua',
+        pokemon: [
+          { id: 7, name: 'Squirtle' }, { id: 54, name: 'Psyduck' },
+          { id: 79, name: 'Slowpoke' }, { id: 116, name: 'Horsea' },
+          { id: 130, name: 'Gyarados' }, { id: 134, name: 'Vaporeon' },
+        ]
+      },
+      electric: {
+        color: '#F7D02C', emoji: '⚡', label: 'Eléctrico',
+        pokemon: [
+          { id: 25, name: 'Pikachu' }, { id: 100, name: 'Voltorb' },
+          { id: 125, name: 'Electabuzz' }, { id: 135, name: 'Jolteon' },
+          { id: 26, name: 'Raichu' }, { id: 145, name: 'Zapdos' },
+        ]
+      },
+      ice: {
+        color: '#96D9D6', emoji: '❄️', label: 'Hielo',
+        pokemon: [
+          { id: 87, name: 'Dewgong' }, { id: 124, name: 'Jynx' },
+          { id: 131, name: 'Lapras' }, { id: 144, name: 'Articuno' },
+          { id: 471, name: 'Glaceon' }, { id: 362, name: 'Glalie' },
+        ]
+      },
+      ghost: {
+        color: '#735797', emoji: '👻', label: 'Fantasma',
+        pokemon: [
+          { id: 92, name: 'Gastly' }, { id: 93, name: 'Haunter' },
+          { id: 94, name: 'Gengar' }, { id: 355, name: 'Duskull' },
+          { id: 200, name: 'Misdreavus' }, { id: 302, name: 'Sableye' },
+        ]
+      },
+      flying: {
+        color: '#A98FF3', emoji: '🕊️', label: 'Volador',
+        pokemon: [
+          { id: 16, name: 'Pidgey' }, { id: 17, name: 'Pidgeotto' },
+          { id: 142, name: 'Aerodactyl' }, { id: 278, name: 'Wingull' },
+          { id: 18, name: 'Pidgeot' }, { id: 334, name: 'Altaria' },
+        ]
+      },
+      poison: {
+        color: '#A33EA1', emoji: '☠️', label: 'Veneno',
+        pokemon: [
+          { id: 41, name: 'Zubat' }, { id: 88, name: 'Grimer' },
+          { id: 109, name: 'Koffing' }, { id: 23, name: 'Ekans' },
+          { id: 110, name: 'Weezing' }, { id: 89, name: 'Muk' },
+        ]
+      },
+      ground: {
+        color: '#E2BF65', emoji: '⛰️', label: 'Tierra',
+        pokemon: [
+          { id: 27, name: 'Sandshrew' }, { id: 50, name: 'Diglett' },
+          { id: 104, name: 'Cubone' }, { id: 328, name: 'Trapinch' },
+          { id: 105, name: 'Marowak' }, { id: 28, name: 'Sandslash' },
+        ]
+      },
+    };
+
+    const WEATHER_TO_TYPE = {
+      Thunderstorm: 'electric',
+      Drizzle: 'water',
+      Rain: 'water',
+      Snow: 'ice',
+      Mist: 'ghost',
+      Smoke: 'poison',
+      Haze: 'poison',
+      Dust: 'ground',
+      Fog: 'ghost',
+      Sand: 'ground',
+      Ash: 'poison',
+      Squall: 'water',
+      Tornado: 'ghost',
+      Clear: 'fire',
+      Clouds: 'flying',
+    };
+
+    function getPokemon(condition) {
+      const typeName = WEATHER_TO_TYPE[condition] || 'flying';
+      const roster = TYPE_ROSTERS[typeName];
+      const pick = roster.pokemon[Math.floor(Math.random() * roster.pokemon.length)];
+      return { ...pick, type: typeName, color: roster.color, emoji: roster.emoji, label: roster.label };
+    }
+
+    function getSpriteUrl(id) {
+      return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
+    }
+
+    function toF(c) { return Math.round(c * 9 / 5 + 32); }
+    function formatTemp(c) { return useFahrenheit ? `${toF(c)}°F` : `${Math.round(c)}°C`; }
+
+    async function fetchWeather(city) {
+      const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${city.lat}&lon=${city.lon}&appid=${API_KEY}&units=metric&lang=es`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.json();
+    }
+
+    function createMarkerIcon(pokemon, temp) {
+      const tempStr = formatTemp(temp);
+      const html = `
+        <div class="pokemon-marker">
+          <img src="${getSpriteUrl(pokemon.id)}" alt="${pokemon.name}"
+               onerror="this.src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png'"/>
+          <div class="marker-label">${tempStr}</div>
+        </div>`;
+      return L.divIcon({ html, className: 'pokemon-icon', iconSize: [52, 68], iconAnchor: [26, 62], popupAnchor: [0, -62] });
+    }
+
+    function createPopup(city, weather, pokemon) {
+      const temp = weather.main.temp;
+      const feels = weather.main.feels_like;
+      const wind = weather.wind.speed;
+      const bgAlpha = '15';
+      return `
+        <div class="popup-header">
+          <h3>${city.name}</h3>
+        </div>
+        <div class="popup-body">
+          <div class="popup-sprite-wrap">
+            <div class="popup-sprite-bg" style="background: radial-gradient(circle, ${pokemon.color}${bgAlpha}, transparent)">
+              <img src="${getSpriteUrl(pokemon.id)}" alt="${pokemon.name}"/>
+            </div>
+          </div>
+          <div class="popup-info">
+            <div class="popup-temp-row">
+              <div class="popup-temp">${formatTemp(temp)}</div>
+              <div class="popup-feels">ST ${formatTemp(feels)}</div>
+            </div>
+            <div class="popup-condition">${weather.weather[0].description}</div>
+            <div class="popup-stats">
+              <div class="popup-stat">💧 ${weather.main.humidity}%</div>
+              <div class="popup-stat">💨 ${wind} m/s</div>
+              ${weather.clouds ? `<div class="popup-stat">☁️ ${weather.clouds.all}%</div>` : ''}
+            </div>
+            <div class="popup-pokemon-name" style="color:${pokemon.color}">
+              ✨ ¡Un ${pokemon.name} salvaje apareció!
+            </div>
+            <span class="type-badge" style="background:${pokemon.color}20;color:${pokemon.color};border:2px solid ${pokemon.color}40">
+              ${pokemon.emoji} ${pokemon.label}
+            </span>
+          </div>
+        </div>`;
+    }
+
+    // ─── Weather Particles ───
+    function spawnWeatherParticles(weatherMain) {
+      const container = document.getElementById('weather-particles');
+      container.innerHTML = '';
+
+      if (weatherMain === 'Rain' || weatherMain === 'Drizzle') {
+        const count = weatherMain === 'Rain' ? 80 : 30;
+        for (let i = 0; i < count; i++) {
+          const drop = document.createElement('div');
+          drop.className = 'particle rain-drop';
+          drop.style.left = Math.random() * 100 + '%';
+          drop.style.height = (15 + Math.random() * 20) + 'px';
+          drop.style.animationDuration = (0.5 + Math.random() * 0.5) + 's';
+          drop.style.animationDelay = Math.random() * 2 + 's';
+          container.appendChild(drop);
+        }
+      } else if (weatherMain === 'Snow') {
+        for (let i = 0; i < 40; i++) {
+          const flake = document.createElement('div');
+          flake.className = 'particle snow-flake';
+          flake.style.left = Math.random() * 100 + '%';
+          const s = 3 + Math.random() * 5;
+          flake.style.width = s + 'px';
+          flake.style.height = s + 'px';
+          flake.style.animationDuration = (3 + Math.random() * 4) + 's';
+          flake.style.animationDelay = Math.random() * 5 + 's';
+          container.appendChild(flake);
+        }
+      } else if (weatherMain === 'Clear') {
+        for (let i = 0; i < 12; i++) {
+          const ray = document.createElement('div');
+          ray.className = 'particle sun-ray';
+          ray.style.left = Math.random() * 100 + '%';
+          ray.style.top = '0';
+          ray.style.height = (30 + Math.random() * 40) + 'vh';
+          ray.style.animationDuration = (2 + Math.random() * 3) + 's';
+          ray.style.animationDelay = Math.random() * 4 + 's';
+          container.appendChild(ray);
+        }
+      }
+    }
+
+    // ─── Encounter Flash ───
+    function triggerEncounter() {
+      const el = document.getElementById('encounter-overlay');
+      el.classList.remove('active');
+      void el.offsetWidth;
+      el.classList.add('active');
+      setTimeout(() => el.classList.remove('active'), 700);
+    }
+
+    // ─── Search ───
+    function initSearch(map) {
+      const input = document.getElementById('city-search');
+      input.addEventListener('input', () => {
+        const q = input.value.toLowerCase().trim();
+        allMarkers.forEach(m => {
+          const match = m._cityName.toLowerCase().includes(q);
+          if (match && !map.hasLayer(m)) map.addLayer(m);
+          if (!match && q.length > 0 && map.hasLayer(m)) map.removeLayer(m);
+        });
+      });
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          const q = input.value.toLowerCase().trim();
+          const found = allMarkers.find(m => m._cityName.toLowerCase().includes(q));
+          if (found) {
+            map.setView(found.getLatLng(), 6, { animate: true });
+            found.openPopup();
+            triggerEncounter();
+          }
+        }
+      });
+    }
+
+    // ─── Type Filters ───
+    function initTypeFilters(map) {
+      const container = document.getElementById('type-filters');
+      Object.entries(TYPE_ROSTERS).forEach(([type, data]) => {
+        const btn = document.createElement('div');
+        btn.className = 'type-filter-btn';
+        btn.style.background = data.color;
+        btn.innerHTML = data.emoji;
+        btn.title = `Tipo ${data.label}`;
+        btn.addEventListener('click', () => {
+          if (activeFilters.has(type)) {
+            activeFilters.delete(type);
+            btn.classList.remove('dimmed');
+          } else {
+            // If clicking while no filters, dim everything else
+            if (activeFilters.size === 0) {
+              container.querySelectorAll('.type-filter-btn').forEach(b => b.classList.add('dimmed'));
+              btn.classList.remove('dimmed');
+              Object.keys(TYPE_ROSTERS).forEach(t => { if (t !== type) activeFilters.add(t); });
+            } else {
+              activeFilters.add(type);
+              btn.classList.add('dimmed');
+            }
+          }
+          // If all dimmed, reset
+          if (activeFilters.size === Object.keys(TYPE_ROSTERS).length) {
+            activeFilters.clear();
+            container.querySelectorAll('.type-filter-btn').forEach(b => b.classList.remove('dimmed'));
+          }
+          applyFilters(map);
+        });
+        container.appendChild(btn);
+      });
+    }
+
+    function applyFilters(map) {
+      allMarkers.forEach(m => {
+        const hidden = activeFilters.has(m._pokemonType);
+        if (hidden && map.hasLayer(m)) map.removeLayer(m);
+        if (!hidden && !map.hasLayer(m)) map.addLayer(m);
+      });
+    }
+
+    // ─── Unit Toggle ───
+    function initUnitToggle(map) {
+      document.getElementById('unit-toggle').addEventListener('click', () => {
+        useFahrenheit = !useFahrenheit;
+        const btn = document.getElementById('unit-toggle');
+        btn.classList.toggle('active', useFahrenheit);
+        allMarkers.forEach(m => {
+          m.setIcon(createMarkerIcon(m._pokemon, m._tempC));
+          if (m.getPopup() && m.getPopup().isOpen()) {
+            m.setPopupContent(createPopup(m._city, m._weather, m._pokemon));
+          }
+        });
+      });
+    }
+
+    // ─── Main Init ───
+    async function init() {
+      const progressBar = document.getElementById('progress-bar');
+      progressBar.style.width = '10%';
+
+      const map = L.map('map', {
+        center: [20, 0],
+        zoom: 2,
+        minZoom: 2,
+        maxZoom: 17,
+        maxBounds: [[-90, -180], [90, 180]],
+        maxBoundsViscosity: 1.0,
+        zoomControl: true,
+      });
+
+      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        attribution: '© Esri',
+        maxZoom: 19,
+      }).addTo(map);
+
+      progressBar.style.width = '20%';
+
+      // Legend
+      const legend = L.control({ position: 'bottomright' });
+      legend.onAdd = () => {
+        const div = L.DomUtil.create('div', 'legend');
+        const uniqueTypes = [...new Set(Object.values(WEATHER_TO_TYPE))];
+        const isMobile = window.innerWidth <= 600;
+        if (isMobile) div.classList.add('collapsed');
+        div.innerHTML =
+          `<div class="legend-toggle">
+            <h4>🗺️ Tipos por clima</h4>
+            <span class="arrow">▼</span>
+          </div>
+          <div class="legend-body">` +
+          uniqueTypes.map(type => {
+            const r = TYPE_ROSTERS[type];
+            return `<div class="legend-item"><div class="legend-dot" style="background:${r.color};color:${r.color}"></div>${r.emoji} ${r.label}</div>`;
+          }).join('') +
+          `</div>`;
+        div.querySelector('.legend-toggle').addEventListener('click', () => {
+          div.classList.toggle('collapsed');
+        });
+        // Prevent map interactions when clicking legend
+        L.DomEvent.disableClickPropagation(div);
+        return div;
+      };
+      legend.addTo(map);
+
+      initSearch(map);
+      initTypeFilters(map);
+      initUnitToggle(map);
+
+      progressBar.style.width = '30%';
+
+      // Fetch weather data with progress
+      let loaded = 0;
+      let dominantWeather = 'Clear';
+      const weatherCounts = {};
+
+      const results = await Promise.allSettled(
+        CITIES.map(city =>
+          fetchWeather(city).then(w => {
+            loaded++;
+            progressBar.style.width = (30 + (loaded / CITIES.length) * 60) + '%';
+            return { city, weather: w };
+          })
+        )
+      );
+
+      progressBar.style.width = '95%';
+
+      let successCount = 0;
+      results.forEach((r, i) => {
+        if (r.status !== 'fulfilled') return;
+        const { city, weather } = r.value;
+        const mainWeather = weather.weather[0].main;
+        weatherCounts[mainWeather] = (weatherCounts[mainWeather] || 0) + 1;
+
+        const pokemon = getPokemon(mainWeather);
+        const marker = L.marker([city.lat, city.lon], {
+          icon: createMarkerIcon(pokemon, weather.main.temp),
+        });
+
+        // Store data on marker for filtering/updating
+        marker._cityName = city.name;
+        marker._pokemonType = pokemon.type;
+        marker._pokemon = pokemon;
+        marker._tempC = weather.main.temp;
+        marker._city = city;
+        marker._weather = weather;
+
+        marker.bindPopup(createPopup(city, weather, pokemon), { maxWidth: 320, autoPan: true });
+        marker.on('click', triggerEncounter);
+
+        // Stagger marker appearance
+        setTimeout(() => marker.addTo(map), i * 60);
+        allMarkers.push(marker);
+        successCount++;
+      });
+
+      // Find dominant weather
+      let maxCount = 0;
+      Object.entries(weatherCounts).forEach(([w, c]) => {
+        if (c > maxCount) { maxCount = c; dominantWeather = w; }
+      });
+      spawnWeatherParticles(dominantWeather);
+
+      // Update stats
+      document.querySelector('#city-count strong').textContent = successCount;
+      document.querySelector('#pokemon-count strong').textContent = successCount;
+
+      progressBar.style.width = '100%';
+      setTimeout(() => {
+        document.getElementById('loading-overlay').style.opacity = '0';
+        document.getElementById('loading-overlay').style.transition = 'opacity 0.5s';
+        setTimeout(() => document.getElementById('loading-overlay').style.display = 'none', 500);
+      }, 400);
+    }
+
+    init().catch(err => {
+      document.getElementById('loading-overlay').innerHTML =
+        `<div style="text-align:center;padding:20px">
+          <p style="color:#FFDE00;font-family:'Press Start 2P',monospace;font-size:0.7rem;margin-bottom:12px">❌ Error</p>
+          <p style="color:#ccc;font-size:0.8rem">${err.message}</p>
+          <p style="color:#aaa;font-size:0.65rem;margin-top:8px">Verifica tu API key de OpenWeatherMap</p>
+        </div>`;
+    });
+  </script>
+</body>
+
+</html>
