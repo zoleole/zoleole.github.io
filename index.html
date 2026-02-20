@@ -1,772 +1,821 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>☁️ Weather & Clouds | Meteorama</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        .body-wrapper {
-            font-family: 'Outfit', sans-serif;
-            background: linear-gradient(135deg, #3a3897 0%, #2c2a72 40%, #1a1a4e 100%);
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zoleole</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Archivo+Black&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 
-        .weather-widget::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 70%);
-            animation: shimmer 15s infinite linear;
-            pointer-events: none;
-            z-index: 1;
-        }
+  :root {
+    --hot-pink: #ff0066;
+    --cyan: #00e5cc;
+    --white: #ffffff;
+    --mx: 50%;
+    --my: 50%;
+  }
 
-        @keyframes shimmer {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+  html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
 
-        .weather-icon-main {
-            filter: drop-shadow(0 0 12px rgba(220, 220, 255, 0.5));
-            animation: floating 3.5s ease-in-out infinite;
-        }
+  /* === POSTER IS NOW FULL PAGE === */
+  .poster {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    cursor: crosshair;
+  }
 
-        @keyframes floating {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-8px); }
-            100% { transform: translateY(0px); }
-        }
+  /* === BACKGROUND === */
+  .bg-gradient {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 30% 15%, rgba(255,80,140,0.45) 0%, transparent 50%),
+      radial-gradient(ellipse at 75% 85%, rgba(0,200,180,0.4) 0%, transparent 50%),
+      linear-gradient(172deg, #ff1a6e 0%, #d9004d 15%, #a8204a 32%, #5a4a5a 50%, #2a6a6a 68%, #1a9988 82%, var(--cyan) 100%);
+    z-index: 1;
+  }
 
-        #cloud-container {
-            pointer-events: auto;
-        }
+  .bg-mesh {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    opacity: 0.35;
+    background:
+      radial-gradient(circle 30vw at 20% 25%, rgba(255,150,200,0.5) 0%, transparent 100%),
+      radial-gradient(circle 25vw at 78% 70%, rgba(0,220,200,0.4) 0%, transparent 100%),
+      radial-gradient(circle 15vw at 50% 50%, rgba(255,255,255,0.08) 0%, transparent 100%);
+    animation: meshShift 12s ease-in-out infinite alternate;
+  }
 
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(15px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        .animate-fadeInUp {
-            opacity: 0;
-            animation: fadeInUp 0.6s ease-out forwards;
-        }
+  @keyframes meshShift {
+    0% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(10px, -12px) scale(1.02); }
+    100% { transform: translate(-5px, 8px) scale(1.01); }
+  }
 
-        @keyframes fadeInScaleUp {
-            from {
-                opacity: 0;
-                transform: translateY(10px) scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-        .animate-fadeInScaleUp {
-            opacity: 0;
-            animation: fadeInScaleUp 0.7s ease-out forwards;
-        }
+  /* === CIRCLE — centered in viewport === */
+  .circle-anchor {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+  }
 
-        @keyframes gentleBob {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-4px); }
-        }
-        .animate-gentleBob {
-            animation: gentleBob 2.5s ease-in-out infinite;
-        }
+  .circle-outer {
+    position: absolute;
+    width: min(60vw, 60vh);
+    height: min(60vw, 60vh);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    background: conic-gradient(from 0deg, rgba(255,100,180,0.15), rgba(0,220,200,0.1), rgba(255,100,180,0.15));
+    filter: blur(1px);
+    animation: circleIn 1.4s cubic-bezier(0.22, 1, 0.36, 1) both,
+               outerRing 20s linear 1.5s infinite;
+  }
 
-        .sun-info .sunrise:hover .sun-icon,
-        .sun-info .sunset:hover .sun-icon {
-            transform: rotate(15deg) scale(1.15);
-        }
-        .sun-icon {
-            transition: transform 0.3s ease-in-out;
-        }
+  @keyframes outerRing {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+  }
 
-        .forecast-day:hover {
-            box-shadow: 0 0 25px rgba(255, 255, 255, 0.1), 0 4px 10px rgba(0,0,0,0.2);
-        }
-        .forecast-day:hover .forecast-icon {
-            transform: scale(1.2) translateY(-2px);
-            transition: transform 0.3s ease-out;
-        }
-        .forecast-day .forecast-icon {
-            transition: transform 0.3s ease-out;
-        }
+  .circle {
+    position: absolute;
+    width: min(58vw, 58vh);
+    height: min(58vw, 58vh);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background:
+      radial-gradient(circle at 40% 30%, rgba(255,240,250,0.97) 0%, transparent 35%),
+      radial-gradient(circle at 60% 40%, rgba(255,180,220,0.7) 0%, transparent 40%),
+      radial-gradient(circle at 50% 60%, rgba(150,240,230,0.5) 0%, transparent 45%),
+      radial-gradient(circle at 50% 50%, rgba(255,200,230,0.6) 0%, rgba(100,220,210,0.5) 50%, rgba(0,200,180,0.3) 100%);
+    z-index: 2;
+    animation: circleIn 1.4s cubic-bezier(0.22, 1, 0.36, 1) both,
+               circleFloat 8s ease-in-out 1.5s infinite;
+    box-shadow:
+      inset 0 -40px 80px rgba(0,180,160,0.2),
+      inset 0 40px 80px rgba(255,150,200,0.15),
+      0 0 120px rgba(255,200,230,0.25),
+      0 0 250px rgba(0,200,180,0.1);
+  }
 
-        .delay-100 { animation-delay: 0.1s !important; }
-        .delay-200 { animation-delay: 0.2s !important; }
-        .delay-300 { animation-delay: 0.3s !important; }
-        .delay-400 { animation-delay: 0.4s !important; }
-        .delay-500 { animation-delay: 0.5s !important; }
-        .delay-600 { animation-delay: 0.6s !important; }
-        .delay-700 { animation-delay: 0.7s !important; }
-        .delay-\[0\.8s\] { animation-delay: 0.8s !important; }
+  .circle::before {
+    content: '';
+    position: absolute;
+    width: 45%;
+    height: 25%;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%) rotate(-5deg);
+    background: radial-gradient(ellipse, rgba(255,255,255,0.35) 0%, transparent 70%);
+    border-radius: 50%;
+  }
 
-        .location-search {
-            position: relative;
-        }
+  @keyframes circleFloat {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(1.015); }
+  }
 
-        .suggestions-dropdown {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: rgba(30, 20, 60, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 12px;
-            margin-top: 4px;
-            max-height: 200px;
-            overflow-y: auto;
-            z-index: 50;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
+  @keyframes circleIn {
+    from { opacity: 0; transform: translate(-50%, -50%) scale(0.7); }
+    to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  }
 
-        .suggestion-item {
-            padding: 10px 15px;
-            cursor: pointer;
-            transition: background 0.2s;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
+  /* === ANIMALS ORBIT CONTAINER === */
+  /* Both animals are positioned relative to the center of the viewport
+     and orbit gently around the circle center */
 
-        .suggestion-item:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
+  .orbit-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    z-index: 4;
+  }
 
-        .suggestion-item:last-child {
-            border-bottom: none;
-        }
+  /* === DOG === */
+  .dog-container {
+    position: absolute;
+    z-index: 3;
+    width: min(30vw, 30vh);
+    height: min(34vw, 34vh);
+    /* Offset below center */
+    top: calc(50% + min(6vw, 6vh));
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: dogIn 1.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: 0.4s;
+  }
 
-        .loading-spinner {
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top: 2px solid white;
-            width: 20px;
-            height: 20px;
-            animation: spin 1s linear infinite;
-        }
+  .dog-svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 15px 40px rgba(0,0,0,0.35)) drop-shadow(0 0 25px rgba(0,229,204,0.12));
+    animation: dogOrbit 12s ease-in-out 1.6s infinite;
+  }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+  @keyframes dogOrbit {
+    0%   { transform: translate(0, 0) rotate(0deg); }
+    25%  { transform: translate(8px, -6px) rotate(0.5deg); }
+    50%  { transform: translate(0, -10px) rotate(0deg); }
+    75%  { transform: translate(-8px, -4px) rotate(-0.5deg); }
+    100% { transform: translate(0, 0) rotate(0deg); }
+  }
 
-        .meteorama-link {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            transition: all 0.3s ease;
-        }
+  @keyframes dogIn {
+    from { opacity: 0; transform: translate(-50%, -50%) translateY(60px) scale(0.9); }
+    to { opacity: 1; transform: translate(-50%, -50%) translateY(0) scale(1); }
+  }
 
-        .meteorama-link:hover {
-            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
-        }
+  /* === CAT === */
+  .cat-container {
+    position: absolute;
+    z-index: 4;
+    width: min(14vw, 14vh);
+    height: min(16vw, 16vh);
+    /* Offset above center */
+    top: calc(50% - min(14vw, 14vh));
+    left: calc(50% + min(2vw, 2vh));
+    transform: translate(-50%, -50%);
+    animation: catIn 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: 0.7s;
+  }
 
-        .header-title {
-            background: linear-gradient(135deg, #667eea, #87ceeb, #4682b4);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: gradient-shift 3s ease infinite;
-            background-size: 200% 200%;
-        }
+  .cat-svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 6px 18px rgba(0,229,204,0.35)) drop-shadow(0 0 30px rgba(0,255,220,0.15));
+    animation: catOrbit 10s ease-in-out 1.8s infinite;
+  }
 
-        @keyframes gradient-shift {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-    </style>
+  @keyframes catOrbit {
+    0%   { transform: translate(0, 0) rotate(0deg); }
+    20%  { transform: translate(-10px, 5px) rotate(-1.5deg); }
+    40%  { transform: translate(-6px, 12px) rotate(-0.5deg); }
+    60%  { transform: translate(8px, 10px) rotate(1deg); }
+    80%  { transform: translate(10px, -2px) rotate(1.5deg); }
+    100% { transform: translate(0, 0) rotate(0deg); }
+  }
+
+  @keyframes catIn {
+    from { opacity: 0; transform: translate(-50%, -50%) scale(0.4) translateY(-30px); }
+    to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  }
+
+  /* === PARTICLES === */
+  .particles {
+    position: absolute;
+    inset: 0;
+    z-index: 6;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .particle {
+    position: absolute;
+    border-radius: 50%;
+    animation: particleDrift linear infinite;
+    opacity: 0;
+  }
+
+  @keyframes particleDrift {
+    0% { transform: translateY(0) translateX(0) scale(0); opacity: 0; }
+    10% { opacity: 1; transform: scale(1); }
+    90% { opacity: 0.6; }
+    100% { transform: translateY(-100vh) translateX(var(--dx, 20px)) scale(0.5); opacity: 0; }
+  }
+
+  /* === STREAKS === */
+  .streak {
+    position: absolute;
+    z-index: 5;
+    pointer-events: none;
+    opacity: 0.05;
+  }
+
+  .streak-1 {
+    width: 2px;
+    height: 40vh;
+    top: -5vh;
+    left: 22%;
+    background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.8), transparent);
+    transform: rotate(15deg);
+    animation: streakFade 8s ease-in-out infinite;
+  }
+
+  .streak-2 {
+    width: 1px;
+    height: 35vh;
+    top: 15vh;
+    right: 18%;
+    background: linear-gradient(to bottom, transparent, rgba(0,229,204,0.6), transparent);
+    transform: rotate(-12deg);
+    animation: streakFade 8s ease-in-out 3s infinite;
+  }
+
+  .streak-3 {
+    width: 1px;
+    height: 25vh;
+    bottom: 10vh;
+    left: 40%;
+    background: linear-gradient(to bottom, transparent, rgba(255,100,180,0.5), transparent);
+    transform: rotate(8deg);
+    animation: streakFade 8s ease-in-out 5s infinite;
+  }
+
+  @keyframes streakFade {
+    0%, 100% { opacity: 0.02; }
+    50% { opacity: 0.07; }
+  }
+
+  /* === TYPOGRAPHY === */
+  .title {
+    position: absolute;
+    top: clamp(20px, 4vh, 40px);
+    left: clamp(20px, 4vw, 50px);
+    z-index: 10;
+    line-height: 1;
+    animation: fadeSlideIn 1.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: 0.2s;
+  }
+
+  .title h1 {
+    font-family: 'Archivo Black', 'Bebas Neue', sans-serif;
+    font-size: clamp(32px, 5vw, 64px);
+    letter-spacing: clamp(5px, 1vw, 12px);
+    color: var(--white);
+    text-shadow: 0 2px 20px rgba(0,0,0,0.3), 0 0 60px rgba(255,0,102,0.15);
+    position: relative;
+  }
+
+  .title h1::after {
+    content: 'HATERS';
+    position: absolute;
+    top: 0;
+    left: 0;
+    -webkit-text-stroke: 1px rgba(255,255,255,0.08);
+    color: transparent;
+    letter-spacing: inherit;
+  }
+
+  .title .handle {
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(9px, 1.2vw, 14px);
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    color: var(--white);
+    opacity: 0.75;
+    margin-top: 6px;
+    text-transform: uppercase;
+  }
+
+  .number {
+    position: absolute;
+    top: clamp(18px, 3.5vh, 36px);
+    right: clamp(20px, 4vw, 50px);
+    z-index: 10;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(40px, 6vw, 80px);
+    color: var(--white);
+    letter-spacing: 4px;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.3);
+    animation: fadeSlideIn 1.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: 0.35s;
+    line-height: 1;
+  }
+
+  .number::after {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 1px;
+    background: rgba(255,255,255,0.3);
+    margin-top: 8px;
+    margin-left: auto;
+  }
+
+  .side-text-left {
+    position: absolute;
+    left: clamp(10px, 2vw, 24px);
+    bottom: 30vh;
+    z-index: 10;
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(7px, 0.8vw, 10px);
+    letter-spacing: 2.5px;
+    color: var(--white);
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transform: rotate(180deg);
+    opacity: 0.6;
+    animation: fadeSlideIn 1.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: 0.5s;
+  }
+
+  .side-text-right {
+    position: absolute;
+    right: clamp(10px, 2vw, 24px);
+    bottom: 30vh;
+    z-index: 10;
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(7px, 0.8vw, 10px);
+    letter-spacing: 2.5px;
+    color: var(--white);
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transform: rotate(180deg);
+    opacity: 0.6;
+    text-transform: uppercase;
+    animation: fadeSlideIn 1.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: 0.6s;
+  }
+
+  .credit {
+    position: absolute;
+    bottom: clamp(14px, 2.5vh, 28px);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(11px, 1.2vw, 16px);
+    letter-spacing: 6px;
+    color: var(--white);
+    white-space: nowrap;
+    opacity: 0;
+    animation: fadeSlideInCredit 1.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: 0.7s;
+  }
+
+  .credit::before,
+  .credit::after {
+    content: '·';
+    margin: 0 8px;
+    opacity: 0.5;
+  }
+
+  /* === CORNER MARKS === */
+  .corner-mark {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    z-index: 10;
+    opacity: 0.18;
+  }
+
+  .corner-mark::before,
+  .corner-mark::after {
+    content: '';
+    position: absolute;
+    background: var(--white);
+  }
+
+  .corner-mark.tl { top: 16px; left: 16px; }
+  .corner-mark.tl::before { width: 14px; height: 1px; top: 0; left: 0; }
+  .corner-mark.tl::after { width: 1px; height: 14px; top: 0; left: 0; }
+
+  .corner-mark.tr { top: 16px; right: 16px; }
+  .corner-mark.tr::before { width: 14px; height: 1px; top: 0; right: 0; }
+  .corner-mark.tr::after { width: 1px; height: 14px; top: 0; right: 0; }
+
+  .corner-mark.bl { bottom: 16px; left: 16px; }
+  .corner-mark.bl::before { width: 14px; height: 1px; bottom: 0; left: 0; }
+  .corner-mark.bl::after { width: 1px; height: 14px; bottom: 0; left: 0; }
+
+  .corner-mark.br { bottom: 16px; right: 16px; }
+  .corner-mark.br::before { width: 14px; height: 1px; bottom: 0; right: 0; }
+  .corner-mark.br::after { width: 1px; height: 14px; bottom: 0; right: 0; }
+
+  /* === OVERLAYS === */
+  .noise {
+    position: absolute;
+    inset: 0;
+    z-index: 8;
+    opacity: 0.04;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 128px;
+    mix-blend-mode: overlay;
+  }
+
+  .glow {
+    position: absolute;
+    inset: 0;
+    z-index: 7;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse at 50% 20%, rgba(255,0,102,0.1) 0%, transparent 55%),
+      radial-gradient(ellipse at 50% 90%, rgba(0,229,204,0.08) 0%, transparent 40%);
+  }
+
+  .vignette {
+    position: absolute;
+    inset: 0;
+    z-index: 7;
+    pointer-events: none;
+    background: radial-gradient(ellipse at 50% 50%, transparent 50%, rgba(0,0,0,0.25) 100%);
+  }
+
+  .poster::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 9;
+    pointer-events: none;
+    background: radial-gradient(
+      circle 300px at var(--mx) var(--my),
+      rgba(255,255,255,0.07) 0%,
+      rgba(255,200,230,0.02) 40%,
+      transparent 100%
+    );
+    transition: opacity 0.4s ease;
+    opacity: 0;
+  }
+
+  .poster:hover::after {
+    opacity: 1;
+  }
+
+  .scanlines {
+    position: absolute;
+    inset: 0;
+    z-index: 8;
+    pointer-events: none;
+    opacity: 0.012;
+    background: repeating-linear-gradient(0deg, transparent 0px, transparent 2px, rgba(0,0,0,0.3) 2px, rgba(0,0,0,0.3) 4px);
+  }
+
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(-12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeSlideInCredit {
+    from { opacity: 0; transform: translateX(-50%) translateY(12px); }
+    to { opacity: 0.85; transform: translateX(-50%) translateY(0); }
+  }
+
+  /* === GENDER SYMBOLS === */
+  .symbol-female {
+    position: absolute;
+    top: 55%;
+    left: 25%;
+    z-index: 5;
+    opacity: 0.04;
+    animation: symbolFloat 10s ease-in-out infinite;
+  }
+
+  .symbol-male {
+    position: absolute;
+    top: 30%;
+    right: 22%;
+    z-index: 5;
+    opacity: 0.04;
+    animation: symbolFloat 10s ease-in-out 3s infinite;
+  }
+
+  @keyframes symbolFloat {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-8px) rotate(3deg); }
+  }
+</style>
 </head>
 <body>
 
-<div class="body-wrapper min-h-screen flex justify-center items-center p-4">
+<div class="poster" id="poster">
 
-    <div class="weather-widget-container relative w-full max-w-sm sm:max-w-md">
-        <div class="weather-widget relative text-white bg-gradient-to-br from-purple-700/70 via-indigo-800/60 to-blue-900/70 backdrop-blur-lg shadow-2xl rounded-3xl p-6 overflow-hidden border border-white/10">
-            <div id="cloud-container" class="absolute top-0 right-0 w-36 h-36 sm:w-40 sm:h-40 z-30 cursor-pointer rounded-tr-3xl overflow-hidden">
-                <div id="cloud-tooltip" class="tooltip absolute top-20 right-2 sm:top-24 sm:right-4 bg-black/70 text-white px-3 py-1.5 rounded-md text-xs opacity-0 transition-opacity duration-300 pointer-events-none z-40 shadow-lg">
-                    Click clouds for a surprise!
-                    <div class="absolute -top-1 right-3 w-3 h-3 bg-black/70 transform rotate-45"></div>
-                </div>
-            </div>
+  <!-- Background -->
+  <div class="bg-gradient"></div>
+  <div class="bg-mesh"></div>
 
-            <div class="relative z-20">
-                <div class="text-center mb-4">
-                    <h1 class="header-title text-2xl font-bold mb-2">Weather & Clouds</h1>
-                    <p class="text-xs opacity-70">Real-time weather information</p>
-                </div>
-                
-                <div class="location-search mb-4">
-                    <div class="flex gap-2">
-                        <input 
-                            type="text" 
-                            id="locationInput" 
-                            placeholder="Search city..."
-                            class="flex-1 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl px-3 py-2 text-sm text-white placeholder-white/50 focus:outline-none focus:border-white/40 transition-all"
-                        >
-                        <button 
-                            id="searchBtn"
-                            class="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl px-3 py-2 text-sm hover:bg-white/20 transition-all"
-                        >
-                            🔍
-                        </button>
-                        <button 
-                            id="geolocateBtn"
-                            title="Use my location"
-                            class="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl px-3 py-2 text-sm hover:bg-white/20 transition-all"
-                        >
-                            📍
-                        </button>
-                    </div>
-                    <div id="suggestionsDropdown" class="suggestions-dropdown hidden"></div>
-                </div>
+  <!-- Light streaks -->
+  <div class="streak streak-1"></div>
+  <div class="streak streak-2"></div>
+  <div class="streak streak-3"></div>
 
-                <div class="date-time text-sm font-light opacity-80 mb-1 tracking-wide animate-fadeInUp" id="dateTime">Loading...</div>
+  <!-- Circle -->
+  <div class="circle-outer"></div>
+  <div class="circle"></div>
 
-                <div class="current-weather flex items-center mb-2">
-                    <div class="weather-icon-main text-5xl mr-3" id="weatherIcon">⛅</div>
-                    <div class="temp text-5xl font-semibold">
-                        <span class="bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-300 animate-fadeInScaleUp delay-100" id="temperature">--°C</span>
-                    </div>
-                </div>
+  <!-- Gender symbols -->
+  <svg class="symbol-female" width="50" height="70" viewBox="0 0 50 70" fill="none">
+    <circle cx="25" cy="22" r="18" stroke="white" stroke-width="2.5" fill="none"/>
+    <line x1="25" y1="40" x2="25" y2="65" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="16" y1="54" x2="34" y2="54" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+  </svg>
 
-                <div class="location text-lg opacity-90 mb-4 tracking-wide animate-fadeInUp delay-200" id="location">Loading...</div>
+  <svg class="symbol-male" width="55" height="55" viewBox="0 0 55 55" fill="none">
+    <circle cx="22" cy="33" r="18" stroke="white" stroke-width="2.5" fill="none"/>
+    <line x1="35" y1="20" x2="50" y2="5" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="38" y1="5" x2="50" y2="5" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="50" y1="5" x2="50" y2="17" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+  </svg>
 
-                <div class="sun-info bg-black/30 backdrop-blur-sm rounded-2xl p-3 sm:p-4 flex justify-between items-center mb-4 border border-white/10 shadow-md animate-fadeInUp delay-300">
-                    <div class="sunrise text-center">
-                        <div class="sun-icon text-xl mb-1">☀️</div>
-                        <div class="text-xs opacity-80" id="sunriseTime">--:--</div>
-                    </div>
-                    <div class="day-length text-center text-sm opacity-90" id="dayLength">-- h -- m</div>
-                    <div class="sunset text-center">
-                        <div class="sun-icon text-xl mb-1">🌙</div>
-                        <div class="text-xs opacity-80" id="sunsetTime">--:--</div>
-                    </div>
-                </div>
+  <!-- FEMALE DOG — centered, offset below circle center -->
+  <div class="dog-container">
+    <svg class="dog-svg" viewBox="0 0 340 380" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="dogGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#cc3377;stop-opacity:1" />
+          <stop offset="25%" style="stop-color:#994466;stop-opacity:1" />
+          <stop offset="55%" style="stop-color:#556060;stop-opacity:1" />
+          <stop offset="80%" style="stop-color:#337070;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#1a8877;stop-opacity:1" />
+        </linearGradient>
+        <linearGradient id="dogShadow" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#992255;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#0d5555;stop-opacity:1" />
+        </linearGradient>
+        <linearGradient id="dogHighlight" x1="30%" y1="0%" x2="70%" y2="100%">
+          <stop offset="0%" style="stop-color:#ffaacc;stop-opacity:0.35" />
+          <stop offset="100%" style="stop-color:#33ddbb;stop-opacity:0.1" />
+        </linearGradient>
+        <linearGradient id="dogEar" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#aa2266;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#226666;stop-opacity:1" />
+        </linearGradient>
+        <radialGradient id="dogChest" cx="50%" cy="30%" r="60%">
+          <stop offset="0%" style="stop-color:#ffccdd;stop-opacity:0.2" />
+          <stop offset="100%" style="stop-color:transparent;stop-opacity:0" />
+        </radialGradient>
+        <filter id="dogSoft">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+          <feOffset dx="2" dy="5"/>
+          <feComponentTransfer><feFuncA type="linear" slope="0.12"/></feComponentTransfer>
+          <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+      <g filter="url(#dogSoft)">
+        <ellipse cx="170" cy="260" rx="80" ry="70" fill="url(#dogGrad)"/>
+        <ellipse cx="125" cy="310" rx="42" ry="30" fill="url(#dogShadow)" transform="rotate(-8, 125, 310)"/>
+        <ellipse cx="215" cy="310" rx="42" ry="30" fill="url(#dogShadow)" transform="rotate(8, 215, 310)"/>
+        <path d="M 135 290 Q 130 320 128 345 Q 126 358 130 365 Q 136 372 144 365 Q 148 358 146 345 Q 144 320 142 295" fill="url(#dogGrad)"/>
+        <path d="M 195 290 Q 192 320 190 345 Q 188 358 192 365 Q 198 372 206 365 Q 210 358 208 345 Q 206 320 202 295" fill="url(#dogGrad)"/>
+        <ellipse cx="137" cy="367" rx="14" ry="7" fill="url(#dogShadow)"/>
+        <ellipse cx="199" cy="367" rx="14" ry="7" fill="url(#dogShadow)"/>
+        <circle cx="130" cy="367" r="3.5" fill="rgba(0,180,160,0.15)"/>
+        <circle cx="137" cy="369" r="3.5" fill="rgba(0,180,160,0.15)"/>
+        <circle cx="144" cy="367" r="3.5" fill="rgba(0,180,160,0.15)"/>
+        <circle cx="192" cy="367" r="3.5" fill="rgba(0,180,160,0.15)"/>
+        <circle cx="199" cy="369" r="3.5" fill="rgba(0,180,160,0.15)"/>
+        <circle cx="206" cy="367" r="3.5" fill="rgba(0,180,160,0.15)"/>
+        <ellipse cx="100" cy="338" rx="16" ry="8" fill="url(#dogShadow)" transform="rotate(-15, 100, 338)"/>
+        <ellipse cx="240" cy="338" rx="16" ry="8" fill="url(#dogShadow)" transform="rotate(15, 240, 338)"/>
+        <path d="M 140 230 Q 145 200 155 180 Q 165 165 175 162 Q 185 165 195 180 Q 205 200 210 230" fill="url(#dogGrad)"/>
+        <ellipse cx="170" cy="240" rx="35" ry="40" fill="url(#dogChest)"/>
+        <ellipse cx="170" cy="140" rx="52" ry="46" fill="url(#dogGrad)"/>
+        <ellipse cx="170" cy="162" rx="28" ry="20" fill="url(#dogGrad)"/>
+        <ellipse cx="170" cy="158" rx="22" ry="14" fill="url(#dogHighlight)"/>
+        <ellipse cx="170" cy="155" rx="9" ry="6" fill="rgba(20,20,30,0.5)"/>
+        <circle cx="168" cy="153" r="2.5" fill="rgba(255,255,255,0.15)"/>
+        <path d="M 170 161 L 170 168 Q 164 172 158 170" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="1.2" stroke-linecap="round"/>
+        <path d="M 170 168 Q 176 172 182 170" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="1.2" stroke-linecap="round"/>
+        <ellipse cx="152" cy="132" rx="8" ry="9" fill="rgba(10,10,20,0.3)"/>
+        <ellipse cx="188" cy="132" rx="8" ry="9" fill="rgba(10,10,20,0.3)"/>
+        <circle cx="153" cy="131" r="4.5" fill="rgba(0,0,0,0.5)"/>
+        <circle cx="187" cy="131" r="4.5" fill="rgba(0,0,0,0.5)"/>
+        <circle cx="155" cy="129" r="2" fill="rgba(255,255,255,0.45)"/>
+        <circle cx="189" cy="129" r="2" fill="rgba(255,255,255,0.45)"/>
+        <circle cx="152" cy="133" r="1" fill="rgba(255,255,255,0.2)"/>
+        <circle cx="186" cy="133" r="1" fill="rgba(255,255,255,0.2)"/>
+        <path d="M 142 122 Q 150 118 160 121" fill="none" stroke="rgba(0,0,0,0.08)" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M 198 122 Q 190 118 180 121" fill="none" stroke="rgba(0,0,0,0.08)" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M 125 130 Q 108 115 95 125 Q 80 138 85 160 Q 88 175 100 178 Q 112 180 120 168 Q 128 155 130 140" fill="url(#dogEar)"/>
+        <path d="M 215 130 Q 232 115 245 125 Q 260 138 255 160 Q 252 175 240 178 Q 228 180 220 168 Q 212 155 210 140" fill="url(#dogEar)"/>
+        <path d="M 120 140 Q 108 130 100 140 Q 92 152 98 165 Q 105 170 112 163 Q 118 155 120 145" fill="rgba(255,100,170,0.15)"/>
+        <path d="M 220 140 Q 232 130 240 140 Q 248 152 242 165 Q 235 170 228 163 Q 222 155 220 145" fill="rgba(255,100,170,0.15)"/>
+        <path d="M 250 250 Q 275 230 290 200 Q 300 180 295 165 Q 288 158 280 165 Q 275 178 270 195" fill="url(#dogGrad)"/>
+        <circle cx="292" cy="170" r="6" fill="rgba(0,220,200,0.2)"/>
+      </g>
+      <ellipse cx="160" cy="245" rx="45" ry="35" fill="url(#dogHighlight)"/>
+      <ellipse cx="162" cy="128" rx="30" ry="22" fill="rgba(255,200,230,0.12)"/>
+      <ellipse cx="170" cy="118" rx="6" ry="5" fill="rgba(0,200,180,0.12)"/>
+      <circle cx="147" cy="158" r="1.2" fill="rgba(0,0,0,0.06)"/>
+      <circle cx="142" cy="162" r="1.2" fill="rgba(0,0,0,0.06)"/>
+      <circle cx="193" cy="158" r="1.2" fill="rgba(0,0,0,0.06)"/>
+      <circle cx="198" cy="162" r="1.2" fill="rgba(0,0,0,0.06)"/>
+      <ellipse cx="170" cy="182" rx="18" ry="5" fill="rgba(255,0,102,0.25)"/>
+      <circle cx="170" cy="182" r="4" fill="rgba(255,50,130,0.35)"/>
+      <path d="M 158 180 Q 152 175 148 180 Q 152 185 158 183" fill="rgba(255,80,150,0.3)"/>
+      <path d="M 182 180 Q 188 175 192 180 Q 188 185 182 183" fill="rgba(255,80,150,0.3)"/>
+    </svg>
+  </div>
 
-                <div class="precipitation bg-white/10 backdrop-blur-sm rounded-xl p-3 flex items-center mb-4 border border-white/5 shadow-sm animate-fadeInUp delay-400">
-                    <div class="precip-icon text-2xl mr-2 text-blue-300 drop-shadow-lg animate-gentleBob">🌧️</div>
-                    <div class="text-sm opacity-90" id="precipitationChance">Rain --%</div>
-                </div>
+  <!-- MALE CAT — centered, offset above circle center -->
+  <div class="cat-container">
+    <svg class="cat-svg" viewBox="0 0 130 150" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="catGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" style="stop-color:#00ffdd;stop-opacity:1" />
+          <stop offset="30%" style="stop-color:#44eedd;stop-opacity:0.95" />
+          <stop offset="60%" style="stop-color:#77ddcc;stop-opacity:0.9" />
+          <stop offset="100%" style="stop-color:#ff66bb;stop-opacity:0.75" />
+        </linearGradient>
+        <linearGradient id="catDark" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" style="stop-color:#00ccaa;stop-opacity:0.8" />
+          <stop offset="100%" style="stop-color:#cc4488;stop-opacity:0.6" />
+        </linearGradient>
+        <radialGradient id="catGlow" cx="50%" cy="40%" r="55%">
+          <stop offset="0%" style="stop-color:#aaffee;stop-opacity:0.25" />
+          <stop offset="100%" style="stop-color:transparent;stop-opacity:0" />
+        </radialGradient>
+        <filter id="catSoft">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="1.5"/>
+          <feOffset dx="0" dy="3"/>
+          <feComponentTransfer><feFuncA type="linear" slope="0.2"/></feComponentTransfer>
+          <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+      <ellipse cx="65" cy="80" rx="45" ry="55" fill="url(#catGlow)"/>
+      <g filter="url(#catSoft)">
+        <path d="M 95 105 Q 110 90 118 70 Q 122 55 118 42 Q 114 35 108 40 Q 105 50 104 65 Q 102 80 98 95" fill="url(#catGrad)"/>
+        <ellipse cx="65" cy="105" rx="30" ry="28" fill="url(#catGrad)"/>
+        <ellipse cx="48" cy="122" rx="16" ry="10" fill="url(#catDark)" transform="rotate(-5, 48, 122)"/>
+        <ellipse cx="82" cy="122" rx="16" ry="10" fill="url(#catDark)" transform="rotate(5, 82, 122)"/>
+        <path d="M 52 110 Q 50 120 48 132 Q 47 138 50 141 Q 54 143 57 140 Q 58 136 57 130 Q 56 120 55 112" fill="url(#catGrad)"/>
+        <path d="M 75 110 Q 77 120 78 132 Q 79 138 76 141 Q 72 143 69 140 Q 68 136 69 130 Q 70 120 72 112" fill="url(#catGrad)"/>
+        <ellipse cx="53" cy="142" rx="7" ry="4" fill="url(#catDark)"/>
+        <ellipse cx="73" cy="142" rx="7" ry="4" fill="url(#catDark)"/>
+        <ellipse cx="40" cy="130" rx="8" ry="5" fill="url(#catDark)" transform="rotate(-10, 40, 130)"/>
+        <ellipse cx="86" cy="130" rx="8" ry="5" fill="url(#catDark)" transform="rotate(10, 86, 130)"/>
+        <path d="M 52 92 Q 55 78 60 72 Q 65 68 70 72 Q 75 78 78 92" fill="url(#catGrad)"/>
+        <ellipse cx="65" cy="95" rx="15" ry="12" fill="rgba(255,255,255,0.1)"/>
+        <ellipse cx="65" cy="55" rx="26" ry="23" fill="url(#catGrad)"/>
+        <path d="M 46 42 L 38 15 Q 37 12 40 14 L 52 35" fill="url(#catGrad)"/>
+        <path d="M 84 42 L 92 15 Q 93 12 90 14 L 78 35" fill="url(#catGrad)"/>
+        <path d="M 47 40 L 42 22 Q 41 20 43 21 L 51 36" fill="rgba(255,100,170,0.25)"/>
+        <path d="M 83 40 L 88 22 Q 89 20 87 21 L 79 36" fill="rgba(255,100,170,0.25)"/>
+        <ellipse cx="65" cy="62" rx="12" ry="8" fill="rgba(255,255,255,0.08)"/>
+        <path d="M 63 59 L 65 57 L 67 59 Z" fill="rgba(255,100,150,0.5)"/>
+        <path d="M 65 60 L 65 63 Q 62 65 59 64" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="0.8" stroke-linecap="round"/>
+        <path d="M 65 63 Q 68 65 71 64" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="0.8" stroke-linecap="round"/>
+        <ellipse cx="56" cy="50" rx="6" ry="7" fill="rgba(10,10,20,0.25)"/>
+        <ellipse cx="74" cy="50" rx="6" ry="7" fill="rgba(10,10,20,0.25)"/>
+        <ellipse cx="56" cy="50" rx="2.5" ry="5.5" fill="rgba(0,0,0,0.5)"/>
+        <ellipse cx="74" cy="50" rx="2.5" ry="5.5" fill="rgba(0,0,0,0.5)"/>
+        <circle cx="57.5" cy="48" r="1.8" fill="rgba(255,255,255,0.5)"/>
+        <circle cx="75.5" cy="48" r="1.8" fill="rgba(255,255,255,0.5)"/>
+        <circle cx="55" cy="52" r="0.8" fill="rgba(255,255,255,0.25)"/>
+        <circle cx="73" cy="52" r="0.8" fill="rgba(255,255,255,0.25)"/>
+        <line x1="50" y1="60" x2="28" y2="56" stroke="rgba(255,255,255,0.15)" stroke-width="0.7" stroke-linecap="round"/>
+        <line x1="50" y1="62" x2="26" y2="62" stroke="rgba(255,255,255,0.12)" stroke-width="0.7" stroke-linecap="round"/>
+        <line x1="50" y1="64" x2="28" y2="68" stroke="rgba(255,255,255,0.1)" stroke-width="0.7" stroke-linecap="round"/>
+        <line x1="80" y1="60" x2="102" y2="56" stroke="rgba(255,255,255,0.15)" stroke-width="0.7" stroke-linecap="round"/>
+        <line x1="80" y1="62" x2="104" y2="62" stroke="rgba(255,255,255,0.12)" stroke-width="0.7" stroke-linecap="round"/>
+        <line x1="80" y1="64" x2="102" y2="68" stroke="rgba(255,255,255,0.1)" stroke-width="0.7" stroke-linecap="round"/>
+      </g>
+      <path d="M 60 40 Q 65 36 70 40" fill="none" stroke="rgba(0,180,160,0.12)" stroke-width="1.2"/>
+      <path d="M 58 43 Q 65 38 72 43" fill="none" stroke="rgba(0,180,160,0.08)" stroke-width="1"/>
+      <path d="M 57 46 Q 65 42 73 46" fill="none" stroke="rgba(0,180,160,0.06)" stroke-width="0.8"/>
+      <ellipse cx="62" cy="48" rx="14" ry="10" fill="rgba(255,255,255,0.08)"/>
+      <circle cx="116" cy="45" r="4" fill="rgba(0,220,200,0.2)"/>
+    </svg>
+  </div>
 
-                <div class="humidity-wind flex justify-between text-sm opacity-90 mb-5 animate-fadeInUp delay-500">
-                    <div id="humidity">Humidity: --%</div>
-                    <div id="windSpeed">Wind: -- km/h</div>
-                </div>
+  <!-- Particles -->
+  <div class="particles" id="particles"></div>
 
-                <div class="forecast flex flex-nowrap justify-between pb-2 mb-4" id="forecastContainer">
-                </div>
+  <!-- Typography -->
+  <div class="title">
+    <h1>ZOLEOLE</h1>
+    <div class="handle">@ZPOTNYK</div>
+  </div>
 
-                <a href="meteorama/" class="meteorama-link block text-center py-3 px-4 rounded-xl border border-white/20 text-white font-semibold text-sm shadow-lg hover:shadow-xl transition-all">
-                    ☁️ Play Cloud Memory Game - Meteorama
-                </a>
+  <div class="number">12°</div>
 
-                <div id="loadingIndicator" class="hidden absolute inset-0 bg-black/50 backdrop-blur-sm rounded-3xl flex items-center justify-center z-40">
-                    <div class="loading-spinner"></div>
-                </div>
-            </div>
-        </div>
-    </div>
+  <div class="side-text-left">FEB 2026</div>
+  <div class="side-text-right">MASTER OF DESASTER</div>
+
+  <div class="credit">Zuleica Ojeda &nbsp;&copy;&nbsp; 2026</div>
+
+  <!-- Corner marks (all four) -->
+  <div class="corner-mark tl"></div>
+  <div class="corner-mark tr"></div>
+  <div class="corner-mark bl"></div>
+  <div class="corner-mark br"></div>
+
+  <!-- Overlays -->
+  <div class="glow"></div>
+  <div class="vignette"></div>
+  <div class="scanlines"></div>
+  <div class="noise"></div>
 </div>
 
-<script type="module">
-    import * as THREE from "https://esm.sh/three";
-    import { OrbitControls } from "https://esm.sh/three/examples/jsm/controls/OrbitControls.js";
+<script>
+  const poster = document.getElementById('poster');
 
-    const weatherAPI = {
-        getWeatherEmoji(code, isDay = true) {
-            if (code === 0) return isDay ? '☀️' : '🌙';
-            if (code === 1) return isDay ? '🌤️' : '🌙';
-            if (code === 2) return '⛅';
-            if (code === 3) return '☁️';
-            if ([45, 48].includes(code)) return '🌫️';
-            if ([51, 53, 55, 56, 57].includes(code)) return '🌦️';
-            if ([61, 63, 65, 66, 67].includes(code)) return '🌧️';
-            if ([71, 73, 75, 77, 85, 86].includes(code)) return '🌨️';
-            if ([80, 81, 82].includes(code)) return '🌧️';
-            if ([95, 96, 99].includes(code)) return '⛈️';
-            return '☁️';
-        },
+  poster.addEventListener('mousemove', (e) => {
+    const x = (e.clientX / window.innerWidth) * 100;
+    const y = (e.clientY / window.innerHeight) * 100;
+    poster.style.setProperty('--mx', x + '%');
+    poster.style.setProperty('--my', y + '%');
 
-        async searchLocations(query) {
-            if (!query || query.length < 2) return [];
-            
-            try {
-                const response = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=5&language=en&format=json`);
-                const data = await response.json();
-                return data.results || [];
-            } catch (error) {
-                console.error('Location search error:', error);
-                return [];
-            }
-        },
+    const cx = (x - 50) / 50;
+    const cy = (y - 50) / 50;
 
-        async getWeather(latitude, longitude, locationName = null) {
-            try {
-                const response = await fetch(
-                    `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,precipitation,weather_code,wind_speed_10m,is_day&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,precipitation_probability_max&timezone=auto`
-                );
-                const data = await response.json();
-                
-                if (!locationName) {
-                    const geoResponse = await fetch(`https://geocoding-api.open-meteo.com/v1/reverse?latitude=${latitude}&longitude=${longitude}&language=en&format=json`);
-                    const geoData = await geoResponse.json();
-                    if (geoData.results && geoData.results[0]) {
-                        locationName = `${geoData.results[0].name}, ${geoData.results[0].country}`;
-                    } else {
-                        locationName = `${latitude.toFixed(2)}, ${longitude.toFixed(2)}`;
-                    }
-                }
+    const circle = poster.querySelector('.circle');
+    const dog = poster.querySelector('.dog-container');
+    const cat = poster.querySelector('.cat-container');
 
-                return { ...data, locationName };
-            } catch (error) {
-                console.error('Weather fetch error:', error);
-                return null;
-            }
-        }
-    };
+    if (circle) circle.style.transform = `translate(calc(-50% + ${cx * 5}px), calc(-50% + ${cy * 5}px))`;
+    if (dog) dog.style.transform = `translate(calc(-50% + ${cx * -4}px), calc(-50% + ${cy * -3}px))`;
+    if (cat) cat.style.transform = `translate(calc(-50% + ${cx * 8}px), calc(-50% + ${cy * 7}px))`;
+  });
 
-    const ui = {
-        currentTimezone: 'America/Mexico_City',
-        
-        updateDateTime(timezone = null) {
-            if (timezone) {
-                this.currentTimezone = timezone;
-            }
-            const now = new Date();
-            const optionsDate = { weekday: 'long', timeZone: this.currentTimezone };
-            const optionsTime = { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: this.currentTimezone };
-            const dateTimeEl = document.getElementById('dateTime');
-            if (dateTimeEl) {
-                try {
-                    dateTimeEl.textContent = `${now.toLocaleDateString('en-US', optionsDate)}, ${now.toLocaleTimeString('en-US', optionsTime)}`;
-                } catch (e) {
-                    console.error('Timezone error:', e);
-                    dateTimeEl.textContent = `${now.toLocaleDateString(undefined, { weekday: 'long' })}, ${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}`;
-                }
-            }
-        },
+  // Particles
+  const particlesContainer = document.getElementById('particles');
+  const colors = [
+    'rgba(255,150,200,0.6)',
+    'rgba(0,229,204,0.5)',
+    'rgba(255,255,255,0.35)',
+    'rgba(255,100,170,0.5)',
+    'rgba(100,255,230,0.4)',
+  ];
 
-        formatTime(dateString) {
-            const date = new Date(dateString);
-            return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
-        },
+  function createParticle() {
+    const p = document.createElement('div');
+    p.classList.add('particle');
+    const size = Math.random() * 3.5 + 1.5;
+    const x = Math.random() * 100;
+    const dx = (Math.random() - 0.5) * 100;
+    const duration = Math.random() * 10 + 12;
+    const delay = Math.random() * 8;
+    const color = colors[Math.floor(Math.random() * colors.length)];
 
-        calculateDayLength(sunrise, sunset) {
-            const sunriseTime = new Date(sunrise);
-            const sunsetTime = new Date(sunset);
-            const diff = sunsetTime - sunriseTime;
-            const hours = Math.floor(diff / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            return `${hours} h ${minutes} m`;
-        },
+    p.style.cssText = `
+      width: ${size}px;
+      height: ${size}px;
+      left: ${x}%;
+      bottom: -10px;
+      background: ${color};
+      box-shadow: 0 0 ${size * 3}px ${color};
+      --dx: ${dx}px;
+      animation-duration: ${duration}s;
+      animation-delay: ${delay}s;
+    `;
 
-        getDayName(dateString, index) {
-            if (index === 0) return 'Today';
-            const date = new Date(dateString);
-            return date.toLocaleDateString('en', { weekday: 'short' });
-        },
+    particlesContainer.appendChild(p);
+    setTimeout(() => {
+      p.remove();
+      createParticle();
+    }, (duration + delay) * 1000);
+  }
 
-        updateWeatherDisplay(weatherData) {
-            if (!weatherData) return;
-
-            const { current, daily, locationName, timezone } = weatherData;
-
-            // Actualizar zona horaria
-            if (timezone) {
-                this.updateDateTime(timezone);
-            }
-
-            document.getElementById('location').textContent = locationName;
-
-            document.getElementById('temperature').textContent = `${Math.round(current.temperature_2m)}°C`;
-            document.getElementById('weatherIcon').textContent = weatherAPI.getWeatherEmoji(current.weather_code, current.is_day);
-            document.getElementById('humidity').textContent = `Humidity: ${current.relative_humidity_2m}%`;
-            document.getElementById('windSpeed').textContent = `Wind: ${Math.round(current.wind_speed_10m)} km/h`;
-            document.getElementById('precipitationChance').textContent = `Rain ${daily.precipitation_probability_max[0]}%`;
-
-            document.getElementById('sunriseTime').textContent = this.formatTime(daily.sunrise[0]);
-            document.getElementById('sunsetTime').textContent = this.formatTime(daily.sunset[0]);
-            document.getElementById('dayLength').textContent = this.calculateDayLength(daily.sunrise[0], daily.sunset[0]);
-
-            const forecastContainer = document.getElementById('forecastContainer');
-            forecastContainer.innerHTML = '';
-            
-            for (let i = 0; i < Math.min(4, daily.time.length); i++) {
-                const forecastDay = document.createElement('div');
-                forecastDay.className = `forecast-day bg-white/5 backdrop-blur-sm rounded-xl p-3 w-20 text-center border border-white/10 shadow-sm hover:bg-white/10 transition-all duration-200 cursor-pointer transform hover:-translate-y-1 animate-fadeInUp delay-${500 + i * 100}`;
-                
-                forecastDay.innerHTML = `
-                    <div class="day-name text-xs font-medium mb-1 opacity-80">${this.getDayName(daily.time[i], i)}</div>
-                    <div class="forecast-icon text-2xl my-1 drop-shadow-md">${weatherAPI.getWeatherEmoji(daily.weather_code[i])}</div>
-                    <div class="high-temp text-sm font-semibold bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-300">${Math.round(daily.temperature_2m_max[i])}°</div>
-                    <div class="low-temp text-xs opacity-70">${Math.round(daily.temperature_2m_min[i])}°</div>
-                `;
-                
-                forecastContainer.appendChild(forecastDay);
-            }
-
-            // Actualizar visibilidad de las nubes 3D según el clima actual
-            if (window.cloudGroup) {
-                const weatherCode = current.weather_code;
-                // Mostrar nubes si hay cualquier tipo de nubosidad (código >= 1)
-                // 0 = despejado, 1 = mayormente despejado, 2+ = nublado/lluvia/etc
-                const isCloudy = weatherCode >= 1;
-                const isRainy = [51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82].includes(weatherCode);
-                
-                window.cloudGroup.visible = isCloudy;
-                
-                // Ocultar/mostrar el contenedor y tooltip
-                const cloudContainer = document.getElementById('cloud-container');
-                const cloudTooltip = document.getElementById('cloud-tooltip');
-                if (cloudContainer) {
-                    cloudContainer.style.display = isCloudy ? 'block' : 'none';
-                }
-                if (cloudTooltip) {
-                    cloudTooltip.style.display = isCloudy ? 'block' : 'none';
-                }
-                
-                // Si está lloviendo, activar la lluvia automáticamente
-                if (isRainy && window.cloud1 && window.cloud2) {
-                    window.cloud1.userData.isRaining = true;
-                    window.cloud2.userData.isRaining = true;
-                    if (window.cloud1.userData.rainGroup) window.cloud1.userData.rainGroup.visible = true;
-                    if (window.cloud2.userData.rainGroup) window.cloud2.userData.rainGroup.visible = true;
-                } else if (window.cloud1 && window.cloud2) {
-                    window.cloud1.userData.isRaining = false;
-                    window.cloud2.userData.isRaining = false;
-                    if (window.cloud1.userData.rainGroup) window.cloud1.userData.rainGroup.visible = false;
-                    if (window.cloud2.userData.rainGroup) window.cloud2.userData.rainGroup.visible = false;
-                }
-            }
-        },
-
-        showLoading() {
-            document.getElementById('loadingIndicator').classList.remove('hidden');
-        },
-
-        hideLoading() {
-            document.getElementById('loadingIndicator').classList.add('hidden');
-        }
-    };
-
-    const locationHandler = {
-        async getUserLocation() {
-            return new Promise((resolve, reject) => {
-                if (!navigator.geolocation) {
-                    reject(new Error('Geolocation not supported'));
-                    return;
-                }
-
-                navigator.geolocation.getCurrentPosition(
-                    position => resolve({
-                        latitude: position.coords.latitude,
-                        longitude: position.coords.longitude
-                    }),
-                    error => reject(error)
-                );
-            });
-        },
-
-        async searchAndSelectLocation() {
-            const input = document.getElementById('locationInput');
-            const query = input.value.trim();
-            
-            if (!query) return;
-
-            ui.showLoading();
-            const locations = await weatherAPI.searchLocations(query);
-            ui.hideLoading();
-
-            const dropdown = document.getElementById('suggestionsDropdown');
-            
-            if (locations.length === 0) {
-                dropdown.innerHTML = '<div class="suggestion-item">No locations found</div>';
-                dropdown.classList.remove('hidden');
-                setTimeout(() => dropdown.classList.add('hidden'), 2000);
-                return;
-            }
-
-            dropdown.innerHTML = '';
-            locations.forEach(location => {
-                const item = document.createElement('div');
-                item.className = 'suggestion-item';
-                item.textContent = `${location.name}, ${location.admin1 || ''} ${location.country}`.replace(/\s+/g, ' ').trim();
-                item.addEventListener('click', async () => {
-                    dropdown.classList.add('hidden');
-                    input.value = '';
-                    await this.loadWeatherForLocation(location.latitude, location.longitude, item.textContent);
-                });
-                dropdown.appendChild(item);
-            });
-            
-            dropdown.classList.remove('hidden');
-        },
-
-        async loadWeatherForLocation(latitude, longitude, locationName = null) {
-            ui.showLoading();
-            const weatherData = await weatherAPI.getWeather(latitude, longitude, locationName);
-            ui.updateWeatherDisplay(weatherData);
-            ui.hideLoading();
-        },
-
-        async loadCurrentLocation() {
-            try {
-                ui.showLoading();
-                const location = await this.getUserLocation();
-                await this.loadWeatherForLocation(location.latitude, location.longitude);
-            } catch (error) {
-                console.error('Geolocation error:', error);
-                // Fallback a Ciudad de México
-                await this.loadWeatherForLocation(19.4326, -99.1332, 'Mexico City, Mexico');
-            } finally {
-                ui.hideLoading();
-            }
-        }
-    };
-
-    ui.updateDateTime();
-    setInterval(() => ui.updateDateTime(), 60000);
-
-    document.getElementById('searchBtn').addEventListener('click', () => locationHandler.searchAndSelectLocation());
-    document.getElementById('locationInput').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') locationHandler.searchAndSelectLocation();
-    });
-    
-    let searchTimeout;
-    document.getElementById('locationInput').addEventListener('input', (e) => {
-        clearTimeout(searchTimeout);
-        const dropdown = document.getElementById('suggestionsDropdown');
-        
-        if (e.target.value.length < 2) {
-            dropdown.classList.add('hidden');
-            return;
-        }
-        
-        searchTimeout = setTimeout(() => locationHandler.searchAndSelectLocation(), 500);
-    });
-
-    document.getElementById('geolocateBtn').addEventListener('click', () => locationHandler.loadCurrentLocation());
-
-    document.addEventListener('click', (e) => {
-        if (!e.target.closest('.location-search')) {
-            document.getElementById('suggestionsDropdown').classList.add('hidden');
-        }
-    });
-
-    locationHandler.loadCurrentLocation();
-
-    const container = document.getElementById('cloud-container');
-
-    if (container) {
-        const containerRect = container.getBoundingClientRect();
-        const scene = new THREE.Scene();
-        const cameraAspect = (containerRect.width > 0 && containerRect.height > 0) ? containerRect.width / containerRect.height : 1;
-        const camera = new THREE.PerspectiveCamera(60, cameraAspect, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-
-        renderer.setSize(containerRect.width, containerRect.height);
-        renderer.setClearColor(0x000000, 0);
-        container.appendChild(renderer.domElement);
-
-        camera.position.set(0, 0.5, 4.5);
-
-        const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
-        scene.add(ambientLight);
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 2.0);
-        directionalLight.position.set(2, 3, 2);
-        scene.add(directionalLight);
-        const pointLight = new THREE.PointLight(0xaabbee, 0.8, 15);
-        pointLight.position.set(-1, 1, 3);
-        scene.add(pointLight);
-
-        const controls = new OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true;
-        controls.dampingFactor = 0.07;
-        controls.rotateSpeed = 0.8;
-        controls.enableZoom = false;
-        controls.enablePan = false;
-        controls.minPolarAngle = Math.PI / 3;
-        controls.maxPolarAngle = Math.PI / 1.8;
-        controls.target.set(0, 0, 0);
-
-        const cloudGroup = new THREE.Group();
-        scene.add(cloudGroup);
-
-        const cloudMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0xf0f8ff,
-            transparent: true, opacity: 0.85, roughness: 0.6, metalness: 0.0,
-            transmission: 0.1,
-            ior: 1.3,
-            specularIntensity: 0.2,
-            sheen: 0.2, sheenColor: 0xffffff, sheenRoughness: 0.5,
-            clearcoat: 0.05, clearcoatRoughness: 0.3,
-        });
-
-        function createCloudPart(radius, position) {
-            const geometry = new THREE.SphereGeometry(radius, 20, 20);
-            const mesh = new THREE.Mesh(geometry, cloudMaterial);
-            mesh.position.copy(position);
-            return mesh;
-        }
-
-        function createDetailedCloud(x, y, z, scale) {
-            const singleCloudGroup = new THREE.Group();
-            singleCloudGroup.position.set(x, y, z);
-            singleCloudGroup.scale.set(scale, scale, scale);
-            const parts = [
-                { radius: 0.8, position: new THREE.Vector3(0, 0, 0) }, { radius: 0.6, position: new THREE.Vector3(0.7, 0.2, 0.1) },
-                { radius: 0.55, position: new THREE.Vector3(-0.6, 0.1, -0.2) }, { radius: 0.7, position: new THREE.Vector3(0.1, 0.4, -0.3) },
-                { radius: 0.5, position: new THREE.Vector3(0.3, -0.3, 0.2) }, { radius: 0.6, position: new THREE.Vector3(-0.4, -0.2, 0.3) },
-                { radius: 0.45, position: new THREE.Vector3(0.8, -0.1, -0.2) }, { radius: 0.5, position: new THREE.Vector3(-0.7, 0.3, 0.3) },
-            ];
-            parts.forEach(part => singleCloudGroup.add(createCloudPart(part.radius, part.position)));
-            singleCloudGroup.userData = {
-                isRaining: false, rainColor: Math.random() > 0.5 ? 0x87CEFA : 0xB0E0E6,
-                originalPosition: singleCloudGroup.position.clone(), bobOffset: Math.random() * Math.PI * 2,
-                bobSpeed: 0.0005 + Math.random() * 0.0003, bobAmount: 0.15 + Math.random() * 0.1,
-            };
-            return singleCloudGroup;
-        }
-
-        const cloud1 = createDetailedCloud(-0.7, 0.2, 0, 1.0);
-        const cloud2 = createDetailedCloud(0.7, -0.1, 0.3, 0.9);
-        cloudGroup.add(cloud1, cloud2);
-        cloudGroup.position.y = -0.2;
-        cloudGroup.visible = true; // Visible por defecto, se controlará según el clima
-        let autoRotateSpeed = 0.002;
-        
-        // Hacer accesibles globalmente para actualizar según el clima
-        window.cloudGroup = cloudGroup;
-        window.cloud1 = cloud1;
-        window.cloud2 = cloud2;
-
-        function createRaindropsForCloud(cloud) {
-            const rainGroup = new THREE.Group();
-            cloud.add(rainGroup);
-            cloud.userData.rainGroup = rainGroup;
-            const raindropMaterial = new THREE.MeshBasicMaterial({ color: cloud.userData.rainColor, transparent: true, opacity: 0.7 });
-            const localRaindrops = [];
-            for (let i = 0; i < 30; i++) {
-                const raindropGeom = new THREE.CylinderGeometry(0.015, 0.015, 0.25, 6);
-                const raindrop = new THREE.Mesh(raindropGeom, raindropMaterial);
-                raindrop.position.set( (Math.random() - 0.5) * 1.8, -0.8 - Math.random() * 1.5, (Math.random() - 0.5) * 1.8 );
-                raindrop.userData = { originalY: raindrop.position.y - Math.random() * 0.5, speed: 0.08 + Math.random() * 0.05 };
-                localRaindrops.push(raindrop);
-                rainGroup.add(raindrop);
-            }
-            rainGroup.visible = false;
-            return localRaindrops;
-        }
-
-        const raindrops1 = createRaindropsForCloud(cloud1);
-        const raindrops2 = createRaindropsForCloud(cloud2);
-
-        const raycaster = new THREE.Raycaster();
-        const mouse = new THREE.Vector2();
-
-        renderer.domElement.addEventListener('click', (event) => {
-            const rect = renderer.domElement.getBoundingClientRect();
-            mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-            mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
-            raycaster.setFromCamera(mouse, camera);
-            const intersects = raycaster.intersectObjects(cloudGroup.children, true);
-
-            if (intersects.length > 0) {
-                let clickedObj = intersects[0].object;
-                let physicallyClickedCloud = null;
-                while (clickedObj.parent && clickedObj.parent !== cloudGroup) {
-                    clickedObj = clickedObj.parent;
-                }
-
-                if (clickedObj.parent === cloudGroup) {
-                    physicallyClickedCloud = clickedObj;
-
-                    const isCloud1Raining = cloud1.userData.isRaining;
-                    const isCloud2Raining = cloud2.userData.isRaining;
-
-                    let newGlobalRainState;
-                    if (isCloud1Raining && isCloud2Raining) {
-                        newGlobalRainState = false;
-                    } else {
-                        newGlobalRainState = true;
-                    }
-
-                    cloud1.userData.isRaining = newGlobalRainState;
-                    if (cloud1.userData.rainGroup) {
-                        cloud1.userData.rainGroup.visible = newGlobalRainState;
-                    }
-
-                    cloud2.userData.isRaining = newGlobalRainState;
-                    if (cloud2.userData.rainGroup) {
-                        cloud2.userData.rainGroup.visible = newGlobalRainState;
-                    }
-
-                    if (physicallyClickedCloud) {
-                        const originalScale = physicallyClickedCloud.scale.clone();
-                        physicallyClickedCloud.scale.multiplyScalar(1.15);
-                        setTimeout(() => {
-                            physicallyClickedCloud.scale.copy(originalScale);
-                        }, 150);
-                    }
-                }
-            }
-        });
-
-        const tooltip = document.getElementById('cloud-tooltip');
-        setTimeout(() => {
-            if (tooltip) tooltip.classList.add('opacity-100');
-            setTimeout(() => { if (tooltip) tooltip.classList.remove('opacity-100'); }, 3500);
-        }, 1500);
-
-        function animate() {
-            requestAnimationFrame(animate);
-            const time = Date.now();
-            cloudGroup.rotation.y += autoRotateSpeed;
-
-            [cloud1, cloud2].forEach(cloud => {
-                if (cloud) {
-                    cloud.position.y = cloud.userData.originalPosition.y + Math.sin(time * cloud.userData.bobSpeed + cloud.userData.bobOffset) * cloud.userData.bobAmount;
-
-                    if (cloud.userData.isRaining && cloud.userData.rainGroup) {
-                        const currentRaindrops = cloud === cloud1 ? raindrops1 : raindrops2;
-                        currentRaindrops.forEach(raindrop => {
-                            raindrop.position.y -= raindrop.userData.speed;
-                            if (raindrop.position.y < -5) {
-                                raindrop.position.y = -0.8;
-                                raindrop.position.x = (Math.random() - 0.5) * 1.8 * cloud.scale.x;
-                                raindrop.position.z = (Math.random() - 0.5) * 1.8 * cloud.scale.z;
-                            }
-                        });
-                    }
-                }
-            });
-            controls.update();
-            renderer.render(scene, camera);
-        }
-
-        window.addEventListener('resize', () => {
-            const newRect = container.getBoundingClientRect();
-            if (newRect.width > 0 && newRect.height > 0) {
-                camera.aspect = newRect.width / newRect.height;
-                camera.updateProjectionMatrix();
-                renderer.setSize(newRect.width, newRect.height);
-            }
-        });
-
-        animate();
-
-    } else {
-        console.error("Cloud container (id: 'cloud-container') not found! 3D cloud animation will not be initialized.");
-    }
+  for (let i = 0; i < 25; i++) {
+    createParticle();
+  }
 </script>
 
 </body>
