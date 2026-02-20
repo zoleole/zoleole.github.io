@@ -94,6 +94,24 @@
       font-family: 'Press Start 2P', monospace;
     }
 
+    .header-decor {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      gap: 8px;
+      z-index: 2;
+    }
+
+    .decor-circle {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 2px solid rgba(0,0,0,0.3);
+      box-shadow: inset 0 -2px 4px rgba(0,0,0,0.2), 0 1px 3px rgba(0,0,0,0.3);
+    }
+
     /* ─── CONTROLS BAR ─── */
     .controls-bar {
       display: flex;
@@ -641,6 +659,7 @@
       .header-text h1 { font-size: 0.52rem; }
       .header-text p { font-size: 0.38rem; }
       .pokeball-logo { width: 30px; height: 30px; }
+      .header-decor { display: none; }
       .controls-bar { padding: 4px 10px; gap: 5px; }
       .control-btn { font-size: 0.45rem; padding: 3px 7px; }
       .search-box { max-width: 160px; }
@@ -679,6 +698,11 @@
       <div class="header-text">
         <h1>Pokémon Weather Map</h1>
         <p>Clima real · Wild Pokémon appeared!</p>
+      </div>
+      <div class="header-decor">
+        <div class="decor-circle" style="background:#78C850"></div>
+        <div class="decor-circle" style="background:#FFDE00"></div>
+        <div class="decor-circle" style="background:#F08030"></div>
       </div>
     </div>
     <div class="controls-bar">
@@ -786,20 +810,20 @@
           { id: 471, name: 'Glaceon' }, { id: 362, name: 'Glalie' },
         ]
       },
-      ghost: {
-        color: '#735797', emoji: '👻', label: 'Fantasma',
-        pokemon: [
-          { id: 92, name: 'Gastly' }, { id: 93, name: 'Haunter' },
-          { id: 94, name: 'Gengar' }, { id: 355, name: 'Duskull' },
-          { id: 200, name: 'Misdreavus' }, { id: 302, name: 'Sableye' },
-        ]
-      },
       flying: {
         color: '#A98FF3', emoji: '🕊️', label: 'Volador',
         pokemon: [
           { id: 16, name: 'Pidgey' }, { id: 17, name: 'Pidgeotto' },
           { id: 142, name: 'Aerodactyl' }, { id: 278, name: 'Wingull' },
           { id: 18, name: 'Pidgeot' }, { id: 334, name: 'Altaria' },
+        ]
+      },
+      ghost: {
+        color: '#735797', emoji: '👻', label: 'Fantasma',
+        pokemon: [
+          { id: 92, name: 'Gastly' }, { id: 93, name: 'Haunter' },
+          { id: 94, name: 'Gengar' }, { id: 355, name: 'Duskull' },
+          { id: 200, name: 'Misdreavus' }, { id: 302, name: 'Sableye' },
         ]
       },
       poison: {
@@ -820,26 +844,33 @@
       },
     };
 
+    // Weather condition → type
     const WEATHER_TO_TYPE = {
       Thunderstorm: 'electric',
       Drizzle: 'water',
       Rain: 'water',
       Snow: 'ice',
       Mist: 'ghost',
+      Fog: 'ghost',
       Smoke: 'poison',
       Haze: 'poison',
-      Dust: 'ground',
-      Fog: 'ghost',
-      Sand: 'ground',
       Ash: 'poison',
+      Dust: 'ground',
+      Sand: 'ground',
       Squall: 'water',
-      Tornado: 'ghost',
+      Tornado: 'electric',
       Clear: 'fire',
       Clouds: 'flying',
     };
 
-    function getPokemon(condition) {
-      const typeName = WEATHER_TO_TYPE[condition] || 'flying';
+    // Cold temps (≤5°C) override to ice
+    function getType(condition, tempC) {
+      if (tempC <= 5) return 'ice';
+      return WEATHER_TO_TYPE[condition] || 'flying';
+    }
+
+    function getPokemon(condition, tempC) {
+      const typeName = getType(condition, tempC);
       const roster = TYPE_ROSTERS[typeName];
       const pick = roster.pokemon[Math.floor(Math.random() * roster.pokemon.length)];
       return { ...pick, type: typeName, color: roster.color, emoji: roster.emoji, label: roster.label };
@@ -1064,7 +1095,16 @@
       const legend = L.control({ position: 'bottomright' });
       legend.onAdd = () => {
         const div = L.DomUtil.create('div', 'legend');
-        const uniqueTypes = [...new Set(Object.values(WEATHER_TO_TYPE))];
+        const legendItems = [
+          { emoji: '☀️', label: 'Sol → Fuego', color: '#EE8130' },
+          { emoji: '🌧️', label: 'Lluvia → Agua', color: '#6390F0' },
+          { emoji: '☁️', label: 'Nubes → Volador', color: '#A98FF3' },
+          { emoji: '🥶', label: 'Frío ≤5°C → Hielo', color: '#96D9D6' },
+          { emoji: '⛈️', label: 'Tormenta → Eléctrico', color: '#F7D02C' },
+          { emoji: '🌫️', label: 'Niebla → Fantasma', color: '#735797' },
+          { emoji: '💨', label: 'Humo → Veneno', color: '#A33EA1' },
+          { emoji: '🏜️', label: 'Polvo → Tierra', color: '#E2BF65' },
+        ];
         const isMobile = window.innerWidth <= 600;
         if (isMobile) div.classList.add('collapsed');
         div.innerHTML =
@@ -1073,10 +1113,9 @@
             <span class="arrow">▼</span>
           </div>
           <div class="legend-body">` +
-          uniqueTypes.map(type => {
-            const r = TYPE_ROSTERS[type];
-            return `<div class="legend-item"><div class="legend-dot" style="background:${r.color};color:${r.color}"></div>${r.emoji} ${r.label}</div>`;
-          }).join('') +
+          legendItems.map(item =>
+            `<div class="legend-item"><div class="legend-dot" style="background:${item.color};color:${item.color}"></div>${item.emoji} ${item.label}</div>`
+          ).join('') +
           `</div>`;
         div.querySelector('.legend-toggle').addEventListener('click', () => {
           div.classList.toggle('collapsed');
@@ -1117,7 +1156,7 @@
         const mainWeather = weather.weather[0].main;
         weatherCounts[mainWeather] = (weatherCounts[mainWeather] || 0) + 1;
 
-        const pokemon = getPokemon(mainWeather);
+        const pokemon = getPokemon(mainWeather, weather.main.temp);
         const marker = L.marker([city.lat, city.lon], {
           icon: createMarkerIcon(pokemon, weather.main.temp),
         });
