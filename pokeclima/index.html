@@ -94,6 +94,24 @@
       font-family: 'Press Start 2P', monospace;
     }
 
+    .header-decor {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      gap: 8px;
+      z-index: 2;
+    }
+
+    .decor-circle {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 2px solid rgba(0,0,0,0.3);
+      box-shadow: inset 0 -2px 4px rgba(0,0,0,0.2), 0 1px 3px rgba(0,0,0,0.3);
+    }
+
     /* ─── CONTROLS BAR ─── */
     .controls-bar {
       display: flex;
@@ -641,6 +659,7 @@
       .header-text h1 { font-size: 0.52rem; }
       .header-text p { font-size: 0.38rem; }
       .pokeball-logo { width: 30px; height: 30px; }
+      .header-decor { display: none; }
       .controls-bar { padding: 4px 10px; gap: 5px; }
       .control-btn { font-size: 0.45rem; padding: 3px 7px; }
       .search-box { max-width: 160px; }
@@ -679,6 +698,11 @@
       <div class="header-text">
         <h1>Pokémon Weather Map</h1>
         <p>Clima real · Wild Pokémon appeared!</p>
+      </div>
+      <div class="header-decor">
+        <div class="decor-circle" style="background:#78C850"></div>
+        <div class="decor-circle" style="background:#FFDE00"></div>
+        <div class="decor-circle" style="background:#F08030"></div>
       </div>
     </div>
     <div class="controls-bar">
