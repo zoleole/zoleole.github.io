@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
   <head>
-    <title>Keith Tachibana: Memory Match</title>
+    <meta charset="UTF-8">
+    <title>Meteorama: Memorama de Nubes</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://fonts.googleapis.com/css?family=Inconsolata&display=swap" rel="stylesheet">
     <link href="assets/css/grid.css" rel="stylesheet" />
@@ -12,7 +13,8 @@
       <div class="row">
         <header class="header">
           <div class="title-container">
-            <h1 class="title-text">Star Wars Memory Match</h1>
+            <h1 class="title-text">METEORAMA</h1>
+            <p class="subtitle-text">Memorama de Tipos de Nubes</p>
           </div>
         </header>
       </div>
@@ -42,82 +44,79 @@
           <div class="accuracy-score-container">
             <h4 class="accuracy-score">0%</h4>
           </div>
-          <button class="shuffle-button">Click To Reset</button>
-          <video autoplay muted loop class="video-bg">
-            <source src="./assets/videos/nebula.mp4" />
-          </video>
+          <button class="shuffle-button">Reiniciar Juego</button>
         </aside>
         <main class="main col-10" id="gameCards">
           <div class="card-item col-2">
-            <div class="card-front chewbacca"></div>
+            <div class="card-front altocumulus"></div>
             <div class="card-back"></div>
           </div>
           <div class="card-item col-2">
-            <div class="card-front chewbacca"></div>
+            <div class="card-front altocumulus"></div>
             <div class="card-back"></div>
           </div>
           <div class="card-item col-2">
-            <div class="card-front emperor"></div>
+            <div class="card-front altostratus"></div>
             <div class="card-back"></div>
           </div>
           <div class="card-item col-2">
-            <div class="card-front emperor"></div>
+            <div class="card-front altostratus"></div>
             <div class="card-back"></div>
           </div>
           <div class="card-item col-2">
-            <div class="card-front hansolo"></div>
+            <div class="card-front cirrocumulus"></div>
             <div class="card-back"></div>
           </div>
           <div class="card-item col-2">
-            <div class="card-front hansolo"></div>
+            <div class="card-front cirrocumulus"></div>
             <div class="card-back"></div>
           </div>
           <div class="card-item col-2">
-            <div class="card-front leia"></div>
+            <div class="card-front cirrostratus"></div>
             <div class="card-back"></div>
           </div>
           <div class="card-item col-2">
-            <div class="card-front leia"></div>
+            <div class="card-front cirrostratus"></div>
             <div class="card-back"></div>
           </div>
           <div class="card-item col-2">
-            <div class="card-front luke"></div>
+            <div class="card-front cirrus"></div>
             <div class="card-back"></div>
           </div>
           <div class="card-item col-2">
-            <div class="card-front luke"></div>
+            <div class="card-front cirrus"></div>
             <div class="card-back"></div>
           </div>
           <div class="card-item col-2">
-            <div class="card-front obiwan"></div>
+            <div class="card-front cumulonimbus"></div>
             <div class="card-back"></div>
           </div>
           <div class="card-item col-2">
-            <div class="card-front obiwan"></div>
+            <div class="card-front cumulonimbus"></div>
             <div class="card-back"></div>
           </div>
           <div class="card-item col-2">
-            <div class="card-front padme"></div>
+            <div class="card-front cumulus"></div>
             <div class="card-back"></div>
           </div>
           <div class="card-item col-2">
-            <div class="card-front padme"></div>
+            <div class="card-front cumulus"></div>
             <div class="card-back"></div>
           </div>
           <div class="card-item col-2">
-            <div class="card-front vader"></div>
+            <div class="card-front kelvin-helmholtz"></div>
             <div class="card-back"></div>
           </div>
           <div class="card-item col-2">
-            <div class="card-front vader"></div>
+            <div class="card-front kelvin-helmholtz"></div>
             <div class="card-back"></div>
           </div>
           <div class="card-item col-2">
-            <div class="card-front yoda"></div>
+            <div class="card-front lenticular"></div>
             <div class="card-back"></div>
           </div>
           <div class="card-item col-2">
-            <div class="card-front yoda"></div>
+            <div class="card-front lenticular"></div>
             <div class="card-back"></div>
           </div>
         </main>
@@ -126,8 +125,9 @@
     <div class="modal hidden">
       <div class="modal-text">
         <span class="close">&times;</span>
-        <h3>Congratulations! You have won!!!</h3>
-        <button class="reset"><span>Play Again </span></button>
+        <h3>¡Felicidades! ¡Has completado el Meteorama!</h3>
+        <p class="modal-description">Ahora conoces los principales tipos de nubes.</p>
+        <button class="reset"><span>Jugar de Nuevo </span></button>
       </div>
     </div>
     <script src="assets/js/script.js"></script>
