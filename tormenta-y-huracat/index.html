@@ -1468,7 +1468,8 @@
         const heroTemp = document.getElementById('heroTemp');
         async function fetchTemp() {
             try {
-                const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=19.4326&longitude=-99.1332&current_weather=true');
+                // ENSENADA
+                const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=31.8665&longitude=-116.5964&current_weather=true');
                 const data = await res.json();
                 const temp = Math.round(data.current_weather.temperature);
                 heroTemp.textContent = temp + '°';
