@@ -44,6 +44,31 @@
     cursor: crosshair;
   }
 
+  /* === LOADING CURTAIN === */
+  .loading-curtain {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 1.2s cubic-bezier(0.22, 1, 0.36, 1), visibility 1.2s;
+  }
+  .loading-curtain.hide {
+    opacity: 0;
+    visibility: hidden;
+  }
+  .loading-curtain .loader-ring {
+    width: 40px;
+    height: 40px;
+    border: 1.5px solid transparent;
+    border-top-color: var(--orange);
+    border-radius: 50%;
+    animation: loaderSpin 1s linear infinite;
+  }
+  @keyframes loaderSpin { to { transform: rotate(360deg); } }
+
   /* === BG GRADIENT ATMOSPHERE === */
   .bg-atmosphere {
     position: absolute;
@@ -54,6 +79,21 @@
       radial-gradient(ellipse 40% 30% at 30% 80%, rgba(255,85,0,0.02) 0%, transparent 60%),
       radial-gradient(ellipse 50% 40% at 70% 20%, rgba(100,30,0,0.03) 0%, transparent 60%);
     pointer-events: none;
+  }
+
+  /* === CURSOR AURORA === */
+  .cursor-glow {
+    position: fixed;
+    width: 260px;
+    height: 260px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 1;
+    background: radial-gradient(circle, rgba(255,85,0,0.04) 0%, rgba(255,85,0,0.015) 40%, transparent 70%);
+    transform: translate(-50%, -50%);
+    transition: opacity 0.5s;
+    mix-blend-mode: screen;
+    will-change: left, top;
   }
 
   /* === STARFIELD === */
@@ -76,6 +116,48 @@
     50% { opacity: calc(var(--star-o, 0.4) * 0.2); }
   }
 
+  /* === SHOOTING STARS === */
+  .shooting-star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: #fff;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 2;
+    opacity: 0;
+    filter: blur(0.3px);
+  }
+  .shooting-star::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: var(--trail-len, 60px);
+    height: 1px;
+    background: linear-gradient(to left, rgba(255,255,255,0.8), rgba(255,200,150,0.3), transparent);
+    transform-origin: right center;
+    transform: rotate(var(--trail-angle, 0deg));
+  }
+
+  @keyframes shootingStar {
+    0% { opacity: 0; transform: translate(0, 0); }
+    5% { opacity: 1; }
+    70% { opacity: 0.6; }
+    100% { opacity: 0; transform: translate(var(--shoot-dx), var(--shoot-dy)); }
+  }
+
+  /* === CONSTELLATION LINES === */
+  .constellation-canvas {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0;
+    animation: constFade 2s ease 1.8s forwards;
+  }
+  @keyframes constFade { to { opacity: 1; } }
+
   /* === CROSSES === */
   .cross {
     position: absolute;
@@ -86,11 +168,12 @@
     opacity: 0;
     animation: crossFade 0.6s ease both;
     user-select: none;
-    transition: color 0.4s, text-shadow 0.4s;
+    transition: color 0.4s, text-shadow 0.4s, transform 0.3s;
   }
   .cross:hover {
     color: var(--orange);
     text-shadow: 0 0 8px rgba(255,85,0,0.5);
+    transform: rotate(45deg) scale(1.3);
   }
 
   @keyframes crossFade {
@@ -141,6 +224,36 @@
   @keyframes planetIn {
     from { opacity: 0; transform: scale(0.5); }
     to { opacity: 1; transform: scale(1); }
+  }
+
+  /* Planet storm spot */
+  .planet-storm {
+    position: absolute;
+    width: 22%;
+    height: 14%;
+    top: 52%;
+    left: 30%;
+    border-radius: 50%;
+    background: radial-gradient(ellipse, rgba(200,60,10,0.5) 0%, rgba(180,50,5,0.25) 50%, transparent 75%);
+    filter: blur(3px);
+    animation: stormDrift 40s ease-in-out infinite alternate;
+    mix-blend-mode: screen;
+  }
+  .planet-storm-2 {
+    position: absolute;
+    width: 10%;
+    height: 7%;
+    top: 35%;
+    left: 55%;
+    border-radius: 50%;
+    background: radial-gradient(ellipse, rgba(255,180,100,0.2) 0%, transparent 70%);
+    filter: blur(2px);
+    animation: stormDrift 25s ease-in-out infinite alternate-reverse;
+    mix-blend-mode: screen;
+  }
+  @keyframes stormDrift {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(15%); }
   }
 
   /* Planet bands */
@@ -200,6 +313,45 @@
     pointer-events: none;
   }
 
+  /* === ORBITING MOON === */
+  .moon-orbit {
+    position: absolute;
+    top: 50%;
+    left: 48%;
+    width: min(52vw, 52vh);
+    height: min(52vw, 52vh);
+    transform: translate(-50%, -50%);
+    z-index: 5;
+    pointer-events: none;
+    animation: moonOrbit 30s linear infinite;
+  }
+  .moon {
+    position: absolute;
+    top: -2%;
+    left: 50%;
+    width: clamp(4px, 0.6vw, 8px);
+    height: clamp(4px, 0.6vw, 8px);
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #ffeedd, #cc9966);
+    box-shadow: 0 0 6px rgba(255,200,150,0.5), 0 0 15px rgba(255,150,80,0.15);
+    transform: translateX(-50%);
+  }
+  .moon::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200%;
+    height: 200%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,180,120,0.08) 0%, transparent 70%);
+  }
+  @keyframes moonOrbit {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+  }
+
   /* === RING SYSTEM === */
   .ring-back {
     position: absolute;
@@ -233,6 +385,36 @@
     width: 100%;
     height: 100%;
     overflow: visible;
+  }
+
+  /* Ring shimmer overlay */
+  .ring-shimmer {
+    position: absolute;
+    top: 50%;
+    left: 48%;
+    transform: translate(-50%, -50%);
+    width: min(58vw, 58vh);
+    height: min(9vw, 9vh);
+    z-index: 4;
+    pointer-events: none;
+    overflow: hidden;
+    opacity: 0;
+    animation: ringIn 1.8s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
+    will-change: transform;
+  }
+  .ring-shimmer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,180,120,0.06), transparent);
+    animation: shimmerSweep 8s ease-in-out infinite;
+  }
+  @keyframes shimmerSweep {
+    0%, 100% { left: -50%; }
+    50% { left: 100%; }
   }
 
   /* === DIAGONAL LINE === */
@@ -293,6 +475,11 @@
     animation: boxIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
     backdrop-filter: blur(2px);
     background: rgba(6,6,6,0.4);
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  .box:hover {
+    border-color: var(--orange-bright);
+    box-shadow: 0 0 20px rgba(255,85,0,0.1), inset 0 0 20px rgba(255,85,0,0.03);
   }
 
   @keyframes boxIn {
@@ -349,6 +536,10 @@
     letter-spacing: 2px;
     margin-top: 6px;
   }
+  .box-date .time .seconds {
+    color: var(--orange);
+    opacity: 0.7;
+  }
 
   .box-date .location {
     font-family: 'DM Mono', monospace;
@@ -389,6 +580,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    text-decoration: none;
   }
   .box-bottom-left span {
     font-family: 'DM Mono', monospace;
@@ -397,6 +589,10 @@
     color: var(--white-dim);
     letter-spacing: 3px;
     text-transform: uppercase;
+    transition: color 0.3s;
+  }
+  .box-bottom-left:hover span {
+    color: var(--orange);
   }
 
   /* === COORD LABELS === */
@@ -482,6 +678,11 @@
     align-items: center;
     gap: 6px;
     background: rgba(232,96,28,0.04);
+    transition: background 0.4s, box-shadow 0.4s;
+  }
+  .text-saturnday:hover span {
+    background: rgba(232,96,28,0.08);
+    box-shadow: 0 0 30px rgba(255,85,0,0.08);
   }
 
   .saturn-icon {
@@ -602,13 +803,52 @@
   .corner-mark.br { bottom: 12px; right: 12px; }
   .corner-mark.br::before { width: 12px; height: 1px; bottom: 0; right: 0; }
   .corner-mark.br::after { width: 1px; height: 12px; bottom: 0; right: 0; }
+
+  /* === HUD PULSE LINE === */
+  .hud-pulse {
+    position: absolute;
+    bottom: 9vh;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 6;
+    width: clamp(100px, 12vw, 160px);
+    height: 20px;
+    opacity: 0;
+    animation: textFade 1s ease 1.5s both;
+  }
+  .hud-pulse svg { width: 100%; height: 100%; }
+  .hud-pulse-line {
+    stroke: var(--orange);
+    stroke-width: 1;
+    fill: none;
+    opacity: 0.4;
+    stroke-dasharray: 200;
+    stroke-dashoffset: 200;
+    animation: hudDraw 3s ease-in-out infinite;
+  }
+  @keyframes hudDraw {
+    0% { stroke-dashoffset: 200; opacity: 0.2; }
+    50% { stroke-dashoffset: 0; opacity: 0.5; }
+    100% { stroke-dashoffset: -200; opacity: 0.2; }
+  }
 </style>
 </head>
 <body>
 
+<!-- Loading curtain -->
+<div class="loading-curtain" id="loading">
+  <div class="loader-ring"></div>
+</div>
+
 <div class="poster" id="poster">
 
   <div class="bg-atmosphere"></div>
+
+  <!-- Cursor glow -->
+  <div class="cursor-glow" id="cursorGlow"></div>
+
+  <!-- Constellation canvas -->
+  <canvas class="constellation-canvas" id="constellationCanvas"></canvas>
 
   <!-- Orbital trails (SVG) -->
   <div class="orbital-trails">
@@ -646,12 +886,19 @@
         <clipPath id="ring-back-clip">
           <rect x="0" y="0" width="460" height="35"/>
         </clipPath>
+        <linearGradient id="ringGradBack" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#e8601c" stop-opacity="0.15"/>
+          <stop offset="30%" stop-color="#e8601c" stop-opacity="0.45"/>
+          <stop offset="50%" stop-color="#ffaa66" stop-opacity="0.5"/>
+          <stop offset="70%" stop-color="#e8601c" stop-opacity="0.45"/>
+          <stop offset="100%" stop-color="#e8601c" stop-opacity="0.15"/>
+        </linearGradient>
       </defs>
       <g clip-path="url(#ring-back-clip)">
         <ellipse cx="230" cy="35" rx="228" ry="32"
-          fill="none" stroke="#e8601c" stroke-width="1.2" opacity="0.4"/>
+          fill="none" stroke="url(#ringGradBack)" stroke-width="1.2" opacity="0.4"/>
         <ellipse cx="230" cy="35" rx="215" ry="28"
-          fill="none" stroke="#e8601c" stroke-width="0.6" opacity="0.2"/>
+          fill="none" stroke="url(#ringGradBack)" stroke-width="0.6" opacity="0.2"/>
         <ellipse cx="230" cy="35" rx="205" ry="25"
           fill="none" stroke="#e8601c" stroke-width="0.4" opacity="0.12"/>
       </g>
@@ -662,8 +909,15 @@
   <div class="planet-container">
     <div class="planet">
       <div class="planet-bands"></div>
+      <div class="planet-storm"></div>
+      <div class="planet-storm-2"></div>
     </div>
     <div class="planet-rim"></div>
+  </div>
+
+  <!-- Orbiting moon -->
+  <div class="moon-orbit">
+    <div class="moon"></div>
   </div>
 
   <!-- Ring FRONT (in front of planet) -->
@@ -673,17 +927,27 @@
         <clipPath id="ring-front-clip">
           <rect x="0" y="35" width="460" height="35"/>
         </clipPath>
+        <linearGradient id="ringGradFront" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#e8601c" stop-opacity="0.3"/>
+          <stop offset="25%" stop-color="#e8601c" stop-opacity="0.9"/>
+          <stop offset="50%" stop-color="#ffaa66" stop-opacity="1"/>
+          <stop offset="75%" stop-color="#e8601c" stop-opacity="0.9"/>
+          <stop offset="100%" stop-color="#e8601c" stop-opacity="0.3"/>
+        </linearGradient>
       </defs>
       <g clip-path="url(#ring-front-clip)">
         <ellipse cx="230" cy="35" rx="228" ry="32"
-          fill="none" stroke="#e8601c" stroke-width="1.5" opacity="0.85"/>
+          fill="none" stroke="url(#ringGradFront)" stroke-width="1.5" opacity="0.85"/>
         <ellipse cx="230" cy="35" rx="215" ry="28"
-          fill="none" stroke="#e8601c" stroke-width="0.8" opacity="0.4"/>
+          fill="none" stroke="url(#ringGradFront)" stroke-width="0.8" opacity="0.4"/>
         <ellipse cx="230" cy="35" rx="205" ry="25"
           fill="none" stroke="#e8601c" stroke-width="0.5" opacity="0.2"/>
       </g>
     </svg>
   </div>
+
+  <!-- Ring shimmer -->
+  <div class="ring-shimmer"></div>
 
   <!-- Diagonal line -->
   <div class="diagonal-line">
@@ -722,7 +986,7 @@
     <span>/ZU</span>
   </div>
 
-  <a href="https://zoleole.github.io/tormenta-y-huracat" target="_blank">
+  <a href="https://zoleole.github.io/tormenta-y-huracat" target="_blank" style="text-decoration:none;">
     <div class="box box-bottom-left">
         <span>TORMENTA Y HURACAT</span>
     </div>
@@ -744,6 +1008,13 @@
     <span>DRA <span class="saturn-icon"></span> ATMOSFERA</span>
   </div>
 
+  <!-- HUD pulse -->
+  <div class="hud-pulse">
+    <svg viewBox="0 0 160 20" xmlns="http://www.w3.org/2000/svg">
+      <polyline class="hud-pulse-line" points="0,10 30,10 40,3 50,17 60,5 70,15 80,8 90,12 100,10 160,10"/>
+    </svg>
+  </div>
+
   <!-- Scanlines -->
   <div class="scanlines"></div>
   <!-- Vignette -->
@@ -755,23 +1026,81 @@
 <script>
   const poster = document.getElementById('poster');
 
+  // === LOADING SEQUENCE ===
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      document.getElementById('loading').classList.add('hide');
+    }, 800);
+  });
+
   // === STARFIELD ===
-  const starCount = 140;
+  const stars = [];
+  const starCount = 160;
   for (let i = 0; i < starCount; i++) {
     const star = document.createElement('div');
     star.className = 'star' + (Math.random() > 0.6 ? ' twinkle' : '');
     const size = Math.random() < 0.85 ? (0.8 + Math.random() * 0.8) : (1.5 + Math.random() * 1);
     const opacity = 0.15 + Math.random() * 0.45;
+    const x = Math.random() * 100;
+    const y = Math.random() * 100;
     star.style.cssText = `
-      left: ${Math.random() * 100}%;
-      top: ${Math.random() * 100}%;
+      left: ${x}%;
+      top: ${y}%;
       width: ${size}px;
       height: ${size}px;
       --star-o: ${opacity};
       animation-delay: ${0.2 + Math.random() * 1.2}s${star.classList.contains('twinkle') ? ', ' + (Math.random() * 3).toFixed(1) + 's' : ''};
     `;
     poster.appendChild(star);
+    stars.push({ el: star, x, y, size });
   }
+
+  // === CONSTELLATION LINES ===
+  const constCanvas = document.getElementById('constellationCanvas');
+  const constCtx = constCanvas.getContext('2d');
+
+  function resizeConstCanvas() {
+    constCanvas.width = window.innerWidth;
+    constCanvas.height = window.innerHeight;
+  }
+  resizeConstCanvas();
+  window.addEventListener('resize', resizeConstCanvas);
+
+  function drawConstellations() {
+    constCtx.clearRect(0, 0, constCanvas.width, constCanvas.height);
+    const w = constCanvas.width;
+    const h = constCanvas.height;
+
+    // Pick nearby star pairs and draw faint lines
+    const constellationGroups = [
+      // Top-left cluster
+      [[8,3],[15,18],[6,35]],
+      // Top-right
+      [[92,2],[88,20],[72,14]],
+      // Middle
+      [[48,28],[40,55],[55,62]],
+      // Bottom
+      [[30,75],[20,92],[42,95]],
+      // Right side
+      [[85,38],[90,55],[78,65]],
+    ];
+
+    constCtx.strokeStyle = 'rgba(232, 96, 28, 0.06)';
+    constCtx.lineWidth = 0.5;
+
+    constellationGroups.forEach(group => {
+      constCtx.beginPath();
+      group.forEach((pt, i) => {
+        const px = (pt[0] / 100) * w;
+        const py = (pt[1] / 100) * h;
+        if (i === 0) constCtx.moveTo(px, py);
+        else constCtx.lineTo(px, py);
+      });
+      constCtx.stroke();
+    });
+  }
+  setTimeout(drawConstellations, 2000);
+  window.addEventListener('resize', () => setTimeout(drawConstellations, 100));
 
   // === CROSSES ===
   const crossPositions = [
@@ -824,6 +1153,45 @@
   for (let i = 0; i < 16; i++) setTimeout(spawnParticle, i * 250);
   setInterval(spawnParticle, 600);
 
+  // === SHOOTING STARS ===
+  function spawnShootingStar() {
+    const ss = document.createElement('div');
+    ss.className = 'shooting-star';
+
+    const startX = 15 + Math.random() * 70;
+    const startY = Math.random() * 40;
+    const angle = 20 + Math.random() * 30; // degrees
+    const distance = 150 + Math.random() * 250;
+    const rad = angle * (Math.PI / 180);
+    const dx = Math.cos(rad) * distance;
+    const dy = Math.sin(rad) * distance;
+    const trailLen = 40 + Math.random() * 50;
+    const trailAngle = -(180 - angle);
+    const dur = 0.5 + Math.random() * 0.6;
+
+    ss.style.cssText = `
+      left: ${startX}%;
+      top: ${startY}%;
+      --shoot-dx: ${dx}px;
+      --shoot-dy: ${dy}px;
+      --trail-len: ${trailLen}px;
+      --trail-angle: ${trailAngle}deg;
+      animation: shootingStar ${dur}s ease-out forwards;
+    `;
+    poster.appendChild(ss);
+    setTimeout(() => ss.remove(), dur * 1000 + 100);
+  }
+
+  // Random shooting stars
+  function scheduleShootingStar() {
+    const delay = 3000 + Math.random() * 8000;
+    setTimeout(() => {
+      spawnShootingStar();
+      scheduleShootingStar();
+    }, delay);
+  }
+  setTimeout(scheduleShootingStar, 2000);
+
   // === LIVE ENSENADA TIME ===
   function updateEnsenadaTime() {
     const now = new Date();
@@ -831,7 +1199,7 @@
     const h = String(ensenada.getHours()).padStart(2, '0');
     const m = String(ensenada.getMinutes()).padStart(2, '0');
     const s = String(ensenada.getSeconds()).padStart(2, '0');
-    document.getElementById('ensenada-time').textContent = '/' + h + ':' + m + ':' + s;
+    document.getElementById('ensenada-time').innerHTML = h + ':' + m + ':<span class="seconds">' + s + '</span>';
   }
   updateEnsenadaTime();
   setInterval(updateEnsenadaTime, 1000);
@@ -886,23 +1254,60 @@
   }
 
   fetchEnsenadaWeather();
-  // Refresh weather every 10 minutes
   setInterval(fetchEnsenadaWeather, 10 * 60 * 1000);
 
-  // === PARALLAX ===
+  // === SMOOTH PARALLAX (rAF-based) ===
+  let mouseX = 0, mouseY = 0;
+  let currentX = 0, currentY = 0;
+
+  const planet = document.querySelector('.planet-container');
+  const ringBack = document.querySelector('.ring-back');
+  const ringFront = document.querySelector('.ring-front');
+  const ringShimmer = document.querySelector('.ring-shimmer');
+  const moonOrbit = document.querySelector('.moon-orbit');
+  const cursorGlow = document.getElementById('cursorGlow');
+
   poster.addEventListener('mousemove', (e) => {
     const rect = poster.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width - 0.5;
-    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    mouseX = (e.clientX - rect.left) / rect.width - 0.5;
+    mouseY = (e.clientY - rect.top) / rect.height - 0.5;
 
-    const planet = document.querySelector('.planet-container');
-    const ringBack = document.querySelector('.ring-back');
-    const ringFront = document.querySelector('.ring-front');
-
-    planet.style.transform = `translate(calc(-50% + ${x * 15}px), calc(-50% + ${y * 15}px))`;
-    ringBack.style.transform = `translate(calc(-50% + ${x * 20}px), calc(-50% + ${y * 8}px))`;
-    ringFront.style.transform = `translate(calc(-50% + ${x * 20}px), calc(-50% + ${y * 8}px))`;
+    // Cursor glow follows immediately
+    cursorGlow.style.left = e.clientX + 'px';
+    cursorGlow.style.top = e.clientY + 'px';
   });
+
+  // Lerp for silky parallax
+  function parallaxLoop() {
+    const ease = 0.06;
+    currentX += (mouseX - currentX) * ease;
+    currentY += (mouseY - currentY) * ease;
+
+    const px = currentX * 15;
+    const py = currentY * 15;
+    const rx = currentX * 20;
+    const ry = currentY * 8;
+
+    planet.style.transform = `translate(calc(-50% + ${px}px), calc(-50% + ${py}px))`;
+    ringBack.style.transform = `translate(calc(-50% + ${rx}px), calc(-50% + ${ry}px))`;
+    ringFront.style.transform = `translate(calc(-50% + ${rx}px), calc(-50% + ${ry}px))`;
+    ringShimmer.style.transform = `translate(calc(-50% + ${rx}px), calc(-50% + ${ry}px))`;
+    moonOrbit.style.marginLeft = (currentX * 10) + 'px';
+    moonOrbit.style.marginTop = (currentY * 10) + 'px';
+
+    requestAnimationFrame(parallaxLoop);
+  }
+  parallaxLoop();
+
+  // === MOBILE GYROSCOPE PARALLAX ===
+  if (window.DeviceOrientationEvent) {
+    window.addEventListener('deviceorientation', (e) => {
+      if (e.gamma !== null && e.beta !== null) {
+        mouseX = Math.max(-0.5, Math.min(0.5, e.gamma / 40));
+        mouseY = Math.max(-0.5, Math.min(0.5, (e.beta - 40) / 40));
+      }
+    });
+  }
 </script>
 
 </body>
