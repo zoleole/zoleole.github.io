@@ -906,7 +906,6 @@
             text-transform: uppercase;
             color: rgba(255, 255, 255, 0.25);
             pointer-events: none;
-            transition: opacity 0.3s;
         }
 
         /* ===== WEATHER BANNER ===== */
@@ -1407,9 +1406,7 @@
 
     <!-- ===== TIP DETAIL MODAL ===== -->
     <div class="tip-detail-modal" id="tipDetailModal">
-        <div class="tip-detail-content" id="tipDetailContent">
-            <!-- Content injected by JS -->
-        </div>
+        <div class="tip-detail-content" id="tipDetailContent"></div>
     </div>
 
     <!-- ===== NAVIGATION ===== -->
@@ -1430,99 +1427,25 @@
     <section class="hero" id="hero">
         <div class="hero-bg"></div>
         <div class="hero-mesh"></div>
-
         <div class="streak streak-1"></div>
         <div class="streak streak-2"></div>
-
         <div class="hero-circle" id="heroCircle"></div>
 
         <!-- FEMALE DOG SVG -->
         <div class="hero-dog-container" id="heroDog">
             <svg class="hero-dog-svg" viewBox="0 0 340 380" xmlns="http://www.w3.org/2000/svg">
                 <defs>
-                    <linearGradient id="dogGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" style="stop-color:#cc3377;stop-opacity:1" />
-                        <stop offset="25%" style="stop-color:#994466;stop-opacity:1" />
-                        <stop offset="55%" style="stop-color:#556060;stop-opacity:1" />
-                        <stop offset="80%" style="stop-color:#337070;stop-opacity:1" />
-                        <stop offset="100%" style="stop-color:#1a8877;stop-opacity:1" />
-                    </linearGradient>
-                    <linearGradient id="dogShadow" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" style="stop-color:#992255;stop-opacity:1" />
-                        <stop offset="100%" style="stop-color:#0d5555;stop-opacity:1" />
-                    </linearGradient>
-                    <linearGradient id="dogHighlight" x1="30%" y1="0%" x2="70%" y2="100%">
-                        <stop offset="0%" style="stop-color:#ffaacc;stop-opacity:0.35" />
-                        <stop offset="100%" style="stop-color:#33ddbb;stop-opacity:0.1" />
-                    </linearGradient>
-                    <linearGradient id="dogEar" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" style="stop-color:#aa2266;stop-opacity:1" />
-                        <stop offset="100%" style="stop-color:#226666;stop-opacity:1" />
-                    </linearGradient>
-                    <radialGradient id="dogChest" cx="50%" cy="30%" r="60%">
-                        <stop offset="0%" style="stop-color:#ffccdd;stop-opacity:0.2" />
-                        <stop offset="100%" style="stop-color:transparent;stop-opacity:0" />
-                    </radialGradient>
-                    <filter id="dogSoft">
-                        <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
-                        <feOffset dx="2" dy="5"/>
-                        <feComponentTransfer><feFuncA type="linear" slope="0.12"/></feComponentTransfer>
-                        <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
-                    </filter>
+                    <linearGradient id="dogGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#cc3377"/><stop offset="25%" style="stop-color:#994466"/><stop offset="55%" style="stop-color:#556060"/><stop offset="80%" style="stop-color:#337070"/><stop offset="100%" style="stop-color:#1a8877"/></linearGradient>
+                    <linearGradient id="dogShadow" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#992255"/><stop offset="100%" style="stop-color:#0d5555"/></linearGradient>
+                    <linearGradient id="dogHighlight" x1="30%" y1="0%" x2="70%" y2="100%"><stop offset="0%" style="stop-color:#ffaacc;stop-opacity:0.35"/><stop offset="100%" style="stop-color:#33ddbb;stop-opacity:0.1"/></linearGradient>
+                    <linearGradient id="dogEar" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#aa2266"/><stop offset="100%" style="stop-color:#226666"/></linearGradient>
+                    <radialGradient id="dogChest" cx="50%" cy="30%" r="60%"><stop offset="0%" style="stop-color:#ffccdd;stop-opacity:0.2"/><stop offset="100%" style="stop-color:transparent;stop-opacity:0"/></radialGradient>
+                    <filter id="dogSoft"><feGaussianBlur in="SourceAlpha" stdDeviation="3"/><feOffset dx="2" dy="5"/><feComponentTransfer><feFuncA type="linear" slope="0.12"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
                 </defs>
                 <g filter="url(#dogSoft)">
-                    <ellipse cx="170" cy="260" rx="80" ry="70" fill="url(#dogGrad)"/>
-                    <ellipse cx="125" cy="310" rx="42" ry="30" fill="url(#dogShadow)" transform="rotate(-8, 125, 310)"/>
-                    <ellipse cx="215" cy="310" rx="42" ry="30" fill="url(#dogShadow)" transform="rotate(8, 215, 310)"/>
-                    <path d="M 135 290 Q 130 320 128 345 Q 126 358 130 365 Q 136 372 144 365 Q 148 358 146 345 Q 144 320 142 295" fill="url(#dogGrad)"/>
-                    <path d="M 195 290 Q 192 320 190 345 Q 188 358 192 365 Q 198 372 206 365 Q 210 358 208 345 Q 206 320 202 295" fill="url(#dogGrad)"/>
-                    <ellipse cx="137" cy="367" rx="14" ry="7" fill="url(#dogShadow)"/>
-                    <ellipse cx="199" cy="367" rx="14" ry="7" fill="url(#dogShadow)"/>
-                    <circle cx="130" cy="367" r="3.5" fill="rgba(0,180,160,0.15)"/>
-                    <circle cx="137" cy="369" r="3.5" fill="rgba(0,180,160,0.15)"/>
-                    <circle cx="144" cy="367" r="3.5" fill="rgba(0,180,160,0.15)"/>
-                    <circle cx="192" cy="367" r="3.5" fill="rgba(0,180,160,0.15)"/>
-                    <circle cx="199" cy="369" r="3.5" fill="rgba(0,180,160,0.15)"/>
-                    <circle cx="206" cy="367" r="3.5" fill="rgba(0,180,160,0.15)"/>
-                    <ellipse cx="100" cy="338" rx="16" ry="8" fill="url(#dogShadow)" transform="rotate(-15, 100, 338)"/>
-                    <ellipse cx="240" cy="338" rx="16" ry="8" fill="url(#dogShadow)" transform="rotate(15, 240, 338)"/>
-                    <path d="M 140 230 Q 145 200 155 180 Q 165 165 175 162 Q 185 165 195 180 Q 205 200 210 230" fill="url(#dogGrad)"/>
-                    <ellipse cx="170" cy="240" rx="35" ry="40" fill="url(#dogChest)"/>
-                    <ellipse cx="170" cy="140" rx="52" ry="46" fill="url(#dogGrad)"/>
-                    <ellipse cx="170" cy="162" rx="28" ry="20" fill="url(#dogGrad)"/>
-                    <ellipse cx="170" cy="158" rx="22" ry="14" fill="url(#dogHighlight)"/>
-                    <ellipse cx="170" cy="155" rx="9" ry="6" fill="rgba(20,20,30,0.5)"/>
-                    <circle cx="168" cy="153" r="2.5" fill="rgba(255,255,255,0.15)"/>
-                    <path d="M 170 161 L 170 168 Q 164 172 158 170" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="1.2" stroke-linecap="round"/>
-                    <path d="M 170 168 Q 176 172 182 170" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="1.2" stroke-linecap="round"/>
-                    <ellipse cx="152" cy="132" rx="8" ry="9" fill="rgba(10,10,20,0.3)"/>
-                    <ellipse cx="188" cy="132" rx="8" ry="9" fill="rgba(10,10,20,0.3)"/>
-                    <circle cx="153" cy="131" r="4.5" fill="rgba(0,0,0,0.5)"/>
-                    <circle cx="187" cy="131" r="4.5" fill="rgba(0,0,0,0.5)"/>
-                    <circle cx="155" cy="129" r="2" fill="rgba(255,255,255,0.45)"/>
-                    <circle cx="189" cy="129" r="2" fill="rgba(255,255,255,0.45)"/>
-                    <circle cx="152" cy="133" r="1" fill="rgba(255,255,255,0.2)"/>
-                    <circle cx="186" cy="133" r="1" fill="rgba(255,255,255,0.2)"/>
-                    <path d="M 142 122 Q 150 118 160 121" fill="none" stroke="rgba(0,0,0,0.08)" stroke-width="1.5" stroke-linecap="round"/>
-                    <path d="M 198 122 Q 190 118 180 121" fill="none" stroke="rgba(0,0,0,0.08)" stroke-width="1.5" stroke-linecap="round"/>
-                    <path d="M 125 130 Q 108 115 95 125 Q 80 138 85 160 Q 88 175 100 178 Q 112 180 120 168 Q 128 155 130 140" fill="url(#dogEar)"/>
-                    <path d="M 215 130 Q 232 115 245 125 Q 260 138 255 160 Q 252 175 240 178 Q 228 180 220 168 Q 212 155 210 140" fill="url(#dogEar)"/>
-                    <path d="M 120 140 Q 108 130 100 140 Q 92 152 98 165 Q 105 170 112 163 Q 118 155 120 145" fill="rgba(255,100,170,0.15)"/>
-                    <path d="M 220 140 Q 232 130 240 140 Q 248 152 242 165 Q 235 170 228 163 Q 222 155 220 145" fill="rgba(255,100,170,0.15)"/>
-                    <path d="M 250 250 Q 275 230 290 200 Q 300 180 295 165 Q 288 158 280 165 Q 275 178 270 195" fill="url(#dogGrad)"/>
-                    <circle cx="292" cy="170" r="6" fill="rgba(0,220,200,0.2)"/>
+                    <ellipse cx="170" cy="260" rx="80" ry="70" fill="url(#dogGrad)"/><ellipse cx="125" cy="310" rx="42" ry="30" fill="url(#dogShadow)" transform="rotate(-8, 125, 310)"/><ellipse cx="215" cy="310" rx="42" ry="30" fill="url(#dogShadow)" transform="rotate(8, 215, 310)"/><path d="M 135 290 Q 130 320 128 345 Q 126 358 130 365 Q 136 372 144 365 Q 148 358 146 345 Q 144 320 142 295" fill="url(#dogGrad)"/><path d="M 195 290 Q 192 320 190 345 Q 188 358 192 365 Q 198 372 206 365 Q 210 358 208 345 Q 206 320 202 295" fill="url(#dogGrad)"/><ellipse cx="137" cy="367" rx="14" ry="7" fill="url(#dogShadow)"/><ellipse cx="199" cy="367" rx="14" ry="7" fill="url(#dogShadow)"/><circle cx="130" cy="367" r="3.5" fill="rgba(0,180,160,0.15)"/><circle cx="137" cy="369" r="3.5" fill="rgba(0,180,160,0.15)"/><circle cx="144" cy="367" r="3.5" fill="rgba(0,180,160,0.15)"/><circle cx="192" cy="367" r="3.5" fill="rgba(0,180,160,0.15)"/><circle cx="199" cy="369" r="3.5" fill="rgba(0,180,160,0.15)"/><circle cx="206" cy="367" r="3.5" fill="rgba(0,180,160,0.15)"/><ellipse cx="100" cy="338" rx="16" ry="8" fill="url(#dogShadow)" transform="rotate(-15, 100, 338)"/><ellipse cx="240" cy="338" rx="16" ry="8" fill="url(#dogShadow)" transform="rotate(15, 240, 338)"/><path d="M 140 230 Q 145 200 155 180 Q 165 165 175 162 Q 185 165 195 180 Q 205 200 210 230" fill="url(#dogGrad)"/><ellipse cx="170" cy="240" rx="35" ry="40" fill="url(#dogChest)"/><ellipse cx="170" cy="140" rx="52" ry="46" fill="url(#dogGrad)"/><ellipse cx="170" cy="162" rx="28" ry="20" fill="url(#dogGrad)"/><ellipse cx="170" cy="158" rx="22" ry="14" fill="url(#dogHighlight)"/><ellipse cx="170" cy="155" rx="9" ry="6" fill="rgba(20,20,30,0.5)"/><circle cx="168" cy="153" r="2.5" fill="rgba(255,255,255,0.15)"/><path d="M 170 161 L 170 168 Q 164 172 158 170" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="1.2" stroke-linecap="round"/><path d="M 170 168 Q 176 172 182 170" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="1.2" stroke-linecap="round"/><ellipse cx="152" cy="132" rx="8" ry="9" fill="rgba(10,10,20,0.3)"/><ellipse cx="188" cy="132" rx="8" ry="9" fill="rgba(10,10,20,0.3)"/><circle cx="153" cy="131" r="4.5" fill="rgba(0,0,0,0.5)"/><circle cx="187" cy="131" r="4.5" fill="rgba(0,0,0,0.5)"/><circle cx="155" cy="129" r="2" fill="rgba(255,255,255,0.45)"/><circle cx="189" cy="129" r="2" fill="rgba(255,255,255,0.45)"/><circle cx="152" cy="133" r="1" fill="rgba(255,255,255,0.2)"/><circle cx="186" cy="133" r="1" fill="rgba(255,255,255,0.2)"/><path d="M 142 122 Q 150 118 160 121" fill="none" stroke="rgba(0,0,0,0.08)" stroke-width="1.5" stroke-linecap="round"/><path d="M 198 122 Q 190 118 180 121" fill="none" stroke="rgba(0,0,0,0.08)" stroke-width="1.5" stroke-linecap="round"/><path d="M 125 130 Q 108 115 95 125 Q 80 138 85 160 Q 88 175 100 178 Q 112 180 120 168 Q 128 155 130 140" fill="url(#dogEar)"/><path d="M 215 130 Q 232 115 245 125 Q 260 138 255 160 Q 252 175 240 178 Q 228 180 220 168 Q 212 155 210 140" fill="url(#dogEar)"/><path d="M 120 140 Q 108 130 100 140 Q 92 152 98 165 Q 105 170 112 163 Q 118 155 120 145" fill="rgba(255,100,170,0.15)"/><path d="M 220 140 Q 232 130 240 140 Q 248 152 242 165 Q 235 170 228 163 Q 222 155 220 145" fill="rgba(255,100,170,0.15)"/><path d="M 250 250 Q 275 230 290 200 Q 300 180 295 165 Q 288 158 280 165 Q 275 178 270 195" fill="url(#dogGrad)"/><circle cx="292" cy="170" r="6" fill="rgba(0,220,200,0.2)"/>
                 </g>
-                <ellipse cx="160" cy="245" rx="45" ry="35" fill="url(#dogHighlight)"/>
-                <ellipse cx="162" cy="128" rx="30" ry="22" fill="rgba(255,200,230,0.12)"/>
-                <ellipse cx="170" cy="118" rx="6" ry="5" fill="rgba(0,200,180,0.12)"/>
-                <circle cx="147" cy="158" r="1.2" fill="rgba(0,0,0,0.06)"/>
-                <circle cx="142" cy="162" r="1.2" fill="rgba(0,0,0,0.06)"/>
-                <circle cx="193" cy="158" r="1.2" fill="rgba(0,0,0,0.06)"/>
-                <circle cx="198" cy="162" r="1.2" fill="rgba(0,0,0,0.06)"/>
-                <ellipse cx="170" cy="182" rx="18" ry="5" fill="rgba(255,0,102,0.25)"/>
-                <circle cx="170" cy="182" r="4" fill="rgba(255,50,130,0.35)"/>
-                <path d="M 158 180 Q 152 175 148 180 Q 152 185 158 183" fill="rgba(255,80,150,0.3)"/>
-                <path d="M 182 180 Q 188 175 192 180 Q 188 185 182 183" fill="rgba(255,80,150,0.3)"/>
+                <ellipse cx="160" cy="245" rx="45" ry="35" fill="url(#dogHighlight)"/><ellipse cx="162" cy="128" rx="30" ry="22" fill="rgba(255,200,230,0.12)"/><ellipse cx="170" cy="118" rx="6" ry="5" fill="rgba(0,200,180,0.12)"/><circle cx="147" cy="158" r="1.2" fill="rgba(0,0,0,0.06)"/><circle cx="142" cy="162" r="1.2" fill="rgba(0,0,0,0.06)"/><circle cx="193" cy="158" r="1.2" fill="rgba(0,0,0,0.06)"/><circle cx="198" cy="162" r="1.2" fill="rgba(0,0,0,0.06)"/><ellipse cx="170" cy="182" rx="18" ry="5" fill="rgba(255,0,102,0.25)"/><circle cx="170" cy="182" r="4" fill="rgba(255,50,130,0.35)"/><path d="M 158 180 Q 152 175 148 180 Q 152 185 158 183" fill="rgba(255,80,150,0.3)"/><path d="M 182 180 Q 188 175 192 180 Q 188 185 182 183" fill="rgba(255,80,150,0.3)"/>
             </svg>
         </div>
 
@@ -1530,70 +1453,16 @@
         <div class="hero-cat-container" id="heroCat">
             <svg class="hero-cat-svg" viewBox="0 0 130 150" xmlns="http://www.w3.org/2000/svg">
                 <defs>
-                    <linearGradient id="catGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                        <stop offset="0%" style="stop-color:#00ffdd;stop-opacity:1" />
-                        <stop offset="30%" style="stop-color:#44eedd;stop-opacity:0.95" />
-                        <stop offset="60%" style="stop-color:#77ddcc;stop-opacity:0.9" />
-                        <stop offset="100%" style="stop-color:#ff66bb;stop-opacity:0.75" />
-                    </linearGradient>
-                    <linearGradient id="catDark" x1="0%" y1="0%" x2="0%" y2="100%">
-                        <stop offset="0%" style="stop-color:#00ccaa;stop-opacity:0.8" />
-                        <stop offset="100%" style="stop-color:#cc4488;stop-opacity:0.6" />
-                    </linearGradient>
-                    <radialGradient id="catGlow" cx="50%" cy="40%" r="55%">
-                        <stop offset="0%" style="stop-color:#aaffee;stop-opacity:0.25" />
-                        <stop offset="100%" style="stop-color:transparent;stop-opacity:0" />
-                    </radialGradient>
-                    <filter id="catSoft">
-                        <feGaussianBlur in="SourceAlpha" stdDeviation="1.5"/>
-                        <feOffset dx="0" dy="3"/>
-                        <feComponentTransfer><feFuncA type="linear" slope="0.2"/></feComponentTransfer>
-                        <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
-                    </filter>
+                    <linearGradient id="catGrad" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#00ffdd"/><stop offset="30%" style="stop-color:#44eedd;stop-opacity:0.95"/><stop offset="60%" style="stop-color:#77ddcc;stop-opacity:0.9"/><stop offset="100%" style="stop-color:#ff66bb;stop-opacity:0.75"/></linearGradient>
+                    <linearGradient id="catDark" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#00ccaa;stop-opacity:0.8"/><stop offset="100%" style="stop-color:#cc4488;stop-opacity:0.6"/></linearGradient>
+                    <radialGradient id="catGlow" cx="50%" cy="40%" r="55%"><stop offset="0%" style="stop-color:#aaffee;stop-opacity:0.25"/><stop offset="100%" style="stop-color:transparent;stop-opacity:0"/></radialGradient>
+                    <filter id="catSoft"><feGaussianBlur in="SourceAlpha" stdDeviation="1.5"/><feOffset dx="0" dy="3"/><feComponentTransfer><feFuncA type="linear" slope="0.2"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
                 </defs>
                 <ellipse cx="65" cy="80" rx="45" ry="55" fill="url(#catGlow)"/>
                 <g filter="url(#catSoft)">
-                    <path d="M 95 105 Q 110 90 118 70 Q 122 55 118 42 Q 114 35 108 40 Q 105 50 104 65 Q 102 80 98 95" fill="url(#catGrad)"/>
-                    <ellipse cx="65" cy="105" rx="30" ry="28" fill="url(#catGrad)"/>
-                    <ellipse cx="48" cy="122" rx="16" ry="10" fill="url(#catDark)" transform="rotate(-5, 48, 122)"/>
-                    <ellipse cx="82" cy="122" rx="16" ry="10" fill="url(#catDark)" transform="rotate(5, 82, 122)"/>
-                    <path d="M 52 110 Q 50 120 48 132 Q 47 138 50 141 Q 54 143 57 140 Q 58 136 57 130 Q 56 120 55 112" fill="url(#catGrad)"/>
-                    <path d="M 75 110 Q 77 120 78 132 Q 79 138 76 141 Q 72 143 69 140 Q 68 136 69 130 Q 70 120 72 112" fill="url(#catGrad)"/>
-                    <ellipse cx="53" cy="142" rx="7" ry="4" fill="url(#catDark)"/>
-                    <ellipse cx="73" cy="142" rx="7" ry="4" fill="url(#catDark)"/>
-                    <ellipse cx="40" cy="130" rx="8" ry="5" fill="url(#catDark)" transform="rotate(-10, 40, 130)"/>
-                    <ellipse cx="86" cy="130" rx="8" ry="5" fill="url(#catDark)" transform="rotate(10, 86, 130)"/>
-                    <path d="M 52 92 Q 55 78 60 72 Q 65 68 70 72 Q 75 78 78 92" fill="url(#catGrad)"/>
-                    <ellipse cx="65" cy="95" rx="15" ry="12" fill="rgba(255,255,255,0.1)"/>
-                    <ellipse cx="65" cy="55" rx="26" ry="23" fill="url(#catGrad)"/>
-                    <path d="M 46 42 L 38 15 Q 37 12 40 14 L 52 35" fill="url(#catGrad)"/>
-                    <path d="M 84 42 L 92 15 Q 93 12 90 14 L 78 35" fill="url(#catGrad)"/>
-                    <path d="M 47 40 L 42 22 Q 41 20 43 21 L 51 36" fill="rgba(255,100,170,0.25)"/>
-                    <path d="M 83 40 L 88 22 Q 89 20 87 21 L 79 36" fill="rgba(255,100,170,0.25)"/>
-                    <ellipse cx="65" cy="62" rx="12" ry="8" fill="rgba(255,255,255,0.08)"/>
-                    <path d="M 63 59 L 65 57 L 67 59 Z" fill="rgba(255,100,150,0.5)"/>
-                    <path d="M 65 60 L 65 63 Q 62 65 59 64" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="0.8" stroke-linecap="round"/>
-                    <path d="M 65 63 Q 68 65 71 64" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="0.8" stroke-linecap="round"/>
-                    <ellipse cx="56" cy="50" rx="6" ry="7" fill="rgba(10,10,20,0.25)"/>
-                    <ellipse cx="74" cy="50" rx="6" ry="7" fill="rgba(10,10,20,0.25)"/>
-                    <ellipse cx="56" cy="50" rx="2.5" ry="5.5" fill="rgba(0,0,0,0.5)"/>
-                    <ellipse cx="74" cy="50" rx="2.5" ry="5.5" fill="rgba(0,0,0,0.5)"/>
-                    <circle cx="57.5" cy="48" r="1.8" fill="rgba(255,255,255,0.5)"/>
-                    <circle cx="75.5" cy="48" r="1.8" fill="rgba(255,255,255,0.5)"/>
-                    <circle cx="55" cy="52" r="0.8" fill="rgba(255,255,255,0.25)"/>
-                    <circle cx="73" cy="52" r="0.8" fill="rgba(255,255,255,0.25)"/>
-                    <line x1="50" y1="60" x2="28" y2="56" stroke="rgba(255,255,255,0.15)" stroke-width="0.7" stroke-linecap="round"/>
-                    <line x1="50" y1="62" x2="26" y2="62" stroke="rgba(255,255,255,0.12)" stroke-width="0.7" stroke-linecap="round"/>
-                    <line x1="50" y1="64" x2="28" y2="68" stroke="rgba(255,255,255,0.1)" stroke-width="0.7" stroke-linecap="round"/>
-                    <line x1="80" y1="60" x2="102" y2="56" stroke="rgba(255,255,255,0.15)" stroke-width="0.7" stroke-linecap="round"/>
-                    <line x1="80" y1="62" x2="104" y2="62" stroke="rgba(255,255,255,0.12)" stroke-width="0.7" stroke-linecap="round"/>
-                    <line x1="80" y1="64" x2="102" y2="68" stroke="rgba(255,255,255,0.1)" stroke-width="0.7" stroke-linecap="round"/>
+                    <path d="M 95 105 Q 110 90 118 70 Q 122 55 118 42 Q 114 35 108 40 Q 105 50 104 65 Q 102 80 98 95" fill="url(#catGrad)"/><ellipse cx="65" cy="105" rx="30" ry="28" fill="url(#catGrad)"/><ellipse cx="48" cy="122" rx="16" ry="10" fill="url(#catDark)" transform="rotate(-5, 48, 122)"/><ellipse cx="82" cy="122" rx="16" ry="10" fill="url(#catDark)" transform="rotate(5, 82, 122)"/><path d="M 52 110 Q 50 120 48 132 Q 47 138 50 141 Q 54 143 57 140 Q 58 136 57 130 Q 56 120 55 112" fill="url(#catGrad)"/><path d="M 75 110 Q 77 120 78 132 Q 79 138 76 141 Q 72 143 69 140 Q 68 136 69 130 Q 70 120 72 112" fill="url(#catGrad)"/><ellipse cx="53" cy="142" rx="7" ry="4" fill="url(#catDark)"/><ellipse cx="73" cy="142" rx="7" ry="4" fill="url(#catDark)"/><ellipse cx="40" cy="130" rx="8" ry="5" fill="url(#catDark)" transform="rotate(-10, 40, 130)"/><ellipse cx="86" cy="130" rx="8" ry="5" fill="url(#catDark)" transform="rotate(10, 86, 130)"/><path d="M 52 92 Q 55 78 60 72 Q 65 68 70 72 Q 75 78 78 92" fill="url(#catGrad)"/><ellipse cx="65" cy="95" rx="15" ry="12" fill="rgba(255,255,255,0.1)"/><ellipse cx="65" cy="55" rx="26" ry="23" fill="url(#catGrad)"/><path d="M 46 42 L 38 15 Q 37 12 40 14 L 52 35" fill="url(#catGrad)"/><path d="M 84 42 L 92 15 Q 93 12 90 14 L 78 35" fill="url(#catGrad)"/><path d="M 47 40 L 42 22 Q 41 20 43 21 L 51 36" fill="rgba(255,100,170,0.25)"/><path d="M 83 40 L 88 22 Q 89 20 87 21 L 79 36" fill="rgba(255,100,170,0.25)"/><ellipse cx="65" cy="62" rx="12" ry="8" fill="rgba(255,255,255,0.08)"/><path d="M 63 59 L 65 57 L 67 59 Z" fill="rgba(255,100,150,0.5)"/><path d="M 65 60 L 65 63 Q 62 65 59 64" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="0.8" stroke-linecap="round"/><path d="M 65 63 Q 68 65 71 64" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="0.8" stroke-linecap="round"/><ellipse cx="56" cy="50" rx="6" ry="7" fill="rgba(10,10,20,0.25)"/><ellipse cx="74" cy="50" rx="6" ry="7" fill="rgba(10,10,20,0.25)"/><ellipse cx="56" cy="50" rx="2.5" ry="5.5" fill="rgba(0,0,0,0.5)"/><ellipse cx="74" cy="50" rx="2.5" ry="5.5" fill="rgba(0,0,0,0.5)"/><circle cx="57.5" cy="48" r="1.8" fill="rgba(255,255,255,0.5)"/><circle cx="75.5" cy="48" r="1.8" fill="rgba(255,255,255,0.5)"/><circle cx="55" cy="52" r="0.8" fill="rgba(255,255,255,0.25)"/><circle cx="73" cy="52" r="0.8" fill="rgba(255,255,255,0.25)"/><line x1="50" y1="60" x2="28" y2="56" stroke="rgba(255,255,255,0.15)" stroke-width="0.7" stroke-linecap="round"/><line x1="50" y1="62" x2="26" y2="62" stroke="rgba(255,255,255,0.12)" stroke-width="0.7" stroke-linecap="round"/><line x1="50" y1="64" x2="28" y2="68" stroke="rgba(255,255,255,0.1)" stroke-width="0.7" stroke-linecap="round"/><line x1="80" y1="60" x2="102" y2="56" stroke="rgba(255,255,255,0.15)" stroke-width="0.7" stroke-linecap="round"/><line x1="80" y1="62" x2="104" y2="62" stroke="rgba(255,255,255,0.12)" stroke-width="0.7" stroke-linecap="round"/><line x1="80" y1="64" x2="102" y2="68" stroke="rgba(255,255,255,0.1)" stroke-width="0.7" stroke-linecap="round"/>
                 </g>
-                <path d="M 60 40 Q 65 36 70 40" fill="none" stroke="rgba(0,180,160,0.12)" stroke-width="1.2"/>
-                <path d="M 58 43 Q 65 38 72 43" fill="none" stroke="rgba(0,180,160,0.08)" stroke-width="1"/>
-                <path d="M 57 46 Q 65 42 73 46" fill="none" stroke="rgba(0,180,160,0.06)" stroke-width="0.8"/>
-                <ellipse cx="62" cy="48" rx="14" ry="10" fill="rgba(255,255,255,0.08)"/>
-                <circle cx="116" cy="45" r="4" fill="rgba(0,220,200,0.2)"/>
+                <path d="M 60 40 Q 65 36 70 40" fill="none" stroke="rgba(0,180,160,0.12)" stroke-width="1.2"/><path d="M 58 43 Q 65 38 72 43" fill="none" stroke="rgba(0,180,160,0.08)" stroke-width="1"/><path d="M 57 46 Q 65 42 73 46" fill="none" stroke="rgba(0,180,160,0.06)" stroke-width="0.8"/><ellipse cx="62" cy="48" rx="14" ry="10" fill="rgba(255,255,255,0.08)"/><circle cx="116" cy="45" r="4" fill="rgba(0,220,200,0.2)"/>
             </svg>
         </div>
 
@@ -1601,26 +1470,20 @@
             <h1>INSTITUTO<br>MICHIOROLÓGICO<br>NACIONAL</h1>
             <div class="subtitle">@tormenta_y_huracat · CDMX</div>
         </div>
-
         <div class="hero-temp" id="heroTemp">--°</div>
-
         <div class="hero-side-left">2026</div>
         <div class="hero-side-right">Corresponsales de campo</div>
-
         <div class="hero-credit">
             <div class="scroll-indicator"></div>
             <span>Descubre más</span>
         </div>
-
         <div class="corner-mark tl"></div>
         <div class="corner-mark tr"></div>
         <div class="corner-mark bl"></div>
         <div class="corner-mark br"></div>
-
         <div class="hero-glow"></div>
         <div class="hero-vignette"></div>
         <div class="hero-scanlines"></div>
-
         <div class="particles" id="heroParticles"></div>
     </section>
 
@@ -1629,7 +1492,6 @@
         <div class="accent-line reveal"></div>
         <h2 class="section-heading reveal">EL EQUIPO</h2>
         <p class="section-sub reveal">Corresponsales meteorológicos con patitas</p>
-
         <div class="about-grid">
             <div class="about-card tormenta reveal">
                 <img src="../img/619915374_17850377358665053_6126088117728831196_n_.jpg" alt="Tormenta" class="about-card-img">
@@ -1655,73 +1517,36 @@
         <div class="accent-line reveal"></div>
         <h2 class="section-heading reveal">TORMENTIPS</h2>
         <p class="section-sub reveal">Consejos meteorológicos para ti y tus mascotas</p>
-
         <div class="tips-grid">
             <div class="tip-card featured reveal" data-tip="frios-uv">
                 <img src="../img/625266309_17852880177665053_3059908937446446596_n_.jpg" alt="Protege a tus mascotas">
-                <div class="tip-card-overlay">
-                    <div class="tip-card-tag">Frentes Fríos · UV</div>
-                    <div class="tip-card-title">Protege a tus mascotas de los frentes fríos y radiación UV. En la CDMX a 2400 msnm se intensifican sus efectos.</div>
-                </div>
-                <div class="tip-card-expand-hint">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
-                    <span>Leer más</span>
-                </div>
+                <div class="tip-card-overlay"><div class="tip-card-tag">Frentes Fríos · UV</div><div class="tip-card-title">Protege a tus mascotas de los frentes fríos y radiación UV.</div></div>
+                <div class="tip-card-expand-hint"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg><span>Leer más</span></div>
             </div>
             <div class="tip-card reveal" style="transition-delay: 0.1s;" data-tip="calor">
                 <img src="../img/634194112_17856177957665053_695104711634274032_n_.jpg" alt="Mantente hidratado">
-                <div class="tip-card-overlay">
-                    <div class="tip-card-tag">Calor</div>
-                    <div class="tip-card-title">En estos días de calor, ¡mantente hidratad@!</div>
-                </div>
-                <div class="tip-card-expand-hint">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
-                    <span>Leer más</span>
-                </div>
+                <div class="tip-card-overlay"><div class="tip-card-tag">Calor</div><div class="tip-card-title">En estos días de calor, ¡mantente hidratad@!</div></div>
+                <div class="tip-card-expand-hint"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg><span>Leer más</span></div>
             </div>
             <div class="tip-card reveal" style="transition-delay: 0.2s;" data-tip="lluvia">
                 <img src="../img/620449702_17849804991665053_880112373181660182_n_.jpg" alt="Lluvias aisladas">
-                <div class="tip-card-overlay">
-                    <div class="tip-card-tag">Lluvia</div>
-                    <div class="tip-card-title">¿Ya salieron a pasear? Hay probabilidad de lluvias aisladas esta tarde en CDMX.</div>
-                </div>
-                <div class="tip-card-expand-hint">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
-                    <span>Leer más</span>
-                </div>
+                <div class="tip-card-overlay"><div class="tip-card-tag">Lluvia</div><div class="tip-card-title">¿Ya salieron a pasear? Hay probabilidad de lluvias aisladas.</div></div>
+                <div class="tip-card-expand-hint"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg><span>Leer más</span></div>
             </div>
             <div class="tip-card reveal" style="transition-delay: 0.15s;" data-tip="isoterma">
                 <img src="../img/618049676_17848826070665053_5093901396132810589_n_.jpg" alt="Isoterma">
-                <div class="tip-card-overlay">
-                    <div class="tip-card-tag">Análisis Sinóptico</div>
-                    <div class="tip-card-title">12°C a lo largo de esa línea (isoterma) — análisis meteorológico del centro de México.</div>
-                </div>
-                <div class="tip-card-expand-hint">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
-                    <span>Leer más</span>
-                </div>
+                <div class="tip-card-overlay"><div class="tip-card-tag">Análisis Sinóptico</div><div class="tip-card-title">12°C a lo largo de esa línea (isoterma).</div></div>
+                <div class="tip-card-expand-hint"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg><span>Leer más</span></div>
             </div>
             <div class="tip-card reveal" style="transition-delay: 0.25s;" data-tip="biodiversidad">
                 <img src="../img/618055459_17849268264665053_7480189280676670810_n_.jpg" alt="Tormenta y la mariposa">
-                <div class="tip-card-overlay">
-                    <div class="tip-card-tag">Naturaleza</div>
-                    <div class="tip-card-title">Tormenta observando la biodiversidad urbana durante su reporte de campo.</div>
-                </div>
-                <div class="tip-card-expand-hint">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
-                    <span>Leer más</span>
-                </div>
+                <div class="tip-card-overlay"><div class="tip-card-tag">Naturaleza</div><div class="tip-card-title">Tormenta observando la biodiversidad urbana.</div></div>
+                <div class="tip-card-expand-hint"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg><span>Leer más</span></div>
             </div>
             <div class="tip-card reveal" style="transition-delay: 0.3s;" data-tip="satelite">
                 <img src="../img/617602496_17848826061665053_8591592844352451526_n_.jpg" alt="Lluvia centro México">
-                <div class="tip-card-overlay">
-                    <div class="tip-card-tag">Satélite GOES-19</div>
-                    <div class="tip-card-title">Lluvia en el centro de México — imagen satelital NOAA/NESDIS.</div>
-                </div>
-                <div class="tip-card-expand-hint">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
-                    <span>Leer más</span>
-                </div>
+                <div class="tip-card-overlay"><div class="tip-card-tag">Satélite GOES-19</div><div class="tip-card-title">Lluvia en el centro de México — NOAA/NESDIS.</div></div>
+                <div class="tip-card-expand-hint"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg><span>Leer más</span></div>
             </div>
         </div>
     </section>
@@ -1731,65 +1556,19 @@
         <div class="accent-line reveal"></div>
         <h2 class="section-heading reveal">REELS</h2>
         <p class="section-sub reveal">Reportes en video desde el campo</p>
-
         <div class="reels-scroll">
-            <div class="reel-card reveal" data-video="../vid/video_1.mp4">
-                <video src="../vid/video_1.mp4" muted loop playsinline preload="metadata" poster="../img/thumb_vid_1.jpg"></video>
-                <div class="reel-card-overlay">
-                    <button class="reel-play-btn" aria-label="Ver video en pantalla completa">
-                        <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
-                    </button>
-                    <div class="reel-tag">Instituto Michiorológico</div>
-                    <div class="reel-title">Tormenta reportando desde las calles de CDMX</div>
-                </div>
-            </div>
-            <div class="reel-card reveal" style="transition-delay: 0.1s;" data-video="../vid/video_4.mp4">
-                <video src="../vid/video_4.mp4" muted loop playsinline preload="metadata" poster="../img/thumb_vid_4.jpg"></video>
-                <div class="reel-card-overlay">
-                    <button class="reel-play-btn" aria-label="Ver video en pantalla completa">
-                        <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
-                    </button>
-                    <div class="reel-tag">Reporte de Campo</div>
-                    <div class="reel-title">Tormenta reportando para el servicio</div>
-                </div>
-            </div>
-            <div class="reel-card reveal" style="transition-delay: 0.2s;" data-video="../vid/video_3.mp4">
-                <video src="../vid/video_3.mp4" muted loop playsinline preload="metadata" poster="../img/thumb_vid_3.jpg"></video>
-                <div class="reel-card-overlay">
-                    <button class="reel-play-btn" aria-label="Ver video en pantalla completa">
-                        <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
-                    </button>
-                    <div class="reel-tag">Contingencia</div>
-                    <div class="reel-title">¡Contingencia ambiental activada! Temporada de partículas</div>
-                </div>
-            </div>
-            <div class="reel-card reveal" style="transition-delay: 0.3s;" data-video="../vid/video_2.mp4">
-                <video src="../vid/video_2.mp4" muted loop playsinline preload="metadata" poster="../img/thumb_vid_2.jpg"></video>
-                <div class="reel-card-overlay">
-                    <button class="reel-play-btn" aria-label="Ver video en pantalla completa">
-                        <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
-                    </button>
-                    <div class="reel-tag">En ruta</div>
-                    <div class="reel-title">Tormenta observando el clima desde el auto</div>
-                </div>
-            </div>
-            <div class="reel-card reveal" style="transition-delay: 0.4s;" data-video="../vid/video_5.mp4">
-                <video src="../vid/video_5.mp4" muted loop playsinline preload="metadata" poster="../img/thumb_vid_5.jpg"></video>
-                <div class="reel-card-overlay">
-                    <button class="reel-play-btn" aria-label="Ver video en pantalla completa">
-                        <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
-                    </button>
-                    <div class="reel-tag">Tormentip</div>
-                    <div class="reel-title">Tip del día desde la comodidad del hogar</div>
-                </div>
-            </div>
+            <div class="reel-card reveal" data-video="../vid/video_1.mp4"><video src="../vid/video_1.mp4" muted loop playsinline preload="metadata" poster="../img/thumb_vid_1.jpg"></video><div class="reel-card-overlay"><button class="reel-play-btn" aria-label="Ver video"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></button><div class="reel-tag">Instituto Michiorológico</div><div class="reel-title">Tormenta reportando desde CDMX</div></div></div>
+            <div class="reel-card reveal" style="transition-delay: 0.1s;" data-video="../vid/video_4.mp4"><video src="../vid/video_4.mp4" muted loop playsinline preload="metadata" poster="../img/thumb_vid_4.jpg"></video><div class="reel-card-overlay"><button class="reel-play-btn" aria-label="Ver video"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></button><div class="reel-tag">Reporte de Campo</div><div class="reel-title">Reportando para el servicio</div></div></div>
+            <div class="reel-card reveal" style="transition-delay: 0.2s;" data-video="../vid/video_3.mp4"><video src="../vid/video_3.mp4" muted loop playsinline preload="metadata" poster="../img/thumb_vid_3.jpg"></video><div class="reel-card-overlay"><button class="reel-play-btn" aria-label="Ver video"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></button><div class="reel-tag">Contingencia</div><div class="reel-title">Contingencia ambiental activada</div></div></div>
+            <div class="reel-card reveal" style="transition-delay: 0.3s;" data-video="../vid/video_2.mp4"><video src="../vid/video_2.mp4" muted loop playsinline preload="metadata" poster="../img/thumb_vid_2.jpg"></video><div class="reel-card-overlay"><button class="reel-play-btn" aria-label="Ver video"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></button><div class="reel-tag">En ruta</div><div class="reel-title">Observando el clima desde el auto</div></div></div>
+            <div class="reel-card reveal" style="transition-delay: 0.4s;" data-video="../vid/video_5.mp4"><video src="../vid/video_5.mp4" muted loop playsinline preload="metadata" poster="../img/thumb_vid_5.jpg"></video><div class="reel-card-overlay"><button class="reel-play-btn" aria-label="Ver video"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></button><div class="reel-tag">Tormentip</div><div class="reel-title">Tip del día desde casita</div></div></div>
         </div>
     </section>
 
     <!-- ===== WEATHER BANNER ===== -->
     <section class="weather-banner">
         <h2 class="reveal">SÍGUENOS EN INSTAGRAM</h2>
-        <p class="reveal" style="transition-delay: 0.1s;">Reportes diarios del clima en la CDMX, tips para proteger a tus mascotas y análisis meteorológicos… todo con patitas.</p>
+        <p class="reveal" style="transition-delay: 0.1s;">Reportes diarios del clima en la CDMX, tips para proteger a tus mascotas y análisis meteorológicos... todo con patitas.</p>
         <a href="https://www.instagram.com/tormenta_y_huracat/" target="_blank" class="cta-btn reveal" style="transition-delay: 0.2s;">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg>
             @tormenta_y_huracat
@@ -1812,20 +1591,16 @@
     <script>
         // === NAV SCROLL ===
         const nav = document.getElementById('mainNav');
-        window.addEventListener('scroll', () => {
-            nav.classList.toggle('scrolled', window.scrollY > 50);
-        });
+        window.addEventListener('scroll', () => { nav.classList.toggle('scrolled', window.scrollY > 50); });
 
         // === HERO PARALLAX ===
         const hero = document.getElementById('hero');
         const heroCircle = document.getElementById('heroCircle');
         const heroDog = document.getElementById('heroDog');
         const heroCat = document.getElementById('heroCat');
-
         hero.addEventListener('mousemove', (e) => {
             const x = (e.clientX / window.innerWidth - 0.5) * 2;
             const y = (e.clientY / window.innerHeight - 0.5) * 2;
-
             if (heroCircle) heroCircle.style.transform = `translate(calc(-50% + ${x * 8}px), calc(-50% + ${y * 8}px))`;
             if (heroDog) heroDog.style.transform = `translate(calc(-50% + ${x * -5}px), calc(-50% + ${y * -4}px))`;
             if (heroCat) heroCat.style.transform = `translate(calc(-50% + ${x * 10}px), calc(-50% + ${y * 8}px))`;
@@ -1833,341 +1608,258 @@
 
         // === PARTICLES ===
         const particlesContainer = document.getElementById('heroParticles');
-        const colors = [
-            'rgba(255,150,200,0.6)',
-            'rgba(0,229,204,0.5)',
-            'rgba(255,255,255,0.3)',
-            'rgba(255,100,170,0.5)',
-            'rgba(100,255,230,0.4)',
-        ];
-
+        const colors = ['rgba(255,150,200,0.6)','rgba(0,229,204,0.5)','rgba(255,255,255,0.3)','rgba(255,100,170,0.5)','rgba(100,255,230,0.4)'];
         function createParticle() {
             const p = document.createElement('div');
             p.classList.add('particle');
-            const size = Math.random() * 3.5 + 1.5;
-            const x = Math.random() * 100;
-            const dx = (Math.random() - 0.5) * 100;
-            const duration = Math.random() * 10 + 12;
-            const delay = Math.random() * 8;
+            const size = Math.random() * 3.5 + 1.5, x = Math.random() * 100, dx = (Math.random() - 0.5) * 100;
+            const duration = Math.random() * 10 + 12, delay = Math.random() * 8;
             const color = colors[Math.floor(Math.random() * colors.length)];
-
-            p.style.cssText = `
-                width: ${size}px; height: ${size}px;
-                left: ${x}%; bottom: -10px;
-                background: ${color};
-                box-shadow: 0 0 ${size * 3}px ${color};
-                --dx: ${dx}px;
-                animation-duration: ${duration}s;
-                animation-delay: ${delay}s;
-            `;
-
+            p.style.cssText = `width:${size}px;height:${size}px;left:${x}%;bottom:-10px;background:${color};box-shadow:0 0 ${size*3}px ${color};--dx:${dx}px;animation-duration:${duration}s;animation-delay:${delay}s;`;
             particlesContainer.appendChild(p);
             setTimeout(() => { p.remove(); createParticle(); }, (duration + delay) * 1000);
         }
-
         for (let i = 0; i < 20; i++) createParticle();
 
-        // === LIVE TEMPERATURE (CDMX) ===
+        // === LIVE TEMPERATURE ===
         const heroTemp = document.getElementById('heroTemp');
-        async function fetchTemp() {
+        (async () => {
             try {
                 const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=19.4326&longitude=-99.1332&current_weather=true');
                 const data = await res.json();
-                const temp = Math.round(data.current_weather.temperature);
-                heroTemp.textContent = temp + '°';
-            } catch(e) {
-                heroTemp.textContent = '19°';
-            }
-        }
-        fetchTemp();
+                heroTemp.textContent = Math.round(data.current_weather.temperature) + '°';
+            } catch(e) { heroTemp.textContent = '19°'; }
+        })();
 
         // === SCROLL REVEAL ===
-        const revealEls = document.querySelectorAll('.reveal');
         const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
         }, { threshold: 0.1 });
-
-        revealEls.forEach(el => observer.observe(el));
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
         // === REEL HOVER PLAY ===
         document.querySelectorAll('.reel-card').forEach(card => {
             const video = card.querySelector('video');
-            card.addEventListener('mouseenter', () => {
-                video.play().catch(() => {});
-            });
-            card.addEventListener('mouseleave', () => {
-                video.pause();
-                video.currentTime = 0;
-            });
+            card.addEventListener('mouseenter', () => { video.play().catch(() => {}); });
+            card.addEventListener('mouseleave', () => { video.pause(); video.currentTime = 0; });
         });
 
-        // === FULLSCREEN VIDEO PLAYER ===
+        // === FULLSCREEN VIDEO ===
         const videoFullscreen = document.getElementById('videoFullscreen');
         const fullscreenVideo = document.getElementById('fullscreenVideo');
         const videoCloseBtn = document.getElementById('videoClose');
+        function openVideo(src) { fullscreenVideo.src = src; videoFullscreen.classList.add('active'); document.body.style.overflow = 'hidden'; setTimeout(() => fullscreenVideo.play().catch(()=>{}), 100); }
+        function closeVideo() { videoFullscreen.classList.remove('active'); document.body.style.overflow = ''; fullscreenVideo.pause(); setTimeout(() => { fullscreenVideo.removeAttribute('src'); fullscreenVideo.load(); }, 400); }
+        document.querySelectorAll('.reel-play-btn').forEach(btn => { btn.addEventListener('click', (e) => { e.stopPropagation(); const src = btn.closest('.reel-card').dataset.video; if (src) openVideo(src); }); });
+        videoCloseBtn.addEventListener('click', (e) => { e.stopPropagation(); closeVideo(); });
+        videoFullscreen.addEventListener('click', (e) => { if (e.target === videoFullscreen) closeVideo(); });
 
-        function openFullscreenVideo(src) {
-            fullscreenVideo.src = src;
-            videoFullscreen.classList.add('active');
-            document.body.style.overflow = 'hidden';
-            // Small delay so the transition plays, then autoplay
-            setTimeout(() => {
-                fullscreenVideo.play().catch(() => {});
-            }, 100);
-        }
-
-        function closeFullscreenVideo() {
-            videoFullscreen.classList.remove('active');
-            document.body.style.overflow = '';
-            fullscreenVideo.pause();
-            // Clear src after transition to free memory
-            setTimeout(() => {
-                fullscreenVideo.removeAttribute('src');
-                fullscreenVideo.load();
-            }, 400);
-        }
-
-        // Play button click → fullscreen
-        document.querySelectorAll('.reel-play-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const card = btn.closest('.reel-card');
-                const videoSrc = card.dataset.video;
-                if (videoSrc) openFullscreenVideo(videoSrc);
-            });
-        });
-
-        // Close: X button
-        videoCloseBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            closeFullscreenVideo();
-        });
-
-        // Close: click backdrop (outside video)
-        videoFullscreen.addEventListener('click', (e) => {
-            if (e.target === videoFullscreen) {
-                closeFullscreenVideo();
-            }
-        });
-
-        // Close: Escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                if (videoFullscreen.classList.contains('active')) closeFullscreenVideo();
-                if (tipDetailModal.classList.contains('active')) closeTipDetail();
-            }
-        });
-
-        // === TIP DETAIL MODAL (data-driven) ===
+        // === TIP DETAIL MODAL ===
         const tipDetailModal = document.getElementById('tipDetailModal');
         const tipDetailContent = document.getElementById('tipDetailContent');
 
         const tipData = {
             'frios-uv': {
                 img: '../img/625266309_17852880177665053_3059908937446446596_n_.jpg',
-                tag: 'Frentes Fríos · Radiación UV · Salud Animal',
-                title: 'Protege a tus mascotas de los frentes fríos y la radiación UV',
+                tag: 'Frentes Fríos · Radiación UV · Patitas Calientitas',
+                title: '¡Que no les gane el frío ni el sol! Guía para proteger a tus peludos',
                 meta: ['🐾 Por Tormenta & Huracat', '📍 CDMX · 2,400 msnm', '🌡️ Temporada de frentes fríos'],
                 sections: [
                     {
-                        heading: '¿Por qué la altitud importa?',
-                        text: 'La Ciudad de México se encuentra a 2,400 metros sobre el nivel del mar. A esta altitud, la atmósfera es más delgada, lo que significa que la radiación ultravioleta es más intensa — hasta un 25% más que a nivel del mar. Durante los frentes fríos, las mascotas enfrentan un doble riesgo: temperaturas bajas combinadas con radiación UV elevada en los días despejados que siguen.'
+                        heading: 'Oigan, aquí arriba pega diferente',
+                        text: '¡Guau! Aquí en la CDMX vivimos a 2,400 metros sobre el nivel del mar. Yo, Tormenta, lo siento cada mañana cuando salgo a patrullar: el airecito de las 6 AM te cala hasta los huesitos. Pero lo que mucha gente no sabe es que a esta altitud los rayos UV son hasta un 25% más fuertes que en la playa. O sea, cuando pasa el frente frío y sale ese solazo traicionero, nuestras narices y orejitas están en peligro. Huracat me lo confirmó desde su ventana con los datos del GOES-19. Así que pongan atención a estos tips que armamos con mucho amor perruno y sabiduría gatuna.'
                     },
                     {
-                        heading: '🐕 Tips para perritos',
+                        heading: '🐕 Tips de Tormenta para perritos',
                         list: [
-                            { icon: '❄️', title: 'Abrígatlos en los paseos matutinos.', desc: 'Las temperaturas más bajas se registran entre las 5:00 y 8:00 AM. Un suéter o chamarra canina puede prevenir hipotermia, especialmente en razas pequeñas y de pelo corto.' },
-                            { icon: '☀️', title: 'Protección solar para narices y orejas.', desc: 'Los perritos con piel clara o poco pelo en estas zonas son vulnerables a quemaduras solares. Usa bloqueador solar veterinario (SPF 30+) antes de salir.' },
-                            { icon: '🏠', title: 'Cama elevada y cobija.', desc: 'No dejes que duerman directamente en el piso frío. Una cama elevada con cobija mantiene su temperatura corporal estable.' },
-                            { icon: '💧', title: 'Hidratación constante.', desc: 'El aire frío y seco deshidrata. Asegúrate de que siempre tengan agua fresca disponible.' }
+                            { icon: '🧣', title: '¡Saquen los suéteres!', desc: 'Las mañanas entre 5 y 8 AM son las más frías. Yo uso mi chamarra favorita con estampado de huellitas. Si tu perrito es chiquito o de pelo corto, un buen suetercito puede ser la diferencia entre un paseo feliz y unos temblores.' },
+                            { icon: '👃', title: 'Protección para narices rosas.', desc: 'Si tu perrito tiene la nariz clarita o las orejitas sin mucho pelo, necesita bloqueador solar veterinario (SPF 30+). Sí, existimos los perritos que nos quemamos con el sol. A mí me ponen en la nariz antes de cada reporte de campo.' },
+                            { icon: '🛏️', title: 'Cero piso frío para dormir.', desc: 'Nada de dormir en el piso helado. Una camita elevada con cobijita es lo mínimo que merecemos (además de croquetas extra, pero eso es otro tema). Mantenemos nuestra temperatura corporal estable y dormimos como angelitos.' },
+                            { icon: '💧', title: 'Agüita siempre, siempre, siempre.', desc: 'El aire frío seco nos deshidrata sin que nos demos cuenta. Mi humana me cambia el agua 3 veces al día. Pidan lo mismo, perritos. Es su derecho.' }
                         ]
                     },
                     {
-                        heading: '🐈 Tips para michis',
+                        heading: '🐈 Tips de Huracat para michis',
                         list: [
-                            { icon: '🪟', title: 'Cuidado con las ventanas.', desc: 'A los gatos les encanta tomar el sol junto a la ventana, pero el vidrio no filtra todos los rayos UV. En días de índice UV alto (>8), limita la exposición directa.' },
-                            { icon: '🛏️', title: 'Espacios cálidos y seguros.', desc: 'Proporciona escondites acogedores con mantas. Los gatos buscan instintivamente lugares cálidos durante los frentes fríos.' },
-                            { icon: '🚫', title: 'No usar calefactores sin supervisión.', desc: 'Los gatos pueden quemarse o derribar calefactores portátiles. Opta por mantas térmicas seguras para mascotas.' }
+                            { icon: '🪟', title: 'La ventana: amiga y enemiga.', desc: 'Yo, Huracat, vivo pegado a la ventana analizando nubes. Pero el vidrio no filtra todos los UV. Cuando el índice UV sube de 8, mejor me muevo a la sombrita. Mis humanos me pusieron una película UV en la ventana y ahora analizo satélites sin riesgo.' },
+                            { icon: '🏠', title: 'Rincones tibios y secretos.', desc: 'Nosotros los michis somos expertos en encontrar el lugar más calientito de la casa. Ayúdanos poniendo mantitas en nuestros spots favoritos. Un michi calentito es un michi feliz que no te despierta a las 4 AM. Bueno, quizá sí, pero por otras razones.' },
+                            { icon: '🔥', title: 'Cuidado con los calefactores.', desc: 'Somos curiosos por naturaleza y a veces nos acercamos demasiado. Un calefactor sin protección puede quemarnos o hasta tirarlo. Mejor usen mantas térmicas seguras para mascotas.' }
                         ]
                     }
                 ],
                 stats: [
                     { number: '47', label: 'Frentes fríos promedio por temporada' },
                     { number: '11+', label: 'Índice UV máximo en CDMX' },
-                    { number: '2°C', label: 'Temperatura mínima registrada en CDMX' }
+                    { number: '2°C', label: 'Mínima histórica en la ciudad' }
                 ]
             },
             'calor': {
                 img: '../img/634194112_17856177957665053_695104711634274032_n_.jpg',
-                tag: 'Olas de Calor · Hidratación · Bienestar Animal',
-                title: '¡Mantente hidratad@! Guía para sobrevivir el calor con mascotas',
+                tag: 'Olas de Calor · Hidratación · Patitas Frescas',
+                title: '¡Agua, sombra y cero asfalto caliente! Sobreviviendo el calor con mascotas',
                 meta: ['🐾 Por Tormenta & Huracat', '📍 CDMX · Valle de México', '☀️ Temporada de calor'],
                 sections: [
                     {
-                        heading: 'El calor en la CDMX no es broma',
-                        text: 'La temporada de calor en la Ciudad de México puede alcanzar temperaturas superiores a los 33°C, agravadas por la isla de calor urbana que eleva la sensación térmica en zonas pavimentadas. Las mascotas son especialmente vulnerables: no sudan como nosotros y dependen del jadeo y las almohadillas de sus patas para regular su temperatura.'
+                        heading: '¡Hace un calorón de locos!',
+                        text: 'Reportando desde el terreno: la CDMX puede superar los 33°C y el asfalto se convierte en una plancha. Nosotros los perritos no sudamos como ustedes — dependemos del jadeo y de nuestras almohadillas para enfriarnos. O sea, caminar sobre pavimento caliente es como si ustedes caminaran descalzos sobre una sartén. Huracat desde su ventana (con ventilador incluido) confirma que la isla de calor urbana empeora todo. Así que aquí van nuestros tips más frescos.'
                     },
                     {
-                        heading: '🐕 Tips para perritos',
+                        heading: '🐕 Tips de Tormenta para perritos',
                         list: [
-                            { icon: '💧', title: 'Agua fresca siempre disponible.', desc: 'Cambia el agua varias veces al día. Puedes agregar cubitos de hielo para mantenerla fría más tiempo. En paseos largos, lleva un bebedero portátil.' },
-                            { icon: '🕐', title: 'Paseos en horarios frescos.', desc: 'Evita pasear entre las 11:00 AM y 4:00 PM. El asfalto puede alcanzar 65°C y quemar las almohadillas. Prueba con el dorso de tu mano: si no aguantas 5 segundos, está muy caliente.' },
-                            { icon: '🧊', title: 'Snacks congelados.', desc: 'Congela caldo de pollo sin sal o fruta (sandía, plátano) en moldes. Son premios refrescantes que ayudan a bajar la temperatura corporal.' },
-                            { icon: '✂️', title: 'No rasurar, sí cepillar.', desc: 'El pelaje los protege del sol. Cepillarlos elimina pelo muerto y mejora la ventilación. Rasurarlos puede causar quemaduras solares.' }
+                            { icon: '💧', title: 'Agua fresca: el requisito número uno.', desc: 'Cámbienla varias veces al día. Mi truco favorito: cubitos de hielo en el plato. También llevo mi bebedero portátil a cada misión de campo. Un perrito hidratado es un perrito reportero estrella.' },
+                            { icon: '🕐', title: 'Paseos solo en horarios VIP.', desc: 'Entre 11 AM y 4 PM el asfalto puede llegar a 65°C. Hagan la prueba: pongan el dorso de la mano en el piso 5 segundos. ¿No aguantan? Nosotros tampoco. Mejor tempranito o después de las 8 PM.' },
+                            { icon: '🍉', title: 'Premios congelados = vida.', desc: 'Congelen caldo de pollo (sin sal) o pedacitos de sandía en moldes. Yo me los como como si fueran el reporte más importante del día. Nos refrescamos y nos ponemos felices. Win-win.' },
+                            { icon: '✂️', title: 'No nos rasuren, por favor.', desc: 'Nuestro pelaje nos protege del sol. Rasurar = quemaduras. Mejor cepíllennos seguido para quitar pelo muerto y mejorar la ventilación. Nos vemos más guapos y sentimos más fresquito.' }
                         ]
                     },
                     {
-                        heading: '🐈 Tips para michis',
+                        heading: '🐈 Tips de Huracat para michis',
                         list: [
-                            { icon: '⛲', title: 'Fuentes de agua.', desc: 'Los gatos prefieren agua en movimiento. Una fuente para gatos los motiva a beber más. La deshidratación felina puede causar problemas renales graves.' },
-                            { icon: '🏠', title: 'Ventilación y sombra.', desc: 'Asegúrate de que tengan acceso a zonas frescas y sombreadas. Los pisos de azulejo son ideales para que se refresquen.' },
-                            { icon: '🧊', title: 'Toalla húmeda.', desc: 'Coloca una toalla húmeda donde suelen descansar. También puedes frotar suavemente sus orejas y patas con un paño húmedo para ayudarlos a refrescarse.' }
+                            { icon: '⛲', title: 'Fuentes de agua: irresistibles.', desc: 'Lo admito: el agua estancada me aburre. Pero ponme una fuente con agua corriendo y bebo como si analizara datos satelitales — con dedicación total. La deshidratación felina daña los riñones, así que inviertan en una fuentecita.' },
+                            { icon: '🏠', title: 'Pisos frescos = spa gatuno.', desc: 'Nos encanta tirarnos en el azulejo cuando hace calor. Asegúrense de que tengamos acceso a zonas frescas y sombreadas. Nuestro trabajo de analistas satelitales rinde más cuando estamos cómodos.' },
+                            { icon: '🧊', title: 'El truco de la toalla húmeda.', desc: 'Pongan una toallita húmeda donde solemos descansar. También pueden frotarnos suavemente las orejitas y patitas con un paño mojado. Es como un mini spa entre cada análisis de imágenes GOES.' }
                         ]
                     }
                 ],
                 stats: [
-                    { number: '33°C+', label: 'Temperatura máxima promedio en temporada' },
+                    { number: '33°C+', label: 'Máxima promedio en temporada' },
                     { number: '65°C', label: 'Temperatura del asfalto al sol' },
                     { number: '80%', label: 'De golpes de calor son prevenibles' }
                 ]
             },
             'lluvia': {
                 img: '../img/620449702_17849804991665053_880112373181660182_n_.jpg',
-                tag: 'Lluvias · Paseos · Seguridad',
-                title: '¿Ya salieron a pasear? Guía para días lluviosos con mascotas',
-                meta: ['🐾 Por Tormenta & Huracat', '📍 CDMX · Temporada de lluvias', '🌧️ Junio–Octubre'],
+                tag: 'Lluvias · Paseos · Charcos Sospechosos',
+                title: '¡Reporte de campo mojado! Guía para días lluviosos con mascotas',
+                meta: ['🐾 Por Tormenta · Corresponsal de Campo', '📍 CDMX · Temporada de lluvias', '🌧️ Junio–Octubre'],
                 sections: [
                     {
-                        heading: 'La temporada de lluvias en CDMX',
-                        text: 'De junio a octubre, la Ciudad de México recibe aproximadamente el 80% de su precipitación anual. Las lluvias suelen ser intensas, vespertinas y pueden llegar con granizo, descargas eléctricas e inundaciones repentinas. Para nuestras mascotas, esto significa cambios en la rutina, ruidos fuertes y riesgos de salud que debemos anticipar.'
+                        heading: '¡Tormenta reportando bajo la tormenta!',
+                        text: 'Sí, mi nombre es Tormenta y sí, me da un poquito de miedo cuando truena. Pero eso no me detiene de traerles este reporte importantísimo. De junio a octubre, la CDMX recibe el 80% de su lluvia anual. Las tormentas llegan por la tarde con todo: granizo, rayos, y esas inundaciones que convierten las calles en ríos. Para nosotros los peludos, esto significa cambios de rutina, ruidos espantosos y charcos sospechosos. Pero tranquilos, aquí están mis tips de campo.'
                     },
                     {
-                        heading: '🐕 Tips para paseos con lluvia',
+                        heading: '🐕 Tips de Tormenta para paseos lluviosos',
                         list: [
-                            { icon: '🌦️', title: 'Revisa el pronóstico antes de salir.', desc: 'Las lluvias en CDMX suelen iniciar entre 2:00 y 5:00 PM. Programa el paseo por la mañana o después de las 8:00 PM cuando ha cesado la lluvia.' },
-                            { icon: '🧥', title: 'Impermeable y botas caninas.', desc: 'Protege a tu perrito de la lluvia y del agua estancada que puede contener bacterias. Sécalo completamente al llegar a casa, especialmente entre los dedos.' },
-                            { icon: '⚡', title: 'Ansiedad por tormentas.', desc: 'Muchos perros sufren ansiedad con truenos. Crea un espacio seguro en casa, usa música suave y considera chalecos de presión (tipo ThunderShirt). No los obligues a salir durante tormentas.' },
-                            { icon: '🦠', title: 'Leptospirosis y charcos.', desc: 'Evita que beban agua de charcos. El agua estancada puede transmitir leptospirosis, una enfermedad bacteriana grave. Mantén sus vacunas al día.' }
+                            { icon: '🌦️', title: 'Chequen el pronóstico antes de salir.', desc: 'Las lluvias en CDMX suelen caer entre 2 y 5 PM. El paseo matutino es más seguro. También pueden checar con Huracat las imágenes de satélite — él siempre sabe cuándo viene la lluvia (se pone nervioso y se baja de la ventana).' },
+                            { icon: '🧥', title: 'Impermeable canino: no es vanidad, es necesidad.', desc: 'El mío es rojo con huellas blancas y me veo increíble. Pero más importante: me protege del agua sucia. Al llegar a casa, que nos sequen bien, especialmente entre los deditos de las patas.' },
+                            { icon: '⚡', title: 'El tema de los truenos...', desc: 'Ok, lo admito: me escondo debajo de la cama. Y está bien. Si tu perrito se asusta, no lo regañen. Creen un espacito seguro, pongan música suavecita y consideren un chaleco de presión. Y por favor, jamás nos saquen a pasear durante una tormenta eléctrica.' },
+                            { icon: '🦠', title: '¡No tomen agua de charcos!', desc: 'Sé que se ven tentadores, pero los charcos pueden tener leptospirosis, una bacteria muy peligrosa. Yo siempre llevo mi botellita personal. Perritos responsables beben agua limpia.' }
                         ]
                     },
                     {
-                        heading: '🐈 Tips para michis en temporada de lluvias',
+                        heading: '🐈 Tips de Huracat para michis en temporada de lluvias',
                         list: [
-                            { icon: '🪟', title: 'Ventanas seguras.', desc: 'Con la humedad, los michis buscan ventanas abiertas. Instala mallas de seguridad para evitar caídas — el síndrome del gato paracaidista aumenta en temporada de lluvias.' },
-                            { icon: '🍄', title: 'Cuidado con la humedad.', desc: 'La humedad excesiva puede causar hongos en la piel de tu michi. Revisa regularmente orejas y almohadillas. Mantén la casa ventilada.' },
-                            { icon: '🎵', title: 'Ruidos y estrés.', desc: 'Los gatos también se estresan con tormentas. Proporciónales escondites elevados y seguros. Las feromonas sintéticas (tipo Feliway) ayudan a calmar la ansiedad.' }
+                            { icon: '🪟', title: 'Mallas en las ventanas, por favor.', desc: 'Con la humedad nos da por asomarnos más a las ventanas. El síndrome del gato paracaidista es real y aumenta en temporada de lluvias. Mis humanos me pusieron mallas y ahora analizo nubes con total seguridad.' },
+                            { icon: '🍄', title: 'La humedad y nuestras patitas.', desc: 'Mucha humedad = posibles hongos en la piel. Revisen nuestras orejitas y almohadillas regularmente. Mantengan la casa ventilada. Yo superviso la ventilación como parte de mis funciones satelitales.' },
+                            { icon: '🎵', title: 'Los truenos también nos estresan.', desc: 'No solo los perritos le tienen miedo a los truenos. Nosotros también, aunque lo disimulamos mejor. Escondites elevados, feromonas Feliway, y una cobijita pueden hacer la diferencia. Tormenta y yo nos hacemos compañía cuando truena fuerte.' }
                         ]
                     }
                 ],
                 stats: [
-                    { number: '820mm', label: 'Precipitación anual promedio CDMX' },
+                    { number: '820mm', label: 'Precipitación anual en CDMX' },
                     { number: '135', label: 'Días con lluvia al año' },
                     { number: '80%', label: 'De lluvia cae entre junio y octubre' }
                 ]
             },
             'isoterma': {
                 img: '../img/618049676_17848826070665053_5093901396132810589_n_.jpg',
-                tag: 'Análisis Sinóptico · Meteorología · Educación',
-                title: '¿Qué es una isoterma? Entendiendo los mapas meteorológicos',
-                meta: ['🐾 Por Huracat · Analista Satelital', '📍 Centro de México', '🗺️ Análisis sinóptico'],
+                tag: 'Clase de Huracat · Meteorología · Mapas con Patitas',
+                title: '¿Qué onda con las isotermas? Huracat te lo explica desde la ventana',
+                meta: ['🐈 Por Huracat · Analista Satelital Senior', '📍 Centro de México', '🗺️ Clase del Instituto Michiorológico'],
                 sections: [
                     {
-                        heading: '¿Qué son las isotermas?',
-                        text: 'Una isoterma es una línea en un mapa que conecta todos los puntos con la misma temperatura en un momento dado. Cuando ves "12°C" a lo largo de una línea curva, significa que todos los lugares sobre esa línea registran 12°C. Son herramientas fundamentales para entender cómo se distribuye el calor y el frío sobre una región.'
+                        heading: 'Huracat al micrófono',
+                        text: 'Miau. Soy Huracat y hoy les voy a dar una clase express de meteorología. Sí, soy un gato. Y sí, sé leer mapas sinópticos. Todo empezó porque mi ventana da justo hacia donde llegan los frentes fríos, y de tanto ver el cielo me volví experto. Cuando ven esas líneas curvas en los mapas del clima con números como "12°C", se llaman isotermas. Y no, no es el nombre de una banda indie. Déjenme explicarles.'
                     },
                     {
-                        heading: '📚 Conceptos clave',
+                        heading: '📚 Mini-diccionario Michiorológico',
                         list: [
-                            { icon: '🌡️', title: 'Isoterma.', desc: 'Línea que une puntos de igual temperatura. Cuando las isotermas están muy juntas, significa que hay un cambio brusco de temperatura — como cuando un frente frío llega a la CDMX.' },
-                            { icon: '📊', title: 'Mapa sinóptico.', desc: 'Mapa que muestra el estado de la atmósfera en un momento dado: presión, temperatura, vientos y frentes. Es como una "fotografía" del clima a gran escala.' },
-                            { icon: '🔵', title: 'Frente frío.', desc: 'Masa de aire frío que empuja al aire cálido. En el mapa se dibuja con triángulos azules. Cuando pasa por CDMX, las temperaturas pueden bajar hasta 10°C en pocas horas.' },
-                            { icon: '🔴', title: 'Frente cálido.', desc: 'Masa de aire cálido que avanza sobre aire frío. Se dibuja con semicírculos rojos. Suele traer lluvias prolongadas y cielos nublados antes de su paso.' }
+                            { icon: '🌡️', title: 'Isoterma.', desc: 'Línea imaginaria que conecta puntos con la misma temperatura. Cuando están muy juntitas, significa que viene un cambiazo de temperatura. Es como cuando mi humano abre la puerta del refri y siento el frío desde el sillón — pero a escala de todo México.' },
+                            { icon: '📊', title: 'Mapa sinóptico.', desc: 'Una "foto" del estado de la atmósfera: presión, temperatura, vientos y frentes. Yo lo reviso cada mañana desde mi ventana oficial del Instituto. Es como el periódico, pero para gatos meteorólogos.' },
+                            { icon: '🔵', title: 'Frente frío.', desc: 'Masa de aire frío que llega empujando el aire calientito. En el mapa se pinta con triángulitos azules. Cuando veo uno acercándose a la CDMX, les aviso a Tormenta y a mis humanos: ¡saquen las cobijas!' },
+                            { icon: '🔴', title: 'Frente cálido.', desc: 'Lo opuesto: aire cálido que avanza sobre aire frío. Se dibuja con semicírculos rojos. Suele traer lluvia prolongada y cielos nublados. Buenos días para quedarse en la ventana observando, la verdad.' }
                         ]
                     },
                     {
-                        heading: '🐾 ¿Y esto qué tiene que ver con las mascotas?',
+                        heading: '🐾 ¿Y esto para qué les sirve a las mascotas?',
                         list: [
-                            { icon: '📱', title: 'Anticípate al frío.', desc: 'Si ves isotermas bajando hacia el centro de México, prepara cobijas, suéteres y refugios cálidos para tus mascotas antes de que llegue el frente frío.' },
-                            { icon: '🌬️', title: 'Cambios bruscos de temperatura.', desc: 'Las mascotas, especialmente las de edad avanzada, son sensibles a los cambios rápidos. Cuando las isotermas se comprimen, es señal de cambio brusco. Mantén la rutina lo más estable posible.' },
-                            { icon: '📈', title: 'Aprende a leer los mapas.', desc: 'Sigue las fuentes oficiales: el SMN (Servicio Meteorológico Nacional) y la NOAA publican mapas sinópticos diarios. Huracat los analiza cada mañana desde su ventana.' }
+                            { icon: '📱', title: 'Anticiparse al frío.', desc: 'Si ven las isotermas bajando hacia el centro del país, es hora de preparar suéteres para Tormenta y mantitas extra para mí. Los humanos previsores tienen mascotas calientitas.' },
+                            { icon: '🌬️', title: 'Cambios bruscos = mascotas sensibles.', desc: 'Los peludos viejitos (como mi tía la gata del vecino) sufren más con los cambios rápidos de temperatura. Isotermas comprimidas = cambio brusco. Mantengan la rutina estable y la casa a buena temperatura.' },
+                            { icon: '📈', title: 'Síganme para más clases.', desc: 'Revisen las fuentes oficiales: el SMN y la NOAA publican mapas sinópticos diarios. Yo los analizo cada mañana desde mi puesto de observación. También pueden seguirnos en Instagram donde hago reportes en vivo (bueno, en foto).' }
                         ]
                     }
                 ],
                 stats: [
-                    { number: '47', label: 'Frentes fríos promedio por temporada en México' },
-                    { number: '10°C', label: 'Caída de temperatura posible en horas' },
-                    { number: 'GOES-19', label: 'Satélite principal para monitoreo' }
+                    { number: '47', label: 'Frentes fríos por temporada en México' },
+                    { number: '10°C', label: 'Caída posible de temperatura en horas' },
+                    { number: 'GOES-19', label: 'Mi satélite favorito para monitoreo' }
                 ]
             },
             'biodiversidad': {
                 img: '../img/618055459_17849268264665053_7480189280676670810_n_.jpg',
-                tag: 'Biodiversidad Urbana · Naturaleza · Convivencia',
-                title: 'Mascotas y biodiversidad urbana: convivir con la naturaleza en la ciudad',
-                meta: ['🐾 Por Tormenta · Corresponsal de Campo', '📍 CDMX · Áreas verdes', '🦋 Temporada de polinizadores'],
+                tag: 'Biodiversidad · Mariposas · Narices Curiosas',
+                title: 'Crónica de campo: la vez que conocí una mariposa (y no me la comí)',
+                meta: ['🐕 Por Tormenta · Corresponsal de Campo', '📍 CDMX · Áreas verdes', '🦋 Temporada de polinizadores'],
                 sections: [
                     {
-                        heading: 'La CDMX es un ecosistema vivo',
-                        text: 'La Ciudad de México alberga más de 2,000 especies de flora y fauna. En parques, jardines y hasta en las azoteas conviven mariposas monarca, colibríes, tlacuaches, murciélagos y cientos de especies de insectos polinizadores. Nuestras mascotas comparten estos espacios, y es nuestra responsabilidad que la convivencia sea segura para todos.'
+                        heading: 'Diario de campo de Tormenta',
+                        text: 'Les cuento: iba yo haciendo mi ronda habitual de reporte meteorológico cuando de pronto se me posó una mariposa en la nariz. ¡EN LA NARIZ! Me quedé quietecita porque mi humana me ha enseñado que la naturaleza se observa, no se muerde. La CDMX tiene más de 2,000 especies de flora y fauna, y nosotros los perritos y michis compartimos los parques con mariposas, colibríes, tlacuaches y hasta murciélagos. Es nuestra responsabilidad (bueno, la de nuestros humanos) que todos convivamos en paz.'
                     },
                     {
-                        heading: '🐕 Tips para paseos en áreas verdes',
+                        heading: '🐕 Tips de Tormenta para paseos en áreas verdes',
                         list: [
-                            { icon: '🦋', title: 'Observar sin tocar.', desc: 'Enséñale a tu perro el comando "déjalo". Las mariposas, abejas y otros polinizadores son esenciales para el ecosistema. Una mordida accidental puede causar reacciones alérgicas y daña la fauna local.' },
-                            { icon: '🌿', title: 'Cuidado con plantas tóxicas.', desc: 'El lirio, la nochebuena, la hiedra y el ricino son comunes en CDMX y tóxicos para mascotas. Conoce las plantas de tu ruta de paseo y evita que tu perro las mastique.' },
-                            { icon: '🐍', title: 'Fauna silvestre.', desc: 'En zonas con vegetación densa pueden encontrarse serpientes y arañas. Mantén a tu mascota en el camino y evita áreas con hierba alta o escombros.' },
-                            { icon: '💩', title: 'Recoge siempre.', desc: 'Las heces contaminan el suelo y el agua, afectando a la fauna silvestre. Además, pueden transmitir parásitos a otros animales. Siempre lleva bolsas biodegradables.' }
+                            { icon: '🦋', title: 'Mirar con la nariz, no con la boca.', desc: 'Yo sé que es tentador corretear todo lo que vuela, pero las abejas y mariposas son vitales para el ecosistema. Mi humana me enseñó el comando "déjalo" y ahora las observo como la corresponsal profesional que soy. Además, una abeja molesta = cara hinchada. No vale la pena.' },
+                            { icon: '🌿', title: 'Plantas que nos pueden hacer daño.', desc: 'El lirio, la nochebuena, la hiedra y el ricino son comunes en CDMX y MUY tóxicas para nosotros. Mi humana estudió las plantas de nuestra ruta de paseo. Pídanle a la suya que haga lo mismo. Dato útil: si la planta es muy bonita, probablemente sea peligrosa.' },
+                            { icon: '🐍', title: 'Cuidado en la hierba alta.', desc: 'En zonas con vegetación densa pueden haber serpientes y arañas. Yo siempre me mantengo en el camino (bueno, casi siempre). Los mejores reporteros de campo saben cuándo ser curiosos y cuándo ser precavidos.' },
+                            { icon: '💩', title: 'Recojan siempre. SIEMPRE.', desc: 'Nuestras heces contaminan el suelo y el agua y pueden enfermar a la fauna silvestre. Bolsitas biodegradables, amigos. Es lo mínimo que podemos hacer por los vecinos del parque.' }
                         ]
                     },
                     {
-                        heading: '🐈 Michis y la fauna urbana',
+                        heading: '🐈 Tips de Huracat sobre michis y la fauna urbana',
                         list: [
-                            { icon: '🐦', title: 'Gatos y aves.', desc: 'Los gatos son depredadores naturales de aves. Si tu michi tiene acceso al exterior, considera un collar con cascabel para alertar a las aves. Mejor aún: enriquecimiento interior para que no necesite cazar.' },
-                            { icon: '🦎', title: 'Lagartijas y geckos.', desc: 'Son comunes en CDMX y los michis les encanta perseguirlos. Generalmente son inofensivos, pero algunos pueden transmitir parásitos. Mantén las desparasitaciones al día.' },
-                            { icon: '🌱', title: 'Jardín seguro.', desc: 'Si tu michi tiene acceso a un jardín, revisa que no haya plantas tóxicas (lirios, tulipanes) y evita el uso de pesticidas químicos que podrían envenenarlo.' }
+                            { icon: '🐦', title: 'Confieso: me gustan los pájaros.', desc: 'Es mi instinto, no lo puedo evitar. Pero mis humanos me pusieron un collar con cascabel y me dan juguetes que simulan presas. Así satisfago mi instinto cazador sin dañar a las aves de la CDMX. Hay 316 especies registradas. No necesitan que yo las reduzca.' },
+                            { icon: '🦎', title: 'Lagartijas: amigas, no comida.', desc: 'Son comunes en CDMX y admito que las persigo a veces. Son generalmente inofensivas pero pueden tener parásitos. Mantengan nuestras desparasitaciones al día.' },
+                            { icon: '🌱', title: 'Jardín michi-seguro.', desc: 'Si tu gato tiene jardín, revisa que no haya lirios ni tulipanes (mortales para nosotros) y evita pesticidas químicos. Un jardín seguro es un jardín donde puedo tomar el sol mientras monitoreo nubes sin preocupaciones.' }
                         ]
                     }
                 ],
                 stats: [
                     { number: '2,000+', label: 'Especies de flora y fauna en CDMX' },
-                    { number: '316', label: 'Especies de aves registradas en la CDMX' },
-                    { number: '12%', label: 'De la biodiversidad de México está en la CDMX' }
+                    { number: '316', label: 'Especies de aves en la ciudad' },
+                    { number: '12%', label: 'De la biodiversidad de México está aquí' }
                 ]
             },
             'satelite': {
                 img: '../img/617602496_17848826061665053_8591592844352451526_n_.jpg',
-                tag: 'GOES-19 · NOAA · Imágenes Satelitales',
-                title: 'Lluvia en el centro de México: ¿cómo se leen las imágenes satelitales?',
-                meta: ['🐾 Por Huracat · Analista Satelital', '📍 Centro de México', '🛰️ Satélite GOES-19 · NOAA/NESDIS'],
+                tag: 'GOES-19 · NOAA · La Ventana de Huracat',
+                title: '¿Qué ve Huracat en la ventana? Guía para leer imágenes de satélite',
+                meta: ['🐈 Por Huracat · Jefe de Análisis Satelital', '📍 Centro de México', '🛰️ Satélite GOES-19 · NOAA/NESDIS'],
                 sections: [
                     {
-                        heading: '¿Qué estamos viendo?',
-                        text: 'Las imágenes del satélite GOES-19 (Geostationary Operational Environmental Satellite) nos muestran la actividad atmosférica en tiempo real desde 36,000 km de altura. Los colores representan la temperatura de las nubes: los tonos más fríos (azules, verdes) indican nubes más altas y con mayor potencial de lluvia intensa, mientras que los tonos cálidos (rojos, naranjas) señalan nubes más bajas y delgadas.'
+                        heading: 'Transmisión desde la ventana oficial',
+                        text: 'Mucha gente piensa que me la paso dormido en la ventana. Falso. Estoy analizando formaciones nubosas en tiempo real. Bueno, a veces me quedo dormido. Pero cuando estoy despierto, complemento mis observaciones con las imágenes del GOES-19, un satélite geoestacionario a 36,000 km de altura que toma fotos de nuestro continente cada 10 minutos. Los colores en la imagen representan la temperatura de las nubes: mientras más frías (azules, verdes), más altas y peligrosas. Déjenme explicarles cómo usar esto antes de sacar a pasear a su Tormenta.'
                     },
                     {
-                        heading: '🛰️ Guía de interpretación',
+                        heading: '🛰️ El semáforo de Huracat para leer nubes',
                         list: [
-                            { icon: '🔵', title: 'Azul intenso / púrpura.', desc: 'Nubes muy altas y frías — tormentas severas con potencial de granizo, descargas eléctricas y lluvias torrenciales. Si ves estos colores sobre tu zona: quédate en casa con tus mascotas.' },
-                            { icon: '🟢', title: 'Verde.', desc: 'Nubes de desarrollo medio — lluvias moderadas a fuertes. Posible granizo menor. Buen momento para postponer el paseo.' },
-                            { icon: '🟡', title: 'Amarillo / naranja.', desc: 'Nubes bajas — lluvias ligeras a lloviznas. Puedes salir con precaución si llevas impermeable.' },
-                            { icon: '⬛', title: 'Sin color (cielo despejado).', desc: 'Sin nubes significativas. Momento ideal para pasear, pero recuerda: sin nubes = más radiación UV. Protección solar para narices claras.' }
+                            { icon: '🟣', title: 'Morado/Azul intenso: ¡QUÉDENSE EN CASA!', desc: 'Nubes altísimas y súper frías. Tormentas severas con granizo, rayos y lluvias torrenciales. Cuando veo estos colores sobre CDMX, me bajo de la ventana y le aviso a Tormenta que ni se acerque a la puerta. Es momento de cobija, no de paseo.' },
+                            { icon: '🟢', title: 'Verde: Mejor postponer el paseo.', desc: 'Nubes de desarrollo medio con lluvias moderadas a fuertes. Posible granizo menor. Yo me quedo en mi puesto de observación pero con un ojo en la puerta por si acaso.' },
+                            { icon: '🟡', title: 'Amarillo: Con impermeable se puede.', desc: 'Nubes bajitas con lloviznas o lluvias ligeras. Si Tormenta tiene puesta su chamarra impermeable roja, puede salir a hacer su reporte de campo. Pero que lleven paraguas los humanos.' },
+                            { icon: '⬛', title: 'Despejado: ¡A pasear! Pero con bloqueador.', desc: 'Cielo limpio, sin nubes significativas. Perfecto para paseos. Pero recuerden: sin nubes = radiación UV directa. Protección solar para narices rosas y orejitas claras. Dato de Huracat: los días más despejados post-lluvia son los de UV más alto.' }
                         ]
                     },
                     {
-                        heading: '🐾 Decisiones con datos',
+                        heading: '🐾 Cómo usar esto en tu día a día perruno/gatuno',
                         list: [
-                            { icon: '📱', title: 'Consulta antes de salir.', desc: 'Las imágenes GOES se actualizan cada 10 minutos. Revisa el estado del cielo antes de sacar a pasear a tu mascota. La página de NOAA/NESDIS es gratuita y pública.' },
-                            { icon: '⏰', title: 'Ventanas de oportunidad.', desc: 'En temporada de lluvias, las tormentas vespertinas suelen durar 1-3 horas. Las imágenes satelitales te ayudan a identificar cuándo pasará el sistema y podrás salir.' },
-                            { icon: '🌀', title: 'Sistemas de mayor escala.', desc: 'Cuando un ciclón tropical se acerca al Pacífico o Golfo, la humedad llega al centro de México días antes. Huracat monitorea estos sistemas para alertarte con anticipación.' }
+                            { icon: '📱', title: 'Checamos antes de cada paseo.', desc: 'Las imágenes se actualizan cada 10 minutos. La web de NOAA/NESDIS es gratuita. Tormenta no sale sin que yo revise primero. Es nuestro protocolo del Instituto Michiorológico Nacional.' },
+                            { icon: '⏰', title: 'Las tormentas tienen horario.', desc: 'En temporada de lluvias, las tormentas vespertinas duran 1-3 horas. Con las imágenes satelitales puedes ver cuándo se aleja el sistema y es seguro salir. Yo le doy luz verde a Tormenta cuando veo que las nubes se van.' },
+                            { icon: '🌀', title: 'Ciclones: los detecto con anticipación.', desc: 'Cuando un ciclón se acerca al Pacífico o al Golfo, la humedad llega al centro de México días antes. Yo monitoreo estos sistemas como parte de mis funciones en el Instituto. Les avisamos en Instagram cuando algo grande viene en camino.' }
                         ]
                     }
                 ],
                 stats: [
-                    { number: '36,000', label: 'Km de altura del satélite GOES-19' },
-                    { number: '10 min', label: 'Frecuencia de actualización de imágenes' },
+                    { number: '36,000', label: 'Km de altura del GOES-19' },
+                    { number: '10 min', label: 'Frecuencia de actualización' },
                     { number: '16', label: 'Canales espectrales del satélite' }
                 ]
             }
@@ -2175,98 +1867,43 @@
 
         function buildModalHTML(data) {
             const metaHTML = data.meta.map(m => `<span class="tip-detail-meta-item">${m}</span>`).join('');
-
             let sectionsHTML = '';
             for (const sec of data.sections) {
                 if (sec.text) {
-                    sectionsHTML += `
-                        <div class="tip-detail-section">
-                            <h3>${sec.heading}</h3>
-                            <p>${sec.text}</p>
-                        </div>`;
+                    sectionsHTML += `<div class="tip-detail-section"><h3>${sec.heading}</h3><p>${sec.text}</p></div>`;
                 }
                 if (sec.list) {
-                    const items = sec.list.map(item => `
-                        <div class="tip-detail-list-item">
-                            <span class="tip-detail-list-icon">${item.icon}</span>
-                            <div><strong>${item.title}</strong> ${item.desc}</div>
-                        </div>`).join('');
-                    sectionsHTML += `
-                        <div class="tip-detail-section">
-                            <h3>${sec.heading}</h3>
-                            <div class="tip-detail-list">${items}</div>
-                        </div>`;
+                    const items = sec.list.map(item => `<div class="tip-detail-list-item"><span class="tip-detail-list-icon">${item.icon}</span><div><strong>${item.title}</strong> ${item.desc}</div></div>`).join('');
+                    sectionsHTML += `<div class="tip-detail-section"><h3>${sec.heading}</h3><div class="tip-detail-list">${items}</div></div>`;
                 }
             }
-
-            const statsHTML = data.stats.map(s => `
-                <div class="tip-detail-stat">
-                    <span class="stat-number">${s.number}</span>
-                    <span class="stat-label">${s.label}</span>
-                </div>`).join('');
-
+            const statsHTML = data.stats.map(s => `<div class="tip-detail-stat"><span class="stat-number">${s.number}</span><span class="stat-label">${s.label}</span></div>`).join('');
             return `
-                <button class="tip-detail-close" id="tipDetailCloseInner" aria-label="Cerrar">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
-                </button>
-                <div class="tip-detail-hero">
-                    <img src="${data.img}" alt="">
-                    <div class="tip-detail-hero-overlay">
-                        <div class="tip-detail-tag">${data.tag}</div>
-                        <h2 class="tip-detail-title">${data.title}</h2>
-                    </div>
-                </div>
+                <button class="tip-detail-close" id="tipDetailCloseInner" aria-label="Cerrar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+                <div class="tip-detail-hero"><img src="${data.img}" alt=""><div class="tip-detail-hero-overlay"><div class="tip-detail-tag">${data.tag}</div><h2 class="tip-detail-title">${data.title}</h2></div></div>
                 <div class="tip-detail-body">
                     <div class="tip-detail-meta">${metaHTML}</div>
                     ${sectionsHTML}
-                    <div class="tip-detail-section">
-                        <h3>📊 Datos del Servicio Michiorológico</h3>
-                        <div class="tip-detail-stats">${statsHTML}</div>
-                    </div>
-                    <div class="tip-detail-cta">
-                        <p>Síguenos para más reportes diarios del clima y tips para tus mascotas.</p>
-                        <a href="https://www.instagram.com/tormenta_y_huracat/" target="_blank" class="cta-btn">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg>
-                            @tormenta_y_huracat
-                        </a>
-                    </div>
+                    <div class="tip-detail-section"><h3>📊 Datos del Instituto Michiorológico</h3><div class="tip-detail-stats">${statsHTML}</div></div>
+                    <div class="tip-detail-cta"><p>Síguenos para más reportes diarios del clima y tips para tus mascotas.</p><a href="https://www.instagram.com/tormenta_y_huracat/" target="_blank" class="cta-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg>@tormenta_y_huracat</a></div>
                 </div>`;
         }
 
         function openTipDetail(tipId) {
-            const data = tipData[tipId];
-            if (!data) return;
+            const data = tipData[tipId]; if (!data) return;
             tipDetailContent.innerHTML = buildModalHTML(data);
             tipDetailModal.classList.add('active');
             document.body.style.overflow = 'hidden';
             tipDetailModal.scrollTop = 0;
-
-            // Re-bind close button inside new content
-            document.getElementById('tipDetailCloseInner').addEventListener('click', (e) => {
-                e.stopPropagation();
-                closeTipDetail();
-            });
+            document.getElementById('tipDetailCloseInner').addEventListener('click', (e) => { e.stopPropagation(); closeTipDetail(); });
         }
-
-        function closeTipDetail() {
-            tipDetailModal.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-
-        // Bind all tip cards
-        document.querySelectorAll('.tip-card[data-tip]').forEach(card => {
-            card.addEventListener('click', () => {
-                openTipDetail(card.dataset.tip);
-            });
-        });
-
-        // Close on backdrop click
-        tipDetailModal.addEventListener('click', (e) => {
-            if (e.target === tipDetailModal) {
-                closeTipDetail();
+        function closeTipDetail() { tipDetailModal.classList.remove('active'); document.body.style.overflow = ''; }
+        document.querySelectorAll('.tip-card[data-tip]').forEach(card => { card.addEventListener('click', () => openTipDetail(card.dataset.tip)); });
+        tipDetailModal.addEventListener('click', (e) => { if (e.target === tipDetailModal) closeTipDetail(); });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (videoFullscreen.classList.contains('active')) closeVideo();
+                if (tipDetailModal.classList.contains('active')) closeTipDetail();
             }
         });
     </script>
