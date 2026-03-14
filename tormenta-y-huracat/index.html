@@ -798,7 +798,7 @@
             justify-content: center;
             transition: all 0.3s ease;
             pointer-events: auto;
-            text-decoration: none;
+            cursor: pointer;
             color: white;
         }
 
@@ -828,6 +828,85 @@
             text-transform: uppercase;
             color: var(--cyan);
             margin-bottom: 0.3rem;
+        }
+
+        /* ===== FULLSCREEN VIDEO PLAYER ===== */
+        .video-fullscreen {
+            position: fixed;
+            inset: 0;
+            z-index: 10000;
+            background: rgba(0, 0, 0, 0.92);
+            backdrop-filter: blur(30px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.4s;
+            cursor: pointer;
+        }
+
+        .video-fullscreen.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .video-fullscreen video {
+            max-height: 90vh;
+            max-width: 90vw;
+            border-radius: 16px;
+            box-shadow: 0 30px 100px rgba(0, 0, 0, 0.6), 0 0 80px rgba(255, 0, 102, 0.08);
+            transform: scale(0.85);
+            transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+            cursor: default;
+        }
+
+        .video-fullscreen.active video {
+            transform: scale(1);
+        }
+
+        .video-fullscreen-close {
+            position: absolute;
+            top: clamp(16px, 3vh, 32px);
+            right: clamp(16px, 3vw, 32px);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .video-fullscreen-close:hover {
+            background: rgba(255, 0, 102, 0.2);
+            border-color: rgba(255, 0, 102, 0.4);
+            color: white;
+            transform: rotate(90deg);
+        }
+
+        .video-fullscreen-close svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .video-fullscreen-hint {
+            position: absolute;
+            bottom: clamp(16px, 3vh, 32px);
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.55rem;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.25);
+            pointer-events: none;
+            transition: opacity 0.3s;
         }
 
         /* ===== WEATHER BANNER ===== */
@@ -965,6 +1044,270 @@
             font-weight: 300;
         }
 
+        /* ===== TIP CARD EXPAND HINT ===== */
+        .tip-card-expand-hint {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.5rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            opacity: 0;
+            transform: translateY(-4px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .tip-card.featured:hover .tip-card-expand-hint,
+        .tip-card:hover .tip-card-expand-hint {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===== TIP DETAIL MODAL ===== */
+        .tip-detail-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 10000;
+            background: rgba(0, 0, 0, 0.88);
+            backdrop-filter: blur(25px);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.5s;
+            overflow-y: auto;
+            overscroll-behavior: contain;
+        }
+
+        .tip-detail-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .tip-detail-content {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+            min-height: 100vh;
+            transform: translateY(30px) scale(0.97);
+            transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .tip-detail-modal.active .tip-detail-content {
+            transform: translateY(0) scale(1);
+        }
+
+        .tip-detail-close {
+            position: fixed;
+            top: clamp(16px, 3vh, 32px);
+            right: clamp(16px, 3vw, 32px);
+            z-index: 10001;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .tip-detail-close:hover {
+            background: rgba(255, 0, 102, 0.2);
+            border-color: rgba(255, 0, 102, 0.4);
+            color: white;
+            transform: rotate(90deg);
+        }
+
+        .tip-detail-close svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .tip-detail-hero {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/9;
+            overflow: hidden;
+        }
+
+        .tip-detail-hero img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .tip-detail-hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(transparent 30%, rgba(0, 0, 0, 0.85) 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: clamp(1.5rem, 4vw, 3rem);
+        }
+
+        .tip-detail-tag {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.55rem;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--cyan);
+            margin-bottom: 0.6rem;
+        }
+
+        .tip-detail-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            letter-spacing: 3px;
+            line-height: 1.15;
+            color: var(--white);
+        }
+
+        .tip-detail-body {
+            padding: clamp(1.5rem, 4vw, 3rem);
+        }
+
+        .tip-detail-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .tip-detail-meta-item {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.6rem;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .tip-detail-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .tip-detail-section h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.4rem;
+            letter-spacing: 3px;
+            margin-bottom: 1rem;
+            color: var(--white);
+        }
+
+        .tip-detail-section p {
+            font-size: 0.95rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 300;
+        }
+
+        .tip-detail-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .tip-detail-list-item {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+            padding: 1rem 1.2rem;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.3s ease;
+        }
+
+        .tip-detail-list-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .tip-detail-list-icon {
+            font-size: 1.3rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .tip-detail-list-item div {
+            font-size: 0.88rem;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.65);
+            font-weight: 300;
+        }
+
+        .tip-detail-list-item strong {
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+        }
+
+        .tip-detail-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .tip-detail-stat {
+            text-align: center;
+            padding: 1.5rem 1rem;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .stat-number {
+            display: block;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(2rem, 4vw, 2.8rem);
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, var(--hot-pink), var(--cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            margin-bottom: 0.4rem;
+        }
+
+        .stat-label {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.5rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.4);
+            line-height: 1.4;
+        }
+
+        .tip-detail-cta {
+            text-align: center;
+            padding: 2.5rem 0 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            margin-top: 1rem;
+        }
+
+        .tip-detail-cta p {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 300;
+            margin-bottom: 1.2rem;
+        }
+
         /* ===== SCROLL ANIMATIONS ===== */
         .reveal {
             opacity: 0;
@@ -1016,6 +1359,20 @@
             .hero-title h1 {
                 font-size: clamp(22px, 6vw, 36px);
             }
+
+            .video-fullscreen video {
+                max-height: 80vh;
+                max-width: 95vw;
+                border-radius: 10px;
+            }
+
+            .tip-detail-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .tip-detail-hero {
+                aspect-ratio: 4/3;
+            }
         }
 
         @media (max-width: 480px) {
@@ -1035,6 +1392,25 @@
     </style>
 </head>
 <body>
+
+    <!-- ===== FULLSCREEN VIDEO PLAYER ===== -->
+    <div class="video-fullscreen" id="videoFullscreen">
+        <button class="video-fullscreen-close" id="videoClose" aria-label="Cerrar video">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </button>
+        <video id="fullscreenVideo" controls playsinline></video>
+        <div class="video-fullscreen-hint">ESC o click afuera para cerrar</div>
+    </div>
+
+    <!-- ===== TIP DETAIL MODAL ===== -->
+    <div class="tip-detail-modal" id="tipDetailModal">
+        <div class="tip-detail-content" id="tipDetailContent">
+            <!-- Content injected by JS -->
+        </div>
+    </div>
 
     <!-- ===== NAVIGATION ===== -->
     <nav id="mainNav">
@@ -1281,48 +1657,72 @@
         <p class="section-sub reveal">Consejos meteorológicos para ti y tus mascotas</p>
 
         <div class="tips-grid">
-            <a href="https://www.instagram.com/tormenta_y_huracat/" target="_blank" class="tip-card featured reveal">
+            <div class="tip-card featured reveal" data-tip="frios-uv">
                 <img src="../img/625266309_17852880177665053_3059908937446446596_n_.jpg" alt="Protege a tus mascotas">
                 <div class="tip-card-overlay">
                     <div class="tip-card-tag">Frentes Fríos · UV</div>
                     <div class="tip-card-title">Protege a tus mascotas de los frentes fríos y radiación UV. En la CDMX a 2400 msnm se intensifican sus efectos.</div>
                 </div>
-            </a>
-            <a href="https://www.instagram.com/tormenta_y_huracat/" target="_blank" class="tip-card reveal" style="transition-delay: 0.1s;">
+                <div class="tip-card-expand-hint">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+                    <span>Leer más</span>
+                </div>
+            </div>
+            <div class="tip-card reveal" style="transition-delay: 0.1s;" data-tip="calor">
                 <img src="../img/634194112_17856177957665053_695104711634274032_n_.jpg" alt="Mantente hidratado">
                 <div class="tip-card-overlay">
                     <div class="tip-card-tag">Calor</div>
                     <div class="tip-card-title">En estos días de calor, ¡mantente hidratad@!</div>
                 </div>
-            </a>
-            <a href="https://www.instagram.com/tormenta_y_huracat/" target="_blank" class="tip-card reveal" style="transition-delay: 0.2s;">
+                <div class="tip-card-expand-hint">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+                    <span>Leer más</span>
+                </div>
+            </div>
+            <div class="tip-card reveal" style="transition-delay: 0.2s;" data-tip="lluvia">
                 <img src="../img/620449702_17849804991665053_880112373181660182_n_.jpg" alt="Lluvias aisladas">
                 <div class="tip-card-overlay">
                     <div class="tip-card-tag">Lluvia</div>
                     <div class="tip-card-title">¿Ya salieron a pasear? Hay probabilidad de lluvias aisladas esta tarde en CDMX.</div>
                 </div>
-            </a>
-            <a href="https://www.instagram.com/tormenta_y_huracat/" target="_blank" class="tip-card reveal" style="transition-delay: 0.15s;">
+                <div class="tip-card-expand-hint">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+                    <span>Leer más</span>
+                </div>
+            </div>
+            <div class="tip-card reveal" style="transition-delay: 0.15s;" data-tip="isoterma">
                 <img src="../img/618049676_17848826070665053_5093901396132810589_n_.jpg" alt="Isoterma">
                 <div class="tip-card-overlay">
                     <div class="tip-card-tag">Análisis Sinóptico</div>
                     <div class="tip-card-title">12°C a lo largo de esa línea (isoterma) — análisis meteorológico del centro de México.</div>
                 </div>
-            </a>
-            <a href="https://www.instagram.com/tormenta_y_huracat/" target="_blank" class="tip-card reveal" style="transition-delay: 0.25s;">
+                <div class="tip-card-expand-hint">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+                    <span>Leer más</span>
+                </div>
+            </div>
+            <div class="tip-card reveal" style="transition-delay: 0.25s;" data-tip="biodiversidad">
                 <img src="../img/618055459_17849268264665053_7480189280676670810_n_.jpg" alt="Tormenta y la mariposa">
                 <div class="tip-card-overlay">
                     <div class="tip-card-tag">Naturaleza</div>
                     <div class="tip-card-title">Tormenta observando la biodiversidad urbana durante su reporte de campo.</div>
                 </div>
-            </a>
-            <a href="https://www.instagram.com/tormenta_y_huracat/" target="_blank" class="tip-card reveal" style="transition-delay: 0.3s;">
+                <div class="tip-card-expand-hint">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+                    <span>Leer más</span>
+                </div>
+            </div>
+            <div class="tip-card reveal" style="transition-delay: 0.3s;" data-tip="satelite">
                 <img src="../img/617602496_17848826061665053_8591592844352451526_n_.jpg" alt="Lluvia centro México">
                 <div class="tip-card-overlay">
                     <div class="tip-card-tag">Satélite GOES-19</div>
                     <div class="tip-card-title">Lluvia en el centro de México — imagen satelital NOAA/NESDIS.</div>
                 </div>
-            </a>
+                <div class="tip-card-expand-hint">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+                    <span>Leer más</span>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -1336,9 +1736,9 @@
             <div class="reel-card reveal" data-video="../vid/video_1.mp4">
                 <video src="../vid/video_1.mp4" muted loop playsinline preload="metadata" poster="../img/thumb_vid_1.jpg"></video>
                 <div class="reel-card-overlay">
-                    <a href="https://www.instagram.com/tormenta_y_huracat/" target="_blank" class="reel-play-btn">
-                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg>
-                    </a>
+                    <button class="reel-play-btn" aria-label="Ver video en pantalla completa">
+                        <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+                    </button>
                     <div class="reel-tag">Instituto Michiorológico</div>
                     <div class="reel-title">Tormenta reportando desde las calles de CDMX</div>
                 </div>
@@ -1346,9 +1746,9 @@
             <div class="reel-card reveal" style="transition-delay: 0.1s;" data-video="../vid/video_4.mp4">
                 <video src="../vid/video_4.mp4" muted loop playsinline preload="metadata" poster="../img/thumb_vid_4.jpg"></video>
                 <div class="reel-card-overlay">
-                    <a href="https://www.instagram.com/tormenta_y_huracat/" target="_blank" class="reel-play-btn">
-                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg>
-                    </a>
+                    <button class="reel-play-btn" aria-label="Ver video en pantalla completa">
+                        <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+                    </button>
                     <div class="reel-tag">Reporte de Campo</div>
                     <div class="reel-title">Tormenta reportando para el servicio</div>
                 </div>
@@ -1356,9 +1756,9 @@
             <div class="reel-card reveal" style="transition-delay: 0.2s;" data-video="../vid/video_3.mp4">
                 <video src="../vid/video_3.mp4" muted loop playsinline preload="metadata" poster="../img/thumb_vid_3.jpg"></video>
                 <div class="reel-card-overlay">
-                    <a href="https://www.instagram.com/tormenta_y_huracat/" target="_blank" class="reel-play-btn">
-                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg>
-                    </a>
+                    <button class="reel-play-btn" aria-label="Ver video en pantalla completa">
+                        <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+                    </button>
                     <div class="reel-tag">Contingencia</div>
                     <div class="reel-title">¡Contingencia ambiental activada! Temporada de partículas</div>
                 </div>
@@ -1366,9 +1766,9 @@
             <div class="reel-card reveal" style="transition-delay: 0.3s;" data-video="../vid/video_2.mp4">
                 <video src="../vid/video_2.mp4" muted loop playsinline preload="metadata" poster="../img/thumb_vid_2.jpg"></video>
                 <div class="reel-card-overlay">
-                    <a href="https://www.instagram.com/tormenta_y_huracat/" target="_blank" class="reel-play-btn">
-                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg>
-                    </a>
+                    <button class="reel-play-btn" aria-label="Ver video en pantalla completa">
+                        <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+                    </button>
                     <div class="reel-tag">En ruta</div>
                     <div class="reel-title">Tormenta observando el clima desde el auto</div>
                 </div>
@@ -1376,9 +1776,9 @@
             <div class="reel-card reveal" style="transition-delay: 0.4s;" data-video="../vid/video_5.mp4">
                 <video src="../vid/video_5.mp4" muted loop playsinline preload="metadata" poster="../img/thumb_vid_5.jpg"></video>
                 <div class="reel-card-overlay">
-                    <a href="https://www.instagram.com/tormenta_y_huracat/" target="_blank" class="reel-play-btn">
-                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg>
-                    </a>
+                    <button class="reel-play-btn" aria-label="Ver video en pantalla completa">
+                        <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+                    </button>
                     <div class="reel-tag">Tormentip</div>
                     <div class="reel-title">Tip del día desde la comodidad del hogar</div>
                 </div>
@@ -1471,7 +1871,6 @@
         const heroTemp = document.getElementById('heroTemp');
         async function fetchTemp() {
             try {
-                // ENSENADA
                 const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=19.4326&longitude=-99.1332&current_weather=true');
                 const data = await res.json();
                 const temp = Math.round(data.current_weather.temperature);
@@ -1506,9 +1905,368 @@
             });
         });
 
+        // === FULLSCREEN VIDEO PLAYER ===
+        const videoFullscreen = document.getElementById('videoFullscreen');
+        const fullscreenVideo = document.getElementById('fullscreenVideo');
+        const videoCloseBtn = document.getElementById('videoClose');
+
+        function openFullscreenVideo(src) {
+            fullscreenVideo.src = src;
+            videoFullscreen.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            // Small delay so the transition plays, then autoplay
+            setTimeout(() => {
+                fullscreenVideo.play().catch(() => {});
+            }, 100);
+        }
+
+        function closeFullscreenVideo() {
+            videoFullscreen.classList.remove('active');
+            document.body.style.overflow = '';
+            fullscreenVideo.pause();
+            // Clear src after transition to free memory
+            setTimeout(() => {
+                fullscreenVideo.removeAttribute('src');
+                fullscreenVideo.load();
+            }, 400);
+        }
+
+        // Play button click → fullscreen
+        document.querySelectorAll('.reel-play-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const card = btn.closest('.reel-card');
+                const videoSrc = card.dataset.video;
+                if (videoSrc) openFullscreenVideo(videoSrc);
+            });
+        });
+
+        // Close: X button
+        videoCloseBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeFullscreenVideo();
+        });
+
+        // Close: click backdrop (outside video)
+        videoFullscreen.addEventListener('click', (e) => {
+            if (e.target === videoFullscreen) {
+                closeFullscreenVideo();
+            }
+        });
+
+        // Close: Escape key
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
-                // reserved
+                if (videoFullscreen.classList.contains('active')) closeFullscreenVideo();
+                if (tipDetailModal.classList.contains('active')) closeTipDetail();
+            }
+        });
+
+        // === TIP DETAIL MODAL (data-driven) ===
+        const tipDetailModal = document.getElementById('tipDetailModal');
+        const tipDetailContent = document.getElementById('tipDetailContent');
+
+        const tipData = {
+            'frios-uv': {
+                img: '../img/625266309_17852880177665053_3059908937446446596_n_.jpg',
+                tag: 'Frentes Fríos · Radiación UV · Salud Animal',
+                title: 'Protege a tus mascotas de los frentes fríos y la radiación UV',
+                meta: ['🐾 Por Tormenta & Huracat', '📍 CDMX · 2,400 msnm', '🌡️ Temporada de frentes fríos'],
+                sections: [
+                    {
+                        heading: '¿Por qué la altitud importa?',
+                        text: 'La Ciudad de México se encuentra a 2,400 metros sobre el nivel del mar. A esta altitud, la atmósfera es más delgada, lo que significa que la radiación ultravioleta es más intensa — hasta un 25% más que a nivel del mar. Durante los frentes fríos, las mascotas enfrentan un doble riesgo: temperaturas bajas combinadas con radiación UV elevada en los días despejados que siguen.'
+                    },
+                    {
+                        heading: '🐕 Tips para perritos',
+                        list: [
+                            { icon: '❄️', title: 'Abrígatlos en los paseos matutinos.', desc: 'Las temperaturas más bajas se registran entre las 5:00 y 8:00 AM. Un suéter o chamarra canina puede prevenir hipotermia, especialmente en razas pequeñas y de pelo corto.' },
+                            { icon: '☀️', title: 'Protección solar para narices y orejas.', desc: 'Los perritos con piel clara o poco pelo en estas zonas son vulnerables a quemaduras solares. Usa bloqueador solar veterinario (SPF 30+) antes de salir.' },
+                            { icon: '🏠', title: 'Cama elevada y cobija.', desc: 'No dejes que duerman directamente en el piso frío. Una cama elevada con cobija mantiene su temperatura corporal estable.' },
+                            { icon: '💧', title: 'Hidratación constante.', desc: 'El aire frío y seco deshidrata. Asegúrate de que siempre tengan agua fresca disponible.' }
+                        ]
+                    },
+                    {
+                        heading: '🐈 Tips para michis',
+                        list: [
+                            { icon: '🪟', title: 'Cuidado con las ventanas.', desc: 'A los gatos les encanta tomar el sol junto a la ventana, pero el vidrio no filtra todos los rayos UV. En días de índice UV alto (>8), limita la exposición directa.' },
+                            { icon: '🛏️', title: 'Espacios cálidos y seguros.', desc: 'Proporciona escondites acogedores con mantas. Los gatos buscan instintivamente lugares cálidos durante los frentes fríos.' },
+                            { icon: '🚫', title: 'No usar calefactores sin supervisión.', desc: 'Los gatos pueden quemarse o derribar calefactores portátiles. Opta por mantas térmicas seguras para mascotas.' }
+                        ]
+                    }
+                ],
+                stats: [
+                    { number: '47', label: 'Frentes fríos promedio por temporada' },
+                    { number: '11+', label: 'Índice UV máximo en CDMX' },
+                    { number: '2°C', label: 'Temperatura mínima registrada en CDMX' }
+                ]
+            },
+            'calor': {
+                img: '../img/634194112_17856177957665053_695104711634274032_n_.jpg',
+                tag: 'Olas de Calor · Hidratación · Bienestar Animal',
+                title: '¡Mantente hidratad@! Guía para sobrevivir el calor con mascotas',
+                meta: ['🐾 Por Tormenta & Huracat', '📍 CDMX · Valle de México', '☀️ Temporada de calor'],
+                sections: [
+                    {
+                        heading: 'El calor en la CDMX no es broma',
+                        text: 'La temporada de calor en la Ciudad de México puede alcanzar temperaturas superiores a los 33°C, agravadas por la isla de calor urbana que eleva la sensación térmica en zonas pavimentadas. Las mascotas son especialmente vulnerables: no sudan como nosotros y dependen del jadeo y las almohadillas de sus patas para regular su temperatura.'
+                    },
+                    {
+                        heading: '🐕 Tips para perritos',
+                        list: [
+                            { icon: '💧', title: 'Agua fresca siempre disponible.', desc: 'Cambia el agua varias veces al día. Puedes agregar cubitos de hielo para mantenerla fría más tiempo. En paseos largos, lleva un bebedero portátil.' },
+                            { icon: '🕐', title: 'Paseos en horarios frescos.', desc: 'Evita pasear entre las 11:00 AM y 4:00 PM. El asfalto puede alcanzar 65°C y quemar las almohadillas. Prueba con el dorso de tu mano: si no aguantas 5 segundos, está muy caliente.' },
+                            { icon: '🧊', title: 'Snacks congelados.', desc: 'Congela caldo de pollo sin sal o fruta (sandía, plátano) en moldes. Son premios refrescantes que ayudan a bajar la temperatura corporal.' },
+                            { icon: '✂️', title: 'No rasurar, sí cepillar.', desc: 'El pelaje los protege del sol. Cepillarlos elimina pelo muerto y mejora la ventilación. Rasurarlos puede causar quemaduras solares.' }
+                        ]
+                    },
+                    {
+                        heading: '🐈 Tips para michis',
+                        list: [
+                            { icon: '⛲', title: 'Fuentes de agua.', desc: 'Los gatos prefieren agua en movimiento. Una fuente para gatos los motiva a beber más. La deshidratación felina puede causar problemas renales graves.' },
+                            { icon: '🏠', title: 'Ventilación y sombra.', desc: 'Asegúrate de que tengan acceso a zonas frescas y sombreadas. Los pisos de azulejo son ideales para que se refresquen.' },
+                            { icon: '🧊', title: 'Toalla húmeda.', desc: 'Coloca una toalla húmeda donde suelen descansar. También puedes frotar suavemente sus orejas y patas con un paño húmedo para ayudarlos a refrescarse.' }
+                        ]
+                    }
+                ],
+                stats: [
+                    { number: '33°C+', label: 'Temperatura máxima promedio en temporada' },
+                    { number: '65°C', label: 'Temperatura del asfalto al sol' },
+                    { number: '80%', label: 'De golpes de calor son prevenibles' }
+                ]
+            },
+            'lluvia': {
+                img: '../img/620449702_17849804991665053_880112373181660182_n_.jpg',
+                tag: 'Lluvias · Paseos · Seguridad',
+                title: '¿Ya salieron a pasear? Guía para días lluviosos con mascotas',
+                meta: ['🐾 Por Tormenta & Huracat', '📍 CDMX · Temporada de lluvias', '🌧️ Junio–Octubre'],
+                sections: [
+                    {
+                        heading: 'La temporada de lluvias en CDMX',
+                        text: 'De junio a octubre, la Ciudad de México recibe aproximadamente el 80% de su precipitación anual. Las lluvias suelen ser intensas, vespertinas y pueden llegar con granizo, descargas eléctricas e inundaciones repentinas. Para nuestras mascotas, esto significa cambios en la rutina, ruidos fuertes y riesgos de salud que debemos anticipar.'
+                    },
+                    {
+                        heading: '🐕 Tips para paseos con lluvia',
+                        list: [
+                            { icon: '🌦️', title: 'Revisa el pronóstico antes de salir.', desc: 'Las lluvias en CDMX suelen iniciar entre 2:00 y 5:00 PM. Programa el paseo por la mañana o después de las 8:00 PM cuando ha cesado la lluvia.' },
+                            { icon: '🧥', title: 'Impermeable y botas caninas.', desc: 'Protege a tu perrito de la lluvia y del agua estancada que puede contener bacterias. Sécalo completamente al llegar a casa, especialmente entre los dedos.' },
+                            { icon: '⚡', title: 'Ansiedad por tormentas.', desc: 'Muchos perros sufren ansiedad con truenos. Crea un espacio seguro en casa, usa música suave y considera chalecos de presión (tipo ThunderShirt). No los obligues a salir durante tormentas.' },
+                            { icon: '🦠', title: 'Leptospirosis y charcos.', desc: 'Evita que beban agua de charcos. El agua estancada puede transmitir leptospirosis, una enfermedad bacteriana grave. Mantén sus vacunas al día.' }
+                        ]
+                    },
+                    {
+                        heading: '🐈 Tips para michis en temporada de lluvias',
+                        list: [
+                            { icon: '🪟', title: 'Ventanas seguras.', desc: 'Con la humedad, los michis buscan ventanas abiertas. Instala mallas de seguridad para evitar caídas — el síndrome del gato paracaidista aumenta en temporada de lluvias.' },
+                            { icon: '🍄', title: 'Cuidado con la humedad.', desc: 'La humedad excesiva puede causar hongos en la piel de tu michi. Revisa regularmente orejas y almohadillas. Mantén la casa ventilada.' },
+                            { icon: '🎵', title: 'Ruidos y estrés.', desc: 'Los gatos también se estresan con tormentas. Proporciónales escondites elevados y seguros. Las feromonas sintéticas (tipo Feliway) ayudan a calmar la ansiedad.' }
+                        ]
+                    }
+                ],
+                stats: [
+                    { number: '820mm', label: 'Precipitación anual promedio CDMX' },
+                    { number: '135', label: 'Días con lluvia al año' },
+                    { number: '80%', label: 'De lluvia cae entre junio y octubre' }
+                ]
+            },
+            'isoterma': {
+                img: '../img/618049676_17848826070665053_5093901396132810589_n_.jpg',
+                tag: 'Análisis Sinóptico · Meteorología · Educación',
+                title: '¿Qué es una isoterma? Entendiendo los mapas meteorológicos',
+                meta: ['🐾 Por Huracat · Analista Satelital', '📍 Centro de México', '🗺️ Análisis sinóptico'],
+                sections: [
+                    {
+                        heading: '¿Qué son las isotermas?',
+                        text: 'Una isoterma es una línea en un mapa que conecta todos los puntos con la misma temperatura en un momento dado. Cuando ves "12°C" a lo largo de una línea curva, significa que todos los lugares sobre esa línea registran 12°C. Son herramientas fundamentales para entender cómo se distribuye el calor y el frío sobre una región.'
+                    },
+                    {
+                        heading: '📚 Conceptos clave',
+                        list: [
+                            { icon: '🌡️', title: 'Isoterma.', desc: 'Línea que une puntos de igual temperatura. Cuando las isotermas están muy juntas, significa que hay un cambio brusco de temperatura — como cuando un frente frío llega a la CDMX.' },
+                            { icon: '📊', title: 'Mapa sinóptico.', desc: 'Mapa que muestra el estado de la atmósfera en un momento dado: presión, temperatura, vientos y frentes. Es como una "fotografía" del clima a gran escala.' },
+                            { icon: '🔵', title: 'Frente frío.', desc: 'Masa de aire frío que empuja al aire cálido. En el mapa se dibuja con triángulos azules. Cuando pasa por CDMX, las temperaturas pueden bajar hasta 10°C en pocas horas.' },
+                            { icon: '🔴', title: 'Frente cálido.', desc: 'Masa de aire cálido que avanza sobre aire frío. Se dibuja con semicírculos rojos. Suele traer lluvias prolongadas y cielos nublados antes de su paso.' }
+                        ]
+                    },
+                    {
+                        heading: '🐾 ¿Y esto qué tiene que ver con las mascotas?',
+                        list: [
+                            { icon: '📱', title: 'Anticípate al frío.', desc: 'Si ves isotermas bajando hacia el centro de México, prepara cobijas, suéteres y refugios cálidos para tus mascotas antes de que llegue el frente frío.' },
+                            { icon: '🌬️', title: 'Cambios bruscos de temperatura.', desc: 'Las mascotas, especialmente las de edad avanzada, son sensibles a los cambios rápidos. Cuando las isotermas se comprimen, es señal de cambio brusco. Mantén la rutina lo más estable posible.' },
+                            { icon: '📈', title: 'Aprende a leer los mapas.', desc: 'Sigue las fuentes oficiales: el SMN (Servicio Meteorológico Nacional) y la NOAA publican mapas sinópticos diarios. Huracat los analiza cada mañana desde su ventana.' }
+                        ]
+                    }
+                ],
+                stats: [
+                    { number: '47', label: 'Frentes fríos promedio por temporada en México' },
+                    { number: '10°C', label: 'Caída de temperatura posible en horas' },
+                    { number: 'GOES-19', label: 'Satélite principal para monitoreo' }
+                ]
+            },
+            'biodiversidad': {
+                img: '../img/618055459_17849268264665053_7480189280676670810_n_.jpg',
+                tag: 'Biodiversidad Urbana · Naturaleza · Convivencia',
+                title: 'Mascotas y biodiversidad urbana: convivir con la naturaleza en la ciudad',
+                meta: ['🐾 Por Tormenta · Corresponsal de Campo', '📍 CDMX · Áreas verdes', '🦋 Temporada de polinizadores'],
+                sections: [
+                    {
+                        heading: 'La CDMX es un ecosistema vivo',
+                        text: 'La Ciudad de México alberga más de 2,000 especies de flora y fauna. En parques, jardines y hasta en las azoteas conviven mariposas monarca, colibríes, tlacuaches, murciélagos y cientos de especies de insectos polinizadores. Nuestras mascotas comparten estos espacios, y es nuestra responsabilidad que la convivencia sea segura para todos.'
+                    },
+                    {
+                        heading: '🐕 Tips para paseos en áreas verdes',
+                        list: [
+                            { icon: '🦋', title: 'Observar sin tocar.', desc: 'Enséñale a tu perro el comando "déjalo". Las mariposas, abejas y otros polinizadores son esenciales para el ecosistema. Una mordida accidental puede causar reacciones alérgicas y daña la fauna local.' },
+                            { icon: '🌿', title: 'Cuidado con plantas tóxicas.', desc: 'El lirio, la nochebuena, la hiedra y el ricino son comunes en CDMX y tóxicos para mascotas. Conoce las plantas de tu ruta de paseo y evita que tu perro las mastique.' },
+                            { icon: '🐍', title: 'Fauna silvestre.', desc: 'En zonas con vegetación densa pueden encontrarse serpientes y arañas. Mantén a tu mascota en el camino y evita áreas con hierba alta o escombros.' },
+                            { icon: '💩', title: 'Recoge siempre.', desc: 'Las heces contaminan el suelo y el agua, afectando a la fauna silvestre. Además, pueden transmitir parásitos a otros animales. Siempre lleva bolsas biodegradables.' }
+                        ]
+                    },
+                    {
+                        heading: '🐈 Michis y la fauna urbana',
+                        list: [
+                            { icon: '🐦', title: 'Gatos y aves.', desc: 'Los gatos son depredadores naturales de aves. Si tu michi tiene acceso al exterior, considera un collar con cascabel para alertar a las aves. Mejor aún: enriquecimiento interior para que no necesite cazar.' },
+                            { icon: '🦎', title: 'Lagartijas y geckos.', desc: 'Son comunes en CDMX y los michis les encanta perseguirlos. Generalmente son inofensivos, pero algunos pueden transmitir parásitos. Mantén las desparasitaciones al día.' },
+                            { icon: '🌱', title: 'Jardín seguro.', desc: 'Si tu michi tiene acceso a un jardín, revisa que no haya plantas tóxicas (lirios, tulipanes) y evita el uso de pesticidas químicos que podrían envenenarlo.' }
+                        ]
+                    }
+                ],
+                stats: [
+                    { number: '2,000+', label: 'Especies de flora y fauna en CDMX' },
+                    { number: '316', label: 'Especies de aves registradas en la CDMX' },
+                    { number: '12%', label: 'De la biodiversidad de México está en la CDMX' }
+                ]
+            },
+            'satelite': {
+                img: '../img/617602496_17848826061665053_8591592844352451526_n_.jpg',
+                tag: 'GOES-19 · NOAA · Imágenes Satelitales',
+                title: 'Lluvia en el centro de México: ¿cómo se leen las imágenes satelitales?',
+                meta: ['🐾 Por Huracat · Analista Satelital', '📍 Centro de México', '🛰️ Satélite GOES-19 · NOAA/NESDIS'],
+                sections: [
+                    {
+                        heading: '¿Qué estamos viendo?',
+                        text: 'Las imágenes del satélite GOES-19 (Geostationary Operational Environmental Satellite) nos muestran la actividad atmosférica en tiempo real desde 36,000 km de altura. Los colores representan la temperatura de las nubes: los tonos más fríos (azules, verdes) indican nubes más altas y con mayor potencial de lluvia intensa, mientras que los tonos cálidos (rojos, naranjas) señalan nubes más bajas y delgadas.'
+                    },
+                    {
+                        heading: '🛰️ Guía de interpretación',
+                        list: [
+                            { icon: '🔵', title: 'Azul intenso / púrpura.', desc: 'Nubes muy altas y frías — tormentas severas con potencial de granizo, descargas eléctricas y lluvias torrenciales. Si ves estos colores sobre tu zona: quédate en casa con tus mascotas.' },
+                            { icon: '🟢', title: 'Verde.', desc: 'Nubes de desarrollo medio — lluvias moderadas a fuertes. Posible granizo menor. Buen momento para postponer el paseo.' },
+                            { icon: '🟡', title: 'Amarillo / naranja.', desc: 'Nubes bajas — lluvias ligeras a lloviznas. Puedes salir con precaución si llevas impermeable.' },
+                            { icon: '⬛', title: 'Sin color (cielo despejado).', desc: 'Sin nubes significativas. Momento ideal para pasear, pero recuerda: sin nubes = más radiación UV. Protección solar para narices claras.' }
+                        ]
+                    },
+                    {
+                        heading: '🐾 Decisiones con datos',
+                        list: [
+                            { icon: '📱', title: 'Consulta antes de salir.', desc: 'Las imágenes GOES se actualizan cada 10 minutos. Revisa el estado del cielo antes de sacar a pasear a tu mascota. La página de NOAA/NESDIS es gratuita y pública.' },
+                            { icon: '⏰', title: 'Ventanas de oportunidad.', desc: 'En temporada de lluvias, las tormentas vespertinas suelen durar 1-3 horas. Las imágenes satelitales te ayudan a identificar cuándo pasará el sistema y podrás salir.' },
+                            { icon: '🌀', title: 'Sistemas de mayor escala.', desc: 'Cuando un ciclón tropical se acerca al Pacífico o Golfo, la humedad llega al centro de México días antes. Huracat monitorea estos sistemas para alertarte con anticipación.' }
+                        ]
+                    }
+                ],
+                stats: [
+                    { number: '36,000', label: 'Km de altura del satélite GOES-19' },
+                    { number: '10 min', label: 'Frecuencia de actualización de imágenes' },
+                    { number: '16', label: 'Canales espectrales del satélite' }
+                ]
+            }
+        };
+
+        function buildModalHTML(data) {
+            const metaHTML = data.meta.map(m => `<span class="tip-detail-meta-item">${m}</span>`).join('');
+
+            let sectionsHTML = '';
+            for (const sec of data.sections) {
+                if (sec.text) {
+                    sectionsHTML += `
+                        <div class="tip-detail-section">
+                            <h3>${sec.heading}</h3>
+                            <p>${sec.text}</p>
+                        </div>`;
+                }
+                if (sec.list) {
+                    const items = sec.list.map(item => `
+                        <div class="tip-detail-list-item">
+                            <span class="tip-detail-list-icon">${item.icon}</span>
+                            <div><strong>${item.title}</strong> ${item.desc}</div>
+                        </div>`).join('');
+                    sectionsHTML += `
+                        <div class="tip-detail-section">
+                            <h3>${sec.heading}</h3>
+                            <div class="tip-detail-list">${items}</div>
+                        </div>`;
+                }
+            }
+
+            const statsHTML = data.stats.map(s => `
+                <div class="tip-detail-stat">
+                    <span class="stat-number">${s.number}</span>
+                    <span class="stat-label">${s.label}</span>
+                </div>`).join('');
+
+            return `
+                <button class="tip-detail-close" id="tipDetailCloseInner" aria-label="Cerrar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+                <div class="tip-detail-hero">
+                    <img src="${data.img}" alt="">
+                    <div class="tip-detail-hero-overlay">
+                        <div class="tip-detail-tag">${data.tag}</div>
+                        <h2 class="tip-detail-title">${data.title}</h2>
+                    </div>
+                </div>
+                <div class="tip-detail-body">
+                    <div class="tip-detail-meta">${metaHTML}</div>
+                    ${sectionsHTML}
+                    <div class="tip-detail-section">
+                        <h3>📊 Datos del Servicio Michiorológico</h3>
+                        <div class="tip-detail-stats">${statsHTML}</div>
+                    </div>
+                    <div class="tip-detail-cta">
+                        <p>Síguenos para más reportes diarios del clima y tips para tus mascotas.</p>
+                        <a href="https://www.instagram.com/tormenta_y_huracat/" target="_blank" class="cta-btn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg>
+                            @tormenta_y_huracat
+                        </a>
+                    </div>
+                </div>`;
+        }
+
+        function openTipDetail(tipId) {
+            const data = tipData[tipId];
+            if (!data) return;
+            tipDetailContent.innerHTML = buildModalHTML(data);
+            tipDetailModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            tipDetailModal.scrollTop = 0;
+
+            // Re-bind close button inside new content
+            document.getElementById('tipDetailCloseInner').addEventListener('click', (e) => {
+                e.stopPropagation();
+                closeTipDetail();
+            });
+        }
+
+        function closeTipDetail() {
+            tipDetailModal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Bind all tip cards
+        document.querySelectorAll('.tip-card[data-tip]').forEach(card => {
+            card.addEventListener('click', () => {
+                openTipDetail(card.dataset.tip);
+            });
+        });
+
+        // Close on backdrop click
+        tipDetailModal.addEventListener('click', (e) => {
+            if (e.target === tipDetailModal) {
+                closeTipDetail();
             }
         });
     </script>
