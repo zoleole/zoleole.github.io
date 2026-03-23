@@ -155,6 +155,7 @@
             position: relative;
             width: 100%;
             height: 100vh;
+            height: 100dvh;
             min-height: 700px;
             overflow: hidden;
             cursor: crosshair;
@@ -184,8 +185,8 @@
 
         .hero-circle {
             position: absolute;
-            width: min(55vw, 55vh);
-            height: min(55vw, 55vh);
+            width: min(55vw, 55dvh);
+            height: min(55vw, 55dvh);
             border-radius: 50%;
             top: 50%;
             left: 50%;
@@ -212,9 +213,9 @@
         .hero-dog-container {
             position: absolute;
             z-index: 3;
-            width: min(30vw, 30vh);
-            height: min(34vw, 34vh);
-            top: calc(50% + min(6vw, 6vh));
+            width: min(30vw, 30dvh);
+            height: min(34vw, 34dvh);
+            top: calc(50% + min(6vw, 6dvh));
             left: 50%;
             transform: translate(-50%, -50%);
             animation: dogIn 1.2s cubic-bezier(0.22, 1, 0.36, 1) both 0.4s;
@@ -243,10 +244,10 @@
         .hero-cat-container {
             position: absolute;
             z-index: 4;
-            width: min(14vw, 14vh);
-            height: min(16vw, 16vh);
-            top: calc(50% - min(14vw, 14vh));
-            left: calc(50% + min(2vw, 2vh));
+            width: min(14vw, 14dvh);
+            height: min(16vw, 16dvh);
+            top: calc(50% - min(14vw, 14dvh));
+            left: calc(50% + min(2vw, 2dvh));
             transform: translate(-50%, -50%);
             animation: catIn 1s cubic-bezier(0.22, 1, 0.36, 1) both 0.7s;
         }
@@ -274,7 +275,7 @@
 
         .hero-title {
             position: absolute;
-            top: clamp(100px, 14vh, 160px);
+            top: clamp(100px, 14dvh, 160px);
             left: clamp(20px, 4vw, 60px);
             z-index: 10;
             animation: fadeSlideIn 1.2s cubic-bezier(0.22, 1, 0.36, 1) both 0.2s;
@@ -302,7 +303,7 @@
 
         .hero-temp {
             position: absolute;
-            top: clamp(100px, 14vh, 160px);
+            top: clamp(100px, 14dvh, 160px);
             right: clamp(20px, 4vw, 60px);
             z-index: 10;
             font-family: 'Bebas Neue', sans-serif;
@@ -347,7 +348,7 @@
 
         .hero-credit {
             position: absolute;
-            bottom: clamp(20px, 4vh, 50px);
+            bottom: clamp(20px, 4dvh, 50px);
             left: 50%;
             transform: translateX(-50%);
             z-index: 10;
@@ -454,13 +455,13 @@
             opacity: 0.04;
         }
         .streak-1 {
-            width: 2px; height: 40vh; top: -5vh; left: 22%;
+            width: 2px; height: 40dvh; top: -5dvh; left: 22%;
             background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.8), transparent);
             transform: rotate(15deg);
             animation: streakFade 8s ease-in-out infinite;
         }
         .streak-2 {
-            width: 1px; height: 35vh; top: 15vh; right: 18%;
+            width: 1px; height: 35dvh; top: 15dvh; right: 18%;
             background: linear-gradient(to bottom, transparent, rgba(0,229,204,0.6), transparent);
             transform: rotate(-12deg);
             animation: streakFade 8s ease-in-out 3s infinite;
@@ -488,7 +489,7 @@
             0% { transform: translateY(0) translateX(0) scale(0); opacity: 0; }
             10% { opacity: 1; transform: scale(1); }
             90% { opacity: 0.6; }
-            100% { transform: translateY(-100vh) translateX(var(--dx, 20px)) scale(0.5); opacity: 0; }
+            100% { transform: translateY(-100dvh) translateX(var(--dx, 20px)) scale(0.5); opacity: 0; }
         }
 
         @keyframes fadeSlideIn {
@@ -852,7 +853,7 @@
         }
 
         .video-fullscreen video {
-            max-height: 90vh;
+            max-height: 90dvh;
             max-width: 90vw;
             border-radius: 16px;
             box-shadow: 0 30px 100px rgba(0, 0, 0, 0.6), 0 0 80px rgba(255, 0, 102, 0.08);
@@ -867,7 +868,7 @@
 
         .video-fullscreen-close {
             position: absolute;
-            top: clamp(16px, 3vh, 32px);
+            top: clamp(16px, 3dvh, 32px);
             right: clamp(16px, 3vw, 32px);
             width: 44px;
             height: 44px;
@@ -897,7 +898,7 @@
 
         .video-fullscreen-hint {
             position: absolute;
-            bottom: clamp(16px, 3vh, 32px);
+            bottom: clamp(16px, 3dvh, 32px);
             left: 50%;
             transform: translateX(-50%);
             font-family: 'Space Mono', monospace;
@@ -1097,7 +1098,7 @@
             position: relative;
             max-width: 800px;
             margin: 0 auto;
-            min-height: 100vh;
+            min-height: 100dvh;
             transform: translateY(30px) scale(0.97);
             transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
         }
@@ -1108,7 +1109,7 @@
 
         .tip-detail-close {
             position: fixed;
-            top: clamp(16px, 3vh, 32px);
+            top: clamp(16px, 3dvh, 32px);
             right: clamp(16px, 3vw, 32px);
             z-index: 10001;
             width: 44px;
@@ -1346,13 +1347,13 @@
             }
 
             .hero-dog-container {
-                width: min(45vw, 45vh);
-                height: min(50vw, 50vh);
+                width: min(45vw, 45dvh);
+                height: min(50vw, 50dvh);
             }
 
             .hero-cat-container {
-                width: min(20vw, 20vh);
-                height: min(22vw, 22vh);
+                width: min(20vw, 20dvh);
+                height: min(22vw, 22dvh);
             }
 
             .hero-title h1 {
@@ -1360,7 +1361,7 @@
             }
 
             .video-fullscreen video {
-                max-height: 80vh;
+                max-height: 80dvh;
                 max-width: 95vw;
                 border-radius: 10px;
             }
