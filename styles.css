@@ -514,6 +514,7 @@ body {
     opacity: 0;
     animation: ringIn 1.8s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
     will-change: transform;
+    clip-path: ellipse(50% 50% at 50% 50%);
 }
 
 .ring-shimmer::before {
@@ -523,7 +524,7 @@ body {
     left: -100%;
     width: 50%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 180, 120, 0.06), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255, 180, 120, 0.03), transparent);
     animation: shimmerSweep 8s ease-in-out infinite;
 }
 
@@ -677,7 +678,7 @@ body {
 }
 
 .box-date .weather-icon {
-    font-size: clamp(16px, 2vw, 26px);
+    font-size: clamp(24px, 3vw, 38px);
     line-height: 1;
     filter: drop-shadow(0 0 4px rgba(255, 85, 0, 0.3));
     transition: opacity 0.4s ease;
