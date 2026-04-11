@@ -678,9 +678,9 @@ body {
 }
 
 .box-date .weather-icon {
-    font-size: clamp(24px, 3vw, 38px);
+    font-size: clamp(28px, 3.5vw, 44px);
     line-height: 1;
-    filter: drop-shadow(0 0 4px rgba(255, 85, 0, 0.3));
+    filter: drop-shadow(0 0 6px rgba(255, 85, 0, 0.5)) drop-shadow(0 0 14px rgba(255, 85, 0, 0.25));
     transition: opacity 0.4s ease;
 }
 
