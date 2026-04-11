@@ -408,6 +408,16 @@
             text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
             line-height: 1;
             animation: fadeSlideIn 1.2s cubic-bezier(0.22, 1, 0.36, 1) both 0.35s;
+            text-align: center;
+        }
+
+        .hero-temp-city {
+            display: block;
+            font-family: 'Space Mono', monospace;
+            font-size: clamp(10px, 1.2vw, 14px);
+            letter-spacing: 4px;
+            opacity: 0.6;
+            margin-top: 4px;
         }
 
         .hero-side-left {
@@ -1855,9 +1865,9 @@
 
         <div class="hero-title">
             <h1>INSTITUTO<br>MICHIOROLÓGICO<br>NACIONAL</h1>
-            <div class="subtitle">@tormenta_y_huracat · CDMX</div>
+            <div class="subtitle">@tormenta_y_huracat</div>
         </div>
-        <div class="hero-temp" id="heroTemp">--°</div>
+        <div class="hero-temp" id="heroTemp">--°<span class="hero-temp-city">CDMX</span></div>
         <div class="hero-side-left">2026</div>
         <div class="hero-side-right">Corresponsales de campo</div>
         <div class="hero-credit">
@@ -2134,8 +2144,8 @@
             try {
                 const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=19.4326&longitude=-99.1332&current_weather=true');
                 const data = await res.json();
-                heroTemp.textContent = Math.round(data.current_weather.temperature) + '°';
-            } catch (e) { heroTemp.textContent = '19°'; }
+                heroTemp.innerHTML = Math.round(data.current_weather.temperature) + '°<span class="hero-temp-city">CDMX</span>';
+            } catch (e) { heroTemp.innerHTML = '19°<span class="hero-temp-city">CDMX</span>'; }
         })();
 
         // === SCROLL REVEAL ===
