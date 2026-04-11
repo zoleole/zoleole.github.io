@@ -741,6 +741,10 @@ body {
     text-orientation: mixed;
 }
 
+.box-leggo:hover span {
+    color: var(--orange);
+}
+
 /* Box: Bottom Left Link */
 .box-bottom-left {
     bottom: 13dvh;
