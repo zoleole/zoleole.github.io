@@ -21,12 +21,6 @@
     --gray-cross: #444;
     --white: #ddd;
     --white-dim: #999;
-
-    /* Safe-area insets (fallback to 0 on non-notched devices) */
-    --sa-top: env(safe-area-inset-top, 0px);
-    --sa-right: env(safe-area-inset-right, 0px);
-    --sa-bottom: env(safe-area-inset-bottom, 0px);
-    --sa-left: env(safe-area-inset-left, 0px);
 }
 
 /* ── Base ── */
@@ -40,8 +34,6 @@ body {
 body {
     background: #000;
     font-family: 'DM Mono', monospace;
-    -webkit-tap-highlight-color: transparent;
-    -webkit-touch-callout: none;
 }
 
 .poster {
@@ -663,8 +655,8 @@ body {
 
 /* Box: Date / Weather */
 .box-date {
-    top: max(13dvh, calc(var(--sa-top) + 13dvh));
-    left: max(5vw, var(--sa-left));
+    top: 13dvh;
+    left: 5vw;
     padding: clamp(10px, 1.5vw, 18px) clamp(12px, 1.8vw, 20px);
     animation-delay: 0.6s;
 }
@@ -729,8 +721,8 @@ body {
 
 /* Box: Leggo */
 .box-leggo {
-    bottom: max(18dvh, calc(var(--sa-bottom) + 18dvh));
-    right: max(5vw, var(--sa-right));
+    bottom: 18dvh;
+    right: 5vw;
     width: clamp(70px, 7vw, 100px);
     height: clamp(90px, 12dvh, 130px);
     display: flex;
@@ -755,8 +747,8 @@ body {
 
 /* Box: Bottom Left Link */
 .box-bottom-left {
-    bottom: max(13dvh, calc(var(--sa-bottom) + 13dvh));
-    left: max(5vw, var(--sa-left));
+    bottom: 13dvh;
+    left: 5vw;
     padding: 6px 16px;
     animation-delay: 0.9s;
     display: flex;
@@ -796,20 +788,20 @@ body {
 }
 
 .coord-tl {
-    top: max(22px, calc(var(--sa-top) + 10px));
-    left: max(28px, calc(var(--sa-left) + 16px));
+    top: 22px;
+    left: 28px;
     animation-delay: 1.3s;
 }
 
 .coord-tr {
-    top: max(22px, calc(var(--sa-top) + 10px));
-    right: max(28px, calc(var(--sa-right) + 16px));
+    top: 22px;
+    right: 28px;
     animation-delay: 1.35s;
 }
 
 .coord-bl {
-    bottom: max(8dvh, calc(var(--sa-bottom) + 8dvh));
-    left: max(28px, calc(var(--sa-left) + 16px));
+    bottom: 8dvh;
+    left: 28px;
     animation-delay: 1.4s;
 }
 
@@ -819,8 +811,8 @@ body {
 
 .text-bunkermuz {
     position: absolute;
-    top: max(17dvh, calc(var(--sa-top) + 17dvh));
-    right: max(5vw, var(--sa-right));
+    top: 17dvh;
+    right: 5vw;
     z-index: 6;
     font-family: 'Outfit', sans-serif;
     font-weight: 300;
@@ -856,7 +848,7 @@ body {
 .text-smile {
     position: absolute;
     top: 42dvh;
-    right: max(3.5vw, var(--sa-right));
+    right: 3.5vw;
     z-index: 6;
     font-family: 'Outfit', sans-serif;
     font-weight: 600;
@@ -871,7 +863,7 @@ body {
 /* Title */
 .text-saturnday {
     position: absolute;
-    bottom: max(3dvh, calc(var(--sa-bottom) + 3dvh));
+    bottom: 3dvh;
     left: 50%;
     transform: translateX(-50%);
     z-index: 6;
@@ -949,7 +941,7 @@ body {
 
 .edition-tag {
     position: absolute;
-    top: max(4.5dvh, calc(var(--sa-top) + 4.5dvh));
+    top: 4.5dvh;
     left: 50%;
     transform: translateX(-50%);
     z-index: 6;
@@ -1049,8 +1041,8 @@ body {
 }
 
 .corner-mark.tl {
-    top: max(12px, var(--sa-top));
-    left: max(12px, var(--sa-left));
+    top: 12px;
+    left: 12px;
 }
 
 .corner-mark.tl::before {
@@ -1068,8 +1060,8 @@ body {
 }
 
 .corner-mark.tr {
-    top: max(12px, var(--sa-top));
-    right: max(12px, var(--sa-right));
+    top: 12px;
+    right: 12px;
 }
 
 .corner-mark.tr::before {
@@ -1087,8 +1079,8 @@ body {
 }
 
 .corner-mark.bl {
-    bottom: max(12px, var(--sa-bottom));
-    left: max(12px, var(--sa-left));
+    bottom: 12px;
+    left: 12px;
 }
 
 .corner-mark.bl::before {
@@ -1106,8 +1098,8 @@ body {
 }
 
 .corner-mark.br {
-    bottom: max(12px, var(--sa-bottom));
-    right: max(12px, var(--sa-right));
+    bottom: 12px;
+    right: 12px;
 }
 
 .corner-mark.br::before {
@@ -1130,7 +1122,7 @@ body {
 
 .hud-pulse {
     position: absolute;
-    bottom: max(9dvh, calc(var(--sa-bottom) + 9dvh));
+    bottom: 9dvh;
     left: 50%;
     transform: translateX(-50%);
     z-index: 6;
