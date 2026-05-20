@@ -83,13 +83,13 @@ window.addEventListener('load', () => {
 
 // ── Shooting Stars ──────────────────────────
 
-(function initShootingStars() {
-    function spawn() {
+const spawnShootingStar = (function initShootingStars() {
+    function spawn(opts = {}) {
         const ss = document.createElement('div');
         ss.className = 'shooting-star';
 
-        const startX = 15 + Math.random() * 70;
-        const startY = Math.random() * 40;
+        const startX = opts.startX ?? (15 + Math.random() * 70);
+        const startY = opts.startY ?? (Math.random() * 40);
         const angle = 20 + Math.random() * 30;
         const distance = 150 + Math.random() * 250;
         const rad = angle * (Math.PI / 180);
@@ -102,7 +102,7 @@ window.addEventListener('load', () => {
       --shoot-dx: ${Math.cos(rad) * distance}px;
       --shoot-dy: ${Math.sin(rad) * distance}px;
       --trail-len: ${trailLen}px;
-      --trail-angle: ${-(180 - angle)}deg;
+      --trail-angle: ${angle}deg;
       animation: shootingStar ${dur}s ease-out forwards;
     `;
         poster.appendChild(ss);
@@ -114,6 +114,28 @@ window.addEventListener('load', () => {
     }
 
     setTimeout(schedule, 2000);
+
+    return spawn;
+})();
+
+// ── Meteor Shower (on click) ────────────────
+
+(function initMeteorShower() {
+    poster.addEventListener('click', (e) => {
+        // Ignore clicks on links/buttons so they keep their normal behavior
+        if (e.target.closest('a, button')) return;
+
+        // Burst of 10–14 meteors, slightly staggered, spread across the
+        // whole screen. Meteors travel down-right (per the spawn defaults),
+        // so we cap startY at ~70% to leave room for the trail to fall.
+        const count = 10 + Math.floor(Math.random() * 5);
+        for (let i = 0; i < count; i++) {
+            setTimeout(() => spawnShootingStar({
+                startX: Math.random() * 95,
+                startY: Math.random() * 70,
+            }), i * 70 + Math.random() * 80);
+        }
+    });
 })();
 
 // ── Crosses ─────────────────────────────────
