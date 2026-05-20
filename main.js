@@ -93,12 +93,24 @@ const spawnShootingStar = (function initShootingStars() {
         const angle = 20 + Math.random() * 30;
         const distance = 150 + Math.random() * 250;
         const rad = angle * (Math.PI / 180);
-        const trailLen = 40 + Math.random() * 50;
+
+        // Magnitude (0–1): bigger head ↔ longer trail. Independent jitter
+        // on the trail keeps small meteors from all looking the same.
+        const magnitude = Math.random();
+        const size = 1 + magnitude * 3;                              // 1px–4px
+        const trailLen = 25 + magnitude * 130 + Math.random() * 30;  // ~25–185px
         const dur = 0.5 + Math.random() * 0.6;
+
+        // Randomly put each meteor behind (z=2, below planet) or in front
+        // (z=5, above planet + rings) so the shower weaves through the planet
+        const zIndex = Math.random() < 0.5 ? 2 : 5;
 
         ss.style.cssText = `
       left: ${startX}%;
       top: ${startY}%;
+      width: ${size}px;
+      height: ${size}px;
+      z-index: ${zIndex};
       --shoot-dx: ${Math.cos(rad) * distance}px;
       --shoot-dy: ${Math.sin(rad) * distance}px;
       --trail-len: ${trailLen}px;
