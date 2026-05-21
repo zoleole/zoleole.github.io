@@ -83,38 +83,26 @@ window.addEventListener('load', () => {
 
 // ── Shooting Stars ──────────────────────────
 
-const spawnShootingStar = (function initShootingStars() {
-    function spawn(opts = {}) {
+(function initShootingStars() {
+    function spawn() {
         const ss = document.createElement('div');
         ss.className = 'shooting-star';
 
-        const startX = opts.startX ?? (15 + Math.random() * 70);
-        const startY = opts.startY ?? (Math.random() * 40);
+        const startX = 15 + Math.random() * 70;
+        const startY = Math.random() * 40;
         const angle = 20 + Math.random() * 30;
         const distance = 150 + Math.random() * 250;
         const rad = angle * (Math.PI / 180);
-
-        // Magnitude (0–1): bigger head ↔ longer trail. Independent jitter
-        // on the trail keeps small meteors from all looking the same.
-        const magnitude = Math.random();
-        const size = 1 + magnitude * 3;                              // 1px–4px
-        const trailLen = 25 + magnitude * 130 + Math.random() * 30;  // ~25–185px
+        const trailLen = 40 + Math.random() * 50;
         const dur = 0.5 + Math.random() * 0.6;
-
-        // Randomly put each meteor behind (z=2, below planet) or in front
-        // (z=5, above planet + rings) so the shower weaves through the planet
-        const zIndex = Math.random() < 0.5 ? 2 : 5;
 
         ss.style.cssText = `
       left: ${startX}%;
       top: ${startY}%;
-      width: ${size}px;
-      height: ${size}px;
-      z-index: ${zIndex};
       --shoot-dx: ${Math.cos(rad) * distance}px;
       --shoot-dy: ${Math.sin(rad) * distance}px;
       --trail-len: ${trailLen}px;
-      --trail-angle: ${angle}deg;
+      --trail-angle: ${-(180 - angle)}deg;
       animation: shootingStar ${dur}s ease-out forwards;
     `;
         poster.appendChild(ss);
@@ -126,28 +114,6 @@ const spawnShootingStar = (function initShootingStars() {
     }
 
     setTimeout(schedule, 2000);
-
-    return spawn;
-})();
-
-// ── Meteor Shower (on click) ────────────────
-
-(function initMeteorShower() {
-    poster.addEventListener('click', (e) => {
-        // Ignore clicks on links/buttons so they keep their normal behavior
-        if (e.target.closest('a, button')) return;
-
-        // Burst of 10–14 meteors, slightly staggered, spread across the
-        // whole screen. Meteors travel down-right (per the spawn defaults),
-        // so we cap startY at ~70% to leave room for the trail to fall.
-        const count = 10 + Math.floor(Math.random() * 5);
-        for (let i = 0; i < count; i++) {
-            setTimeout(() => spawnShootingStar({
-                startX: Math.random() * 95,
-                startY: Math.random() * 70,
-            }), i * 70 + Math.random() * 80);
-        }
-    });
 })();
 
 // ── Crosses ─────────────────────────────────
