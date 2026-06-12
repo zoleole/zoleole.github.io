@@ -2,20 +2,32 @@
 // Z O L E O L E — DRA ATMOSFERA
 // ═══════════════════════════════════════════
 
+'use strict';
+
 const poster = document.getElementById('poster');
+const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 // ── Loading Curtain ─────────────────────────
 
-window.addEventListener('load', () => {
-    setTimeout(() => {
-        document.getElementById('loading').classList.add('hide');
-    }, 800);
-});
+(function initLoader() {
+    const curtain = document.getElementById('loading');
+    const hide = () => curtain.classList.add('hide');
+
+    if (document.readyState === 'complete') {
+        setTimeout(hide, 300);
+    } else {
+        window.addEventListener('load', () => setTimeout(hide, 800));
+    }
+
+    // Failsafe: never strand the visitor behind the curtain
+    setTimeout(hide, 4000);
+})();
 
 // ── Starfield ───────────────────────────────
 
 (function initStars() {
     const STAR_COUNT = 160;
+    const frag = document.createDocumentFragment();
 
     for (let i = 0; i < STAR_COUNT; i++) {
         const star = document.createElement('div');
@@ -36,11 +48,14 @@ window.addEventListener('load', () => {
       --star-o: ${opacity};
       animation-delay: ${0.2 + Math.random() * 1.2}s${twinkleDelay};
     `;
-        poster.appendChild(star);
+        frag.appendChild(star);
     }
+
+    poster.appendChild(frag);
 })();
 
 // ── Constellations ──────────────────────────
+// Retina-sharp canvas; lines plot themselves in like an instrument trace.
 
 (function initConstellations() {
     const canvas = document.getElementById('constellationCanvas');
@@ -54,36 +69,78 @@ window.addEventListener('load', () => {
         [[85, 38], [90, 55], [78, 65]],
     ];
 
+    let vw = 0, vh = 0;
+    let progress = REDUCED_MOTION ? 1 : 0;
+
+    function toPx(group) {
+        return group.map(([px, py]) => [(px / 100) * vw, (py / 100) * vh]);
+    }
+
+    function pathLength(pts) {
+        let len = 0;
+        for (let i = 1; i < pts.length; i++) {
+            len += Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]);
+        }
+        return len;
+    }
+
     function resize() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        vw = window.innerWidth;
+        vh = window.innerHeight;
+        canvas.width = vw * dpr;
+        canvas.height = vh * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        draw();
     }
 
     function draw() {
-        const { width: w, height: h } = canvas;
-        ctx.clearRect(0, 0, w, h);
+        ctx.clearRect(0, 0, vw, vh);
         ctx.strokeStyle = 'rgba(232, 96, 28, 0.06)';
         ctx.lineWidth = 0.5;
 
         GROUPS.forEach(group => {
+            const pts = toPx(group);
+            const len = pathLength(pts);
+
+            ctx.setLineDash([len]);
+            ctx.lineDashOffset = len * (1 - progress);
+
             ctx.beginPath();
-            group.forEach(([px, py], i) => {
-                const x = (px / 100) * w;
-                const y = (py / 100) * h;
+            pts.forEach(([x, y], i) => {
                 i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
             });
             ctx.stroke();
         });
+
+        ctx.setLineDash([]);
+    }
+
+    function animateIn() {
+        const DURATION = 1800;
+        const start = performance.now();
+
+        (function frame(now) {
+            const t = Math.min((now - start) / DURATION, 1);
+            progress = 1 - Math.pow(1 - t, 3); // ease-out cubic
+            draw();
+            if (t < 1) requestAnimationFrame(frame);
+        })(start);
     }
 
     resize();
-    window.addEventListener('resize', () => { resize(); setTimeout(draw, 100); });
-    setTimeout(draw, 2000);
+    window.addEventListener('resize', resize);
+
+    if (!REDUCED_MOTION) {
+        setTimeout(() => requestAnimationFrame(animateIn), 1800);
+    }
 })();
 
 // ── Shooting Stars ──────────────────────────
 
 (function initShootingStars() {
+    if (REDUCED_MOTION) return;
+
     function spawn() {
         const ss = document.createElement('div');
         ss.className = 'shooting-star';
@@ -96,13 +153,14 @@ window.addEventListener('load', () => {
         const trailLen = 40 + Math.random() * 50;
         const dur = 0.5 + Math.random() * 0.6;
 
+        // Trail rotated by `angle` points opposite the velocity — behind the star.
         ss.style.cssText = `
       left: ${startX}%;
       top: ${startY}%;
       --shoot-dx: ${Math.cos(rad) * distance}px;
       --shoot-dy: ${Math.sin(rad) * distance}px;
       --trail-len: ${trailLen}px;
-      --trail-angle: ${-(180 - angle)}deg;
+      --trail-angle: ${angle}deg;
       animation: shootingStar ${dur}s ease-out forwards;
     `;
         poster.appendChild(ss);
@@ -110,7 +168,10 @@ window.addEventListener('load', () => {
     }
 
     function schedule() {
-        setTimeout(() => { spawn(); schedule(); }, 3000 + Math.random() * 8000);
+        setTimeout(() => {
+            if (!document.hidden) spawn();
+            schedule();
+        }, 3000 + Math.random() * 8000);
     }
 
     setTimeout(schedule, 2000);
@@ -130,6 +191,8 @@ window.addEventListener('load', () => {
         [2, 48], [98, 32], [25, 6], [78, 96], [45, 15],
     ];
 
+    const frag = document.createDocumentFragment();
+
     POSITIONS.forEach(([x, y], i) => {
         const cross = document.createElement('div');
         cross.className = 'cross';
@@ -139,13 +202,17 @@ window.addEventListener('load', () => {
         cross.style.animationDelay = (0.3 + i * 0.04) + 's';
         cross.style.fontSize = (11 * (0.7 + Math.random() * 0.6)) + 'px';
         cross.style.opacity = 0.2 + Math.random() * 0.4;
-        poster.appendChild(cross);
+        frag.appendChild(cross);
     });
+
+    poster.appendChild(frag);
 })();
 
 // ── Floating Particles ──────────────────────
 
 (function initParticles() {
+    if (REDUCED_MOTION) return;
+
     function spawn() {
         const p = document.createElement('div');
         p.className = 'particle';
@@ -171,7 +238,9 @@ window.addEventListener('load', () => {
     }
 
     for (let i = 0; i < 16; i++) setTimeout(spawn, i * 250);
-    setInterval(spawn, 600);
+    setInterval(() => {
+        if (!document.hidden) spawn();
+    }, 600);
 })();
 
 // ── Clock (Ensenada) ────────────────────────
@@ -179,17 +248,25 @@ window.addEventListener('load', () => {
 (function initClock() {
     const el = document.getElementById('ensenada-time');
 
+    const fmt = new Intl.DateTimeFormat('en-GB', {
+        timeZone: 'America/Tijuana',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hourCycle: 'h23',
+    });
+
     function tick() {
-        const now = new Date();
-        const local = new Date(now.toLocaleString('en-US', { timeZone: 'America/Tijuana' }));
-        const h = String(local.getHours()).padStart(2, '0');
-        const m = String(local.getMinutes()).padStart(2, '0');
-        const s = String(local.getSeconds()).padStart(2, '0');
-        el.innerHTML = `${h}:${m}:<span class="seconds">${s}</span>`;
+        const parts = fmt.formatToParts(new Date());
+        const get = type => parts.find(p => p.type === type).value;
+        el.innerHTML = `${get('hour')}:${get('minute')}:<span class="seconds">${get('second')}</span>`;
     }
 
-    tick();
-    setInterval(tick, 1000);
+    // Re-align to the next second boundary each tick — no drift.
+    (function loop() {
+        tick();
+        setTimeout(loop, 1000 - (Date.now() % 1000) + 5);
+    })();
 })();
 
 // ── Weather (Ensenada — Open-Meteo) ─────────
@@ -197,6 +274,8 @@ window.addEventListener('load', () => {
 (function initWeather() {
     const API_URL =
         'https://api.open-meteo.com/v1/forecast?latitude=31.8667&longitude=-116.5964&current=temperature_2m,weather_code,is_day&timezone=America%2FTijuana';
+
+    const REFRESH_MS = 10 * 60 * 1000;
 
     const WMO = {
         0: ['CLEAR SKY', '☀', '☽'], 1: ['MOSTLY CLEAR', '🌤', '☽'], 2: ['PARTLY CLOUDY', '⛅', '☁'],
@@ -208,9 +287,17 @@ window.addEventListener('load', () => {
         95: ['THUNDERSTORM', '⛈', '⛈'], 96: ['STORM W/ HAIL', '⛈', '⛈'], 99: ['STORM W/ HAIL', '⛈', '⛈'],
     };
 
+    let lastSuccess = 0;
+
     async function fetchWeather() {
+        const ctrl = new AbortController();
+        const timeout = setTimeout(() => ctrl.abort(), 8000);
+
         try {
-            const data = await (await fetch(API_URL)).json();
+            const res = await fetch(API_URL, { signal: ctrl.signal });
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const data = await res.json();
+
             const temp = Math.round(data.current.temperature_2m);
             const info = WMO[data.current.weather_code] || WMO[0];
             const isDay = data.current.is_day === 1;
@@ -218,21 +305,37 @@ window.addEventListener('load', () => {
             document.getElementById('ensenada-temp').textContent = `${temp}°C`;
             document.getElementById('ensenada-icon').textContent = isDay ? info[1] : info[2];
             document.getElementById('ensenada-condition').textContent = info[0];
+            lastSuccess = Date.now();
         } catch (err) {
-            document.getElementById('ensenada-temp').textContent = '--°C';
-            document.getElementById('ensenada-condition').textContent = 'OFFLINE';
-            console.error('Weather fetch error:', err);
+            // Keep showing the last good reading; only declare OFFLINE if we never had one.
+            if (!lastSuccess) {
+                document.getElementById('ensenada-temp').textContent = '--°C';
+                document.getElementById('ensenada-icon').textContent = '◌';
+                document.getElementById('ensenada-condition').textContent = 'OFFLINE';
+            }
+            console.warn('Weather fetch error:', err);
+        } finally {
+            clearTimeout(timeout);
         }
     }
 
     fetchWeather();
-    setInterval(fetchWeather, 10 * 60 * 1000);
+    setInterval(() => {
+        if (!document.hidden) fetchWeather();
+    }, REFRESH_MS);
+
+    // Returning to the tab with stale data? Refresh right away.
+    document.addEventListener('visibilitychange', () => {
+        if (!document.hidden && Date.now() - lastSuccess > REFRESH_MS) fetchWeather();
+    });
 })();
 
-// ── Parallax (Mouse + Gyroscope) ────────────
+// ── Parallax (Pointer + Gyroscope) ──────────
 
 (function initParallax() {
-    let mouseX = 0, mouseY = 0;
+    if (REDUCED_MOTION) return;
+
+    let targetX = 0, targetY = 0;
     let currentX = 0, currentY = 0;
     const EASE = 0.06;
 
@@ -243,26 +346,66 @@ window.addEventListener('load', () => {
     const moonOrbit = document.querySelector('.moon-orbit');
     const glow = document.getElementById('cursorGlow');
 
-    poster.addEventListener('mousemove', (e) => {
-        const rect = poster.getBoundingClientRect();
-        mouseX = (e.clientX - rect.left) / rect.width - 0.5;
-        mouseY = (e.clientY - rect.top) / rect.height - 0.5;
-        glow.style.left = e.clientX + 'px';
-        glow.style.top = e.clientY + 'px';
+    // The ringIn entrance (fill-mode: both) outranks inline styles in the
+    // cascade, so parallax transforms would never apply. Once the entrance
+    // finishes, drop the animation — its end state matches the base
+    // transform, so there is no visual jump.
+    [ringBack, ringFront, shimmer].forEach(el => {
+        el.addEventListener('animationend', (e) => {
+            if (e.animationName === 'ringIn') el.style.animation = 'none';
+        }, { once: true });
     });
 
-    if (window.DeviceOrientationEvent) {
-        window.addEventListener('deviceorientation', (e) => {
-            if (e.gamma !== null && e.beta !== null) {
-                mouseX = Math.max(-0.5, Math.min(0.5, e.gamma / 40));
-                mouseY = Math.max(-0.5, Math.min(0.5, (e.beta - 40) / 40));
+    let glowOn = false;
+
+    poster.addEventListener('pointermove', (e) => {
+        targetX = e.clientX / window.innerWidth - 0.5;
+        targetY = e.clientY / window.innerHeight - 0.5;
+
+        if (e.pointerType !== 'touch') {
+            glow.style.transform =
+                `translate3d(${e.clientX}px, ${e.clientY}px, 0) translate(-50%, -50%)`;
+            if (!glowOn) {
+                glow.classList.add('on');
+                glowOn = true;
             }
+        }
+    }, { passive: true });
+
+    // Gyroscope — iOS requires an explicit permission grant from a tap.
+    function onOrient(e) {
+        if (e.gamma !== null && e.beta !== null) {
+            targetX = Math.max(-0.5, Math.min(0.5, e.gamma / 40));
+            targetY = Math.max(-0.5, Math.min(0.5, (e.beta - 40) / 40));
+        }
+    }
+
+    const chip = document.getElementById('tiltChip');
+    const needsPermission =
+        typeof DeviceOrientationEvent !== 'undefined' &&
+        typeof DeviceOrientationEvent.requestPermission === 'function';
+
+    if (needsPermission) {
+        chip.hidden = false;
+        chip.addEventListener('click', async () => {
+            try {
+                const state = await DeviceOrientationEvent.requestPermission();
+                if (state === 'granted') {
+                    window.addEventListener('deviceorientation', onOrient);
+                }
+            } catch (err) {
+                console.warn('Motion permission error:', err);
+            }
+            chip.classList.add('hide');
+            setTimeout(() => { chip.hidden = true; }, 450);
         });
+    } else if (window.DeviceOrientationEvent) {
+        window.addEventListener('deviceorientation', onOrient);
     }
 
     (function loop() {
-        currentX += (mouseX - currentX) * EASE;
-        currentY += (mouseY - currentY) * EASE;
+        currentX += (targetX - currentX) * EASE;
+        currentY += (targetY - currentY) * EASE;
 
         const px = currentX * 15, py = currentY * 15;
         const rx = currentX * 20, ry = currentY * 8;
@@ -271,8 +414,8 @@ window.addEventListener('load', () => {
         ringBack.style.transform = `translate(calc(-50% + ${rx}px), calc(-50% + ${ry}px))`;
         ringFront.style.transform = `translate(calc(-50% + ${rx}px), calc(-50% + ${ry}px))`;
         shimmer.style.transform = `translate(calc(-50% + ${rx}px), calc(-50% + ${ry}px))`;
-        moonOrbit.style.marginLeft = (currentX * 10) + 'px';
-        moonOrbit.style.marginTop = (currentY * 10) + 'px';
+        moonOrbit.style.setProperty('--mx', (currentX * 10) + 'px');
+        moonOrbit.style.setProperty('--my', (currentY * 10) + 'px');
 
         requestAnimationFrame(loop);
     })();
