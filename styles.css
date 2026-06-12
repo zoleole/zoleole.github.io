@@ -12,6 +12,7 @@
 
 /* ── Variables ── */
 :root {
+    color-scheme: dark;
     --orange: #e8601c;
     --orange-bright: #ff6a1a;
     --orange-glow: #ff5500;
@@ -103,16 +104,29 @@ body {
 
 .cursor-glow {
     position: fixed;
+    top: 0;
+    left: 0;
     width: 260px;
     height: 260px;
     border-radius: 50%;
     pointer-events: none;
     z-index: 1;
     background: radial-gradient(circle, rgba(255, 85, 0, 0.04) 0%, rgba(255, 85, 0, 0.015) 40%, transparent 70%);
-    transform: translate(-50%, -50%);
+    transform: translate3d(-50%, -50%, 0);
+    opacity: 0;
     transition: opacity 0.5s;
     mix-blend-mode: screen;
-    will-change: left, top;
+    will-change: transform;
+}
+
+.cursor-glow.on {
+    opacity: 1;
+}
+
+@media (hover: none) {
+    .cursor-glow {
+        display: none;
+    }
 }
 
 /* ═══════════════════════════════════════════
@@ -412,12 +426,14 @@ body {
 ═══════════════════════════════════════════ */
 
 .moon-orbit {
+    --mx: 0px;
+    --my: 0px;
     position: absolute;
     top: 50%;
     left: 48%;
     width: min(52vw, 52dvh);
     height: min(52vw, 52dvh);
-    transform: translate(-50%, -50%);
+    transform: translate(calc(-50% + var(--mx)), calc(-50% + var(--my)));
     z-index: 5;
     pointer-events: none;
     animation: moonOrbit 30s linear infinite;
@@ -449,11 +465,11 @@ body {
 
 @keyframes moonOrbit {
     from {
-        transform: translate(-50%, -50%) rotate(0deg);
+        transform: translate(calc(-50% + var(--mx)), calc(-50% + var(--my))) rotate(0deg);
     }
 
     to {
-        transform: translate(-50%, -50%) rotate(360deg);
+        transform: translate(calc(-50% + var(--mx)), calc(-50% + var(--my))) rotate(360deg);
     }
 }
 
@@ -1162,5 +1178,80 @@ body {
     100% {
         stroke-dashoffset: -200;
         opacity: 0.2;
+    }
+}
+
+/* ═══════════════════════════════════════════
+   Tilt Permission Chip (iOS)
+═══════════════════════════════════════════ */
+
+.tilt-chip {
+    position: absolute;
+    bottom: 8dvh;
+    right: 28px;
+    z-index: 11;
+    appearance: none;
+    border: 1px solid var(--orange);
+    background: rgba(6, 6, 6, 0.55);
+    color: var(--white-dim);
+    font-family: 'DM Mono', monospace;
+    font-weight: 300;
+    font-size: clamp(7px, 0.7vw, 10px);
+    letter-spacing: 3px;
+    padding: 7px 12px 7px 15px;
+    cursor: pointer;
+    backdrop-filter: blur(2px);
+    opacity: 0;
+    animation: textFade 1s ease 1.6s both;
+    transition: color 0.3s, border-color 0.3s, opacity 0.4s;
+}
+
+.tilt-chip:hover {
+    color: var(--orange);
+    border-color: var(--orange-bright);
+}
+
+.tilt-chip.hide {
+    animation: none;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.tilt-chip[hidden] {
+    display: none;
+}
+
+/* ═══════════════════════════════════════════
+   Keyboard Focus
+═══════════════════════════════════════════ */
+
+a:focus-visible {
+    outline: none;
+}
+
+a:focus-visible .box,
+a:focus-visible .text-saturnday span {
+    border-color: var(--orange-bright);
+    box-shadow: 0 0 0 2px rgba(255, 106, 26, 0.55), 0 0 24px rgba(255, 85, 0, 0.2);
+}
+
+.tilt-chip:focus-visible {
+    outline: 1.5px solid var(--orange-bright);
+    outline-offset: 3px;
+}
+
+/* ═══════════════════════════════════════════
+   Reduced Motion
+═══════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-delay: 0s !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
     }
 }
