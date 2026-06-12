@@ -43,11 +43,14 @@
   <meta name="twitter:image" content="https://zoleole.github.io/assets/og-image.png">
   <meta name="twitter:image:alt" content="Z O L E O L E — DRA ATMOSFERA">
 
+  <link rel="canonical" href="https://zoleole.github.io/">
+
   <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32.png">
   <link rel="apple-touch-icon" sizes="192x192" href="./assets/favicon-192.png">
-  <link
-    href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Outfit:wght@200;300;400;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&family=Outfit:wght@200;300;600;700&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -55,7 +58,7 @@
 <body>
 
   <!-- Loading curtain -->
-  <div class="loading-curtain" id="loading">
+  <div class="loading-curtain" id="loading" role="status" aria-label="Loading">
     <div class="loader-ring"></div>
   </div>
 
@@ -64,13 +67,13 @@
     <div class="bg-atmosphere"></div>
 
     <!-- Cursor glow -->
-    <div class="cursor-glow" id="cursorGlow"></div>
+    <div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
 
     <!-- Constellation canvas -->
-    <canvas class="constellation-canvas" id="constellationCanvas"></canvas>
+    <canvas class="constellation-canvas" id="constellationCanvas" aria-hidden="true"></canvas>
 
     <!-- Orbital trails (SVG) -->
-    <div class="orbital-trails">
+    <div class="orbital-trails" aria-hidden="true">
       <svg width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 1000 1000"
         xmlns="http://www.w3.org/2000/svg">
         <ellipse cx="475" cy="500" rx="400" ry="220" fill="none" stroke="#e8601c" stroke-width="0.5"
@@ -81,7 +84,7 @@
     </div>
 
     <!-- Dashed curves -->
-    <div class="dashed-curves">
+    <div class="dashed-curves" aria-hidden="true">
       <svg width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 1000 1000"
         xmlns="http://www.w3.org/2000/svg">
         <path d="M 480 75 Q 620 50 720 70 Q 830 90 900 60" fill="none" stroke="#e8601c" stroke-width="1.2"
@@ -94,7 +97,7 @@
     </div>
 
     <!-- Ring BACK (behind planet) -->
-    <div class="ring-back">
+    <div class="ring-back" aria-hidden="true">
       <svg viewBox="0 0 460 70" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <clipPath id="ring-back-clip">
@@ -119,7 +122,7 @@
     </div>
 
     <!-- Planet -->
-    <div class="planet-container">
+    <div class="planet-container" aria-hidden="true">
       <div class="planet">
         <div class="planet-bands"></div>
         <div class="planet-storm"></div>
@@ -129,12 +132,12 @@
     </div>
 
     <!-- Orbiting moon -->
-    <div class="moon-orbit">
+    <div class="moon-orbit" aria-hidden="true">
       <div class="moon"></div>
     </div>
 
     <!-- Ring FRONT (in front of planet) -->
-    <div class="ring-front">
+    <div class="ring-front" aria-hidden="true">
       <svg viewBox="0 0 460 70" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <clipPath id="ring-front-clip">
@@ -159,10 +162,10 @@
     </div>
 
     <!-- Ring shimmer -->
-    <div class="ring-shimmer"></div>
+    <div class="ring-shimmer" aria-hidden="true"></div>
 
     <!-- Diagonal line -->
-    <div class="diagonal-line">
+    <div class="diagonal-line" aria-hidden="true">
       <svg width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 1000 1000"
         xmlns="http://www.w3.org/2000/svg">
         <defs>
@@ -178,10 +181,10 @@
     </div>
 
     <!-- Corner marks -->
-    <div class="corner-mark tl"></div>
-    <div class="corner-mark tr"></div>
-    <div class="corner-mark bl"></div>
-    <div class="corner-mark br"></div>
+    <div class="corner-mark tl" aria-hidden="true"></div>
+    <div class="corner-mark tr" aria-hidden="true"></div>
+    <div class="corner-mark bl" aria-hidden="true"></div>
+    <div class="corner-mark br" aria-hidden="true"></div>
 
     <!-- Boxes -->
     <div class="box box-date">
@@ -194,7 +197,8 @@
       <div class="location">ENSENADA B.C.</div>
     </div>
 
-    <a href="https://www.linkedin.com/in/zuleica-ojeda-lerma-6ab599179" target="_blank" style="text-decoration:none;">
+    <a href="https://www.linkedin.com/in/zuleica-ojeda-lerma-6ab599179" target="_blank" rel="noopener noreferrer"
+      aria-label="Zuleica Ojeda Lerma on LinkedIn" style="text-decoration:none;">
       <div class="box box-leggo">
         <span>/ZU</span>
       </div>
@@ -210,7 +214,7 @@
     <div class="edition-tag">XII</div>
 
     <!-- Typography -->
-    <div class="text-bunkermuz">Z O L E O L E</div>
+    <h1 class="text-bunkermuz">Z O L E O L E</h1>
     <div class="text-smile">2 0 2 6</div>
 
     <!-- Coordinates -->
@@ -218,25 +222,29 @@
     <div class="coord coord-tr">116.6000°W</div>
     <div class="coord coord-bl">@ZPOTNYK</div>
 
-    <a href="https://www.instagram.com/dra.atmosfera/" target="_blank" style="text-decoration:none;">
+    <a href="https://www.instagram.com/dra.atmosfera/" target="_blank" rel="noopener noreferrer"
+      aria-label="DRA ATMOSFERA on Instagram" style="text-decoration:none;">
       <div class="text-saturnday">
-        <span>DRA <span class="saturn-icon"></span> ATMOSFERA</span>
+        <span>DRA <span class="saturn-icon" aria-hidden="true"></span> ATMOSFERA</span>
       </div>
     </a>
 
+    <!-- iOS motion permission (shown only where required) -->
+    <button class="tilt-chip" id="tiltChip" type="button" hidden>ENABLE TILT</button>
+
     <!-- HUD pulse -->
-    <div class="hud-pulse">
+    <div class="hud-pulse" aria-hidden="true">
       <svg viewBox="0 0 160 20" xmlns="http://www.w3.org/2000/svg">
         <polyline class="hud-pulse-line" points="0,10 30,10 40,3 50,17 60,5 70,15 80,8 90,12 100,10 160,10" />
       </svg>
     </div>
 
     <!-- Scanlines -->
-    <div class="scanlines"></div>
+    <div class="scanlines" aria-hidden="true"></div>
     <!-- Vignette -->
-    <div class="vignette"></div>
+    <div class="vignette" aria-hidden="true"></div>
     <!-- Noise -->
-    <div class="noise"></div>
+    <div class="noise" aria-hidden="true"></div>
   </div>
 
   <script src="main.js" defer></script>
