@@ -1,0 +1,24 @@
+{
+    "name": "Tormenta y Huracat",
+    "short_name": "Tormenta y Huracat",
+    "description": "Instituto Michiorológico Nacional · Reportes del clima con patitas · CDMX",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#1a1a4e",
+    "theme_color": "#ff1a6e",
+    "lang": "es-MX",
+    "icons": [
+        {
+            "src": "favicon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "favicon.svg",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "any"
+        }
+    ]
+}
