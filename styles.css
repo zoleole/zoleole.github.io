@@ -1182,46 +1182,6 @@ body {
 }
 
 /* ═══════════════════════════════════════════
-   Tilt Permission Chip (iOS)
-═══════════════════════════════════════════ */
-
-.tilt-chip {
-    position: absolute;
-    bottom: 8dvh;
-    right: 28px;
-    z-index: 11;
-    appearance: none;
-    border: 1px solid var(--orange);
-    background: rgba(6, 6, 6, 0.55);
-    color: var(--white-dim);
-    font-family: 'DM Mono', monospace;
-    font-weight: 300;
-    font-size: clamp(7px, 0.7vw, 10px);
-    letter-spacing: 3px;
-    padding: 7px 12px 7px 15px;
-    cursor: pointer;
-    backdrop-filter: blur(2px);
-    opacity: 0;
-    animation: textFade 1s ease 1.6s both;
-    transition: color 0.3s, border-color 0.3s, opacity 0.4s;
-}
-
-.tilt-chip:hover {
-    color: var(--orange);
-    border-color: var(--orange-bright);
-}
-
-.tilt-chip.hide {
-    animation: none;
-    opacity: 0;
-    pointer-events: none;
-}
-
-.tilt-chip[hidden] {
-    display: none;
-}
-
-/* ═══════════════════════════════════════════
    Keyboard Focus
 ═══════════════════════════════════════════ */
 
@@ -1233,11 +1193,6 @@ a:focus-visible .box,
 a:focus-visible .text-saturnday span {
     border-color: var(--orange-bright);
     box-shadow: 0 0 0 2px rgba(255, 106, 26, 0.55), 0 0 24px rgba(255, 85, 0, 0.2);
-}
-
-.tilt-chip:focus-visible {
-    outline: 1.5px solid var(--orange-bright);
-    outline-offset: 3px;
 }
 
 /* ═══════════════════════════════════════════
