@@ -372,7 +372,7 @@ const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').mat
         }
     }, { passive: true });
 
-    // Gyroscope — iOS requires an explicit permission grant from a tap.
+    // Gyroscope parallax.
     function onOrient(e) {
         if (e.gamma !== null && e.beta !== null) {
             targetX = Math.max(-0.5, Math.min(0.5, e.gamma / 40));
@@ -380,26 +380,13 @@ const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').mat
         }
     }
 
-    const chip = document.getElementById('tiltChip');
+    // iOS gates deviceorientation behind a permission prompt that has to come
+    // from a tap, so tilt only runs where the events arrive without one.
     const needsPermission =
         typeof DeviceOrientationEvent !== 'undefined' &&
         typeof DeviceOrientationEvent.requestPermission === 'function';
 
-    if (needsPermission) {
-        chip.hidden = false;
-        chip.addEventListener('click', async () => {
-            try {
-                const state = await DeviceOrientationEvent.requestPermission();
-                if (state === 'granted') {
-                    window.addEventListener('deviceorientation', onOrient);
-                }
-            } catch (err) {
-                console.warn('Motion permission error:', err);
-            }
-            chip.classList.add('hide');
-            setTimeout(() => { chip.hidden = true; }, 450);
-        });
-    } else if (window.DeviceOrientationEvent) {
+    if (!needsPermission && window.DeviceOrientationEvent) {
         window.addEventListener('deviceorientation', onOrient);
     }
 
